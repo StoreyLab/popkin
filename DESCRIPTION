@@ -1,0 +1,10 @@
+Package: popkin
+Title: Estimate Kinship under Population Structure
+Version: 0.0.0.9000
+Authors@R: person("Alejandro", "Ochoa", email = "ochoa@princeton.edu", role = c("aut", "cre"))
+Description: Provides functions to estimate the kinship matrix from biallelic SNP data and extract useful information, such as inbreeding coefficients and the generalized \eqn{F_{ST}}.
+Depends: 
+License: MIT + file LICENCE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1.9000

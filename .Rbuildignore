@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+\.git
+\.gitignore
+^README\.md$
+Makefile
