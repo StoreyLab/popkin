@@ -4,7 +4,7 @@
 \alias{getKinshipSubpops}
 \title{Estimate kinship from a genotype matrix and subpopulation assignments}
 \usage{
-getKinshipSubpops(X, subpops, m = NA, lociOnRows = TRUE, lowMem = FALSE,
+getKinshipSubpops(X, subpops, m = NA, lociOnCols = FALSE, lowMem = FALSE,
   verbose = FALSE)
 }
 \arguments{
@@ -14,7 +14,7 @@ getKinshipSubpops(X, subpops, m = NA, lociOnRows = TRUE, lowMem = FALSE,
 
 \item{m}{Number of loci (optional, may truncate input when X is a function; ignored when X is a matrix or BEDMatrix object)}
 
-\item{lociOnRows}{If true, loci are on rows and individuals on columns; if false, X has loci on columns and individuals on rows. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnRows=FALSE is set automatically.}
+\item{lociOnCols}{If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.}
 
 \item{lowMem}{If true, code that runs through each SNP is used, which uses very low memory but is slower. If false, code that uses matrix algebra is used, which uses much more memory but is also faster.}
 
