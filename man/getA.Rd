@@ -4,18 +4,18 @@
 \alias{getA}
 \title{Compute A matrix from genotypes}
 \usage{
-getA(X, n = NA, m = NA, lociOnCols = FALSE, lowMem = FALSE)
+getA(X, n = NA, m = NA, memLim = NA, lociOnCols = FALSE)
 }
 \arguments{
-\item{X}{Genotype matrix, BEDMatrix object, or a function that returns the genotypes of all individuals at successive loci each time it is called, and NULL when no loci are left.}
+\item{X}{Genotype matrix, BEDMatrix object, or a function X(mc) that returns the genotype matrix of all individuals at mc successive loci, and NULL when no loci are left.}
 
 \item{n}{Number of individuals (required only when X is a function, ignored otherwise)}
 
 \item{m}{Number of loci (optional, may truncate input when X is a function; ignored when X is a matrix or BEDMatrix object)}
 
-\item{lociOnCols}{If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.}
+\item{memLim}{Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). NOTE: memory will not be controlled strictly, just approximately.  Default is 2GB, except in linux it is the free memory in the system times 0.7.}
 
-\item{lowMem}{If true, code that runs through each SNP is used, which uses very low memory but is slower. If false, code that uses matrix algebra is used, which uses much more memory but is also faster.  Set to TRUE automaticaly when X is a function.}
+\item{lociOnCols}{If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.}
 }
 \value{
 The A matrix.
