@@ -15,7 +15,8 @@ getKinshipFromA(A, AEMin)
 The estimated \eqn{n \times n} kinship matrix, with a minimum expected value of zero.
 }
 \description{
-Estimate kinship from A and an estimate of the minimum expected A
+Simply rescales the matrix \eqn{A} using the estimate of its minimum expected value \eqn{A_{Emin}} using the formula
+\deqn{Phi = 1 - \frac{A}{A_{Emin}}.}
 }
 \examples{
 \dontrun{Phi <- getKinshipFromA(A, AEmin)}

@@ -13,7 +13,7 @@ getA(X, n = NA, m = NA, memLim = NA, lociOnCols = FALSE)
 
 \item{m}{Number of loci (optional, may truncate input when X is a function; ignored when X is a matrix or BEDMatrix object)}
 
-\item{memLim}{Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). NOTE: memory will not be controlled strictly, just approximately.  Default is 2GB, except in linux it is the free memory in the system times 0.7.}
+\item{memLim}{Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 2GB, except in linux it is the free memory in the system times 0.7.}
 
 \item{lociOnCols}{If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.}
 }
@@ -22,9 +22,9 @@ The A matrix.
 }
 \description{
 Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n}-by-\eqn{n} matrix \eqn{A} that satisfies
-\deqn{E[A] = M(\Phi - 1),}
-where \eqn{\Phi} is the kinship matrix and \eqn{M} is a nuisance scaling factor (determined by the unknown ancestral allele frequencies of each locus).
-Thus a \eqn{\Phi} estimate can be recovered from \eqn{A} after a separate step that estimates \eqn{M = -\min E[A]}{M = -min E[A]} (see \code{\link{getAEminSubpops}} for one example).
+\deqn{E[A] = \alpha(\Phi - 1),}
+where \eqn{\Phi} is the kinship matrix and \eqn{\alpha} is a nuisance scaling factor (determined by the unknown ancestral allele frequencies of each locus).
+Thus a \eqn{\Phi} estimate can be recovered from \eqn{A} after a separate step that estimates \eqn{\alpha = -\min E[A]}{M = -min E[A]} (see \code{\link{getAEminSubpops}} for one example).
 }
 \details{
 The matrix X (or the vectors returned by the function X) must have values only in c(0,1,2,NA), encoded to count the number of reference alleles at the locus, or NA for missing data.

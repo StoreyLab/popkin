@@ -4,7 +4,7 @@
 \alias{getKinshipSubpops}
 \title{Estimate kinship from a genotype matrix and subpopulation assignments}
 \usage{
-getKinshipSubpops(X, subpops, m = NA, lociOnCols = FALSE, lowMem = FALSE,
+getKinshipSubpops(X, subpops, m = NA, lociOnCols = FALSE, memLim = NA,
   verbose = FALSE)
 }
 \arguments{
@@ -16,7 +16,7 @@ getKinshipSubpops(X, subpops, m = NA, lociOnCols = FALSE, lowMem = FALSE,
 
 \item{lociOnCols}{If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.}
 
-\item{lowMem}{If true, code that runs through each SNP is used, which uses very low memory but is slower. If false, code that uses matrix algebra is used, which uses much more memory but is also faster.}
+\item{memLim}{Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 2GB, except in linux it is the free memory in the system times 0.7.}
 
 \item{verbose}{If true, prints messages to indicate which step is being performed.}
 }
@@ -27,6 +27,12 @@ The estimated \eqn{n \times n} kinship matrix, with a minimum expected value of 
 \code{getKinshipSubpops} is a wrapper function that applies \code{getA}, \code{getAEminSubpops}, and \code{getKinshipFromA}.
 }
 \examples{
-\dontrun{Phi <- getKinshipSubpops(X, subpops)}
+\dontrun{
+## This example assumes input is in BED format and is loaded using BEDMatrix
+## "file" is path to BED file (excluding .bed extension)
+library(BEDMatrix)
+X <- BEDMatrix(file) # load genotype matrix object
+Phi <- getKinshipSubpops(X, subpops) # calculate kinship from genotypes and subpopulation labels "subpops"
+}
 
 }
