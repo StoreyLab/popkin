@@ -9,13 +9,13 @@
 #' @return The modified kinship matrix, with inbreeding coefficients along the diagonal
 #'
 #' @examples
-#' \dontrun{PhiMod <- getKinshipWithInbrDiag(Phi)}
+#' \dontrun{PhiMod <- inbrDiag(Phi)}
 #'
 #' @export
-getKinshipWithInbrDiag <- function(Phi) {
+inbrDiag <- function(Phi) {
     ## returns same kinship matrix but with inbreeding along diagonal instead of self-kinship
     ## these are always better for plots
-    diag(Phi) <- getInbr(Phi) # this is the only transformation needed
+    diag(Phi) <- inbr(Phi) # this is the only transformation needed
     Phi # return edited matrix
 }
 

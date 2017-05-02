@@ -1,0 +1,42 @@
+#' Extract \eqn{F_{ST}} from a population-level kinship matrix or vector of inbreeding coefficients
+#'
+#' This function simply returns the weighted mean inbreeding coefficient.
+#' This quantity equals the generalized \eqn{F_{ST}} if all individuals are "locally outbred" (i.e. if the self relatedness of every individual stems entirely from the population structure rather than due partly to having very closely related parents, such as first or second cousins).
+#' If no weights are provided, the regular mean of the inbreeding coefficients is returned.
+#' If a kinship matrix is provided, the inbreeding coefficients are extracted from its diagonal (requires the input kinship matrix to have self-kinship coefficients along the diagonal, as in the output of \code{\link{popkin}}, and not the rescaled inbreeding coefficient diagonal that \code{\link{inbrDiag}} returns).
+#'
+#' @param x The vector of inbreeding coefficients, or the kinship matrix (if class(x) is matrix).
+#' @param w Weights for individuals to use in calculating \eqn{F_{ST}} (optional, defaults to uniform weights)
+#'
+#' @return \eqn{F_{ST}}, which is the weighted mean inbreeding coefficient.
+#'
+#' @examples
+#' \dontrun{
+#' ## Get Fst from a genotype matrix
+#' ## This example assumes input is in BED format and is loaded using BEDMatrix
+#' ## "file" is path to BED file (excluding .bed extension)
+#' library(BEDMatrix)
+#' X <- BEDMatrix(file) # load genotype matrix object
+#' Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels "subpops"
+#' Fst <- fst(Phi, w) # use kinship matrix as input to fst
+#' 
+#' Fst <- fst(Phi) # no weights implies uniform weights
+#'
+#' inbr <- inbr(Phi) # suppose you first extracted inbreeding coefficients for some other analysis
+#' Fst <- fst(inbr, w) # use this inbreeding vector as input too!
+#' }
+#'
+#' @export
+fst <- function(x, w) {
+    ## if input is a matrix, let's assume it is the kinship matrix, so extract the inbreeding coefficients first
+    if (class(x) == 'matrix') {
+        x <- inbr(x)
+    }
+    ## now x is a vector of inbreeding coefficients
+    if (missing(w)) {
+        return( mean(x) ) # no weights implies uniform weights
+    } else {
+        return( drop( x %*% w ) ) # weighted mean
+    }
+}
+

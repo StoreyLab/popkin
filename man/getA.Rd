@@ -24,7 +24,7 @@ The A matrix.
 Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n}-by-\eqn{n} matrix \eqn{A} that satisfies
 \deqn{E[A] = \alpha(\Phi - 1),}
 where \eqn{\Phi} is the kinship matrix and \eqn{\alpha} is a nuisance scaling factor (determined by the unknown ancestral allele frequencies of each locus).
-Thus a \eqn{\Phi} estimate can be recovered from \eqn{A} after a separate step that estimates \eqn{\alpha = -\min E[A]}{M = -min E[A]} (see \code{\link{getAEminSubpops}} for one example).
+Thus a \eqn{\Phi} estimate can be recovered from \eqn{A} after a separate step that estimates \eqn{\alpha = -\min E[A]}{M = -min E[A]} (see \code{\link{minAvgSubpops}} for one example).
 }
 \details{
 The matrix X (or the vectors returned by the function X) must have values only in c(0,1,2,NA), encoded to count the number of reference alleles at the locus, or NA for missing data.

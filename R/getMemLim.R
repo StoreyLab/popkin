@@ -5,6 +5,9 @@ getMemLim <- function(factor=0.7) {
     
     if ( .Platform$OS.type == 'unix' ) {
         if (file.exists('/proc/meminfo')) {
+            ## expanded from:
+            ## https://stackoverflow.com/questions/6457290/how-to-check-the-amount-of-ram-in-r
+            
             ## this reads file as a table with a single column
             meminfo <- read.table('/proc/meminfo', sep="\n", stringsAsFactors=FALSE)
             meminfo <- meminfo[[1]] ## reduce data frame to vector

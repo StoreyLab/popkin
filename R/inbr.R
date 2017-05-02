@@ -5,10 +5,10 @@
 #' @return The length-\eqn{n} vector of inbreeding coefficients for each individual.
 #'
 #' @examples
-#' \dontrun{inbr <- getInbr(Phi)}
+#' \dontrun{inbr <- inbr(Phi)}
 #'
 #' @export
-getInbr <- function(Phi) {
+inbr <- function(Phi) {
     2 * diag(Phi) - 1  # returns vector of inbreeding coefficients!
 }
 

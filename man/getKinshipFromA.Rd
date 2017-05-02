@@ -2,7 +2,7 @@
 % Please edit documentation in R/getKinshipFromA.R
 \name{getKinshipFromA}
 \alias{getKinshipFromA}
-\title{Estimate kinship from A and an estimate of the minimum expected A}
+\title{Estimate kinship from \eqn{A} and an estimate of the minimum expected A}
 \usage{
 getKinshipFromA(A, AEMin)
 }
@@ -16,7 +16,7 @@ The estimated \eqn{n \times n} kinship matrix, with a minimum expected value of 
 }
 \description{
 Simply rescales the matrix \eqn{A} using the estimate of its minimum expected value \eqn{A_{Emin}} using the formula
-\deqn{Phi = 1 - \frac{A}{A_{Emin}}.}
+\deqn{\Phi = 1 - \frac{A}{A_{Emin}}.}
 }
 \examples{
 \dontrun{Phi <- getKinshipFromA(A, AEmin)}
