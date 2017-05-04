@@ -4,23 +4,24 @@
 \alias{rescalePopkin}
 \title{Rescale kinship matrix to set a given kinship value to zero.}
 \usage{
-rescalePopkin(Phi, subpops, phiMin)
+rescalePopkin(Phi, subpops = NULL, phiMin = NA)
 }
 \arguments{
-\item{Phi}{An \eqn{n \times n} kinship matrix.}
+\item{Phi}{An \eqn{n \times n}{n-by-n} kinship matrix.}
 
 \item{subpops}{The length-\eqn{n} vector of subpopulation assignments for each individual.}
 
 \item{phiMin}{A scalar kinship value to define the new zero kinship.}
 }
 \value{
-The rescaled \eqn{n \times n} kinship matrix, with the desired level of relatedness set to zero.
+The rescaled \eqn{n \times n}{n-by-n} kinship matrix, with the desired level of relatedness set to zero.
 }
 \description{
-Rescales the input kinship matrix \eqn{\Phi} so that the value \eqn{\phi_{min}} in the original kinship matrix becomes zero, using the formula
-\deqn{\Phi' = \frac{\Phi - \phi_{min}}{1 - \phi_{min}}.}
-If subpopulation labels 'subpops' are provided, they are used to estimate \eqn{\phi_{min}} using \code{\link{minAvgSubpops}} internally.
-If both subpops and phiMin are provided, script stops with a fatal error.
+Rescales the input kinship matrix \eqn{\Phi^T} so that the value \eqn{\phi_{\mbox{min}}^T}{\phi_min^T} in the original kinship matrix becomes zero, using the formula
+\deqn{\Phi^{T'} = \frac{\Phi^T - \phi_{\mbox{min}}^T}{1 - \phi_{\mbox{min}}^T}.}{\Phi^T' = (\Phi^T - \phi_min^T)/(1 - \phi_min^T).}
+This is equivalent to changing the ancestral population \eqn{T} into \eqn{T'} such that \eqn{\phi_{\mbox{min}}^{T'} = 0}{\phi_min^T' = 0}.
+If subpopulation labels \code{subpops} are provided, they are used to estimate \eqn{\phi_{\mbox{min}}^T}{\phi_min^T}.
+If both \code{subpops} and \code{phiMin} are provided, script stops with a fatal error.
 }
 \examples{
 \dontrun{
@@ -29,11 +30,11 @@ If both subpops and phiMin are provided, script stops with a fatal error.
 ## "file" is path to BED file (excluding .bed extension)
 library(BEDMatrix)
 X <- BEDMatrix(file) # load genotype matrix object
-Phi <- popkin(X) # calculate kinship from genotypes, WITHOUT subpopulation labels "subpops"
-## then we visualize this matrix, figure out a reasonable subpopulation partition "subpops"
+Phi <- popkin(X) # calculate kinship from genotypes, WITHOUT subpops
+## then we visualize this matrix, figure out a reasonable subpopulation partition
 
 ## now we can adjust the kinship matrix!
-Phi2 <- rescalePopkin(Phi, subpops) # direct way, recommended
+Phi2 <- rescalePopkin(Phi, subpops)
 ## prev is faster but otherwise equivalent to re-estimating Phi from scratch with subpops:
 ## Phi2 <- popkin(X, subpops) 
 

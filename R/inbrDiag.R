@@ -1,8 +1,8 @@
 #' Replace kinship diagonal with inbreeding coefficients
 #'
-#' The usual kinship matrix contains self-kinship values \eqn{(1+f_j)/2} where \eqn{f_j} are inbreeding coefficients.
-#' This function returns a modified kinship matrix with the diagonal replaced with the \eqn{f_j} values.
-#' This form produces more aesthetically pleasing visualizations, but is not appropriate for modeling (e.g. in GWAS or heritability).
+#' The usual kinship matrix contains self-kinship values \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} where \eqn{f_j^T} are inbreeding coefficients.
+#' This function returns a modified kinship matrix with each \eqn{\phi_{jj}^T}{\phi_jj^T} replaced with \eqn{f_j} (off-diagonal \eqn{j \ne k}{j != k} values stay the same).
+#' This form produces more aesthetically pleasing visualizations, but is not appropriate for modeling (e.g. in GWAS or heritability estimation).
 #'
 #' @param Phi The kinship matrix with self-kinship values along the diagonal
 #'

@@ -11,7 +11,7 @@
 ## This default choice may be appropriate in some settings, but is susceptible to bias when there are few SNPs and many pairs of individuals with zero kinship (taking the most extreme estimate is clearly worse than averaging these values would be).
 ## This default is provided for convenience, to explore the data when a correct choice of subpopulations is not clear, but is not recommended as a final approach.
 ## 
-## @param Y A symmetric \eqn{n \times n} matrix with values between every individual pair, including self comparisons.
+## @param Y A symmetric \eqn{n \times n}{n-by-n} matrix with values between every individual pair, including self comparisons.
 ## @param subpops A length-\eqn{n} vector of subpopulation assignments for each individual.  If missing, every individual is effectively treated as a different population.
 ##
 ## @return The scalar estimate of the minimum expected value of \eqn{Y}.

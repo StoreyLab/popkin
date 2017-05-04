@@ -2,38 +2,43 @@
 % Please edit documentation in R/fst.R
 \name{fst}
 \alias{fst}
-\title{Extract \eqn{F_{ST}} from a population-level kinship matrix or vector of inbreeding coefficients}
+\title{Extract FST from a population-level kinship matrix or vector of inbreeding coefficients}
 \usage{
 fst(x, w)
 }
 \arguments{
-\item{x}{The vector of inbreeding coefficients, or the kinship matrix (if class(x) is matrix).}
+\item{x}{The vector of inbreeding coefficients \eqn{(f_j^T)}, or the kinship matrix \eqn{\Phi^T} if \code{x} is a matrix.}
 
-\item{w}{Weights for individuals to use in calculating \eqn{F_{ST}} (optional, defaults to uniform weights)}
+\item{w}{Weights for individuals (optional, defaults to uniform weights)}
 }
 \value{
-\eqn{F_{ST}}, which is the weighted mean inbreeding coefficient.
+\eqn{F_{ST}}{FST}
 }
 \description{
-This function simply returns the weighted mean inbreeding coefficient.
-This quantity equals the generalized \eqn{F_{ST}} if all individuals are "locally outbred" (i.e. if the self relatedness of every individual stems entirely from the population structure rather than due partly to having very closely related parents, such as first or second cousins).
-If no weights are provided, the regular mean of the inbreeding coefficients is returned.
-If a kinship matrix is provided, the inbreeding coefficients are extracted from its diagonal (requires the input kinship matrix to have self-kinship coefficients along the diagonal, as in the output of \code{\link{popkin}}, and not the rescaled inbreeding coefficient diagonal that \code{\link{inbrDiag}} returns).
+This function simply returns the weighted mean inbreeding coefficient \eqn{f_j^T}.
+If no weights are provided, the regular mean \eqn{f_j^T} is returned.
+If a kinship matrix \eqn{\Phi^T} is provided, then \eqn{f_j^T} are extracted from its diagonal using \code{\link{inbr}} (assumes the diagonal of \eqn{\Phi^T} is \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} as \code{\link{popkin}} returns, and not \eqn{f_j^T} as \code{\link{inbrDiag}} returns).
+}
+\details{
+The returned weighted mean inbreeding coefficient equals the generalized \eqn{F_{ST}}{FST} if all individuals are "locally outbred" (i.e. if the self relatedness of every individual stems entirely from the population structure rather than due partly to having unusually closely related parents, such as first or second cousins).
+Note most individuals in population-scale human data are locally outbred.
+If there are locally inbred individuals, the returned value will overestimate \eqn{F_{ST}}{FST}.
 }
 \examples{
 \dontrun{
-## Get Fst from a genotype matrix
+## Get FST from a genotype matrix
 ## This example assumes input is in BED format and is loaded using BEDMatrix
 ## "file" is path to BED file (excluding .bed extension)
 library(BEDMatrix)
 X <- BEDMatrix(file) # load genotype matrix object
-Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels "subpops"
-Fst <- fst(Phi, w) # use kinship matrix as input to fst
+Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
+w <- weightsSubpops(subpops) # can weigh individuals so subpopulations are balanced
+Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
 
 Fst <- fst(Phi) # no weights implies uniform weights
 
-inbr <- inbr(Phi) # suppose you first extracted inbreeding coefficients for some other analysis
-Fst <- fst(inbr, w) # use this inbreeding vector as input too!
+inbr <- inbr(Phi) # if you extracted inbr for some other analysis...
+Fst <- fst(inbr, w) # ...use this inbreeding vector as input too!
 }
 
 }
