@@ -2,6 +2,11 @@ context('popkin_Rdata')
 
 ## message('getwd: ', getwd())
 
+## ## introduce an error on purpose
+## test_that("testing is run at all!", {
+##     expect_equal(1, 2)
+## })
+
 ## loads Rdata matrices to test
 load('Xs.RData')
 
