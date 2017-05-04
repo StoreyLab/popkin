@@ -1,27 +1,31 @@
-#' Compute A matrix from genotypes
-#'
-#' Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n}-by-\eqn{n} matrix \eqn{A} that satisfies
-#' \deqn{E[A] = \alpha(\Phi - 1),}
-#' where \eqn{\Phi} is the kinship matrix and \eqn{\alpha} is a nuisance scaling factor (determined by the unknown ancestral allele frequencies of each locus).
-#' Thus a \eqn{\Phi} estimate can be recovered from \eqn{A} after a separate step that estimates \eqn{\alpha = -\min E[A]}{M = -min E[A]} (see \code{\link{minAvgSubpops}} for one example).
-#'
-#' The matrix X (or the vectors returned by the function X) must have values only in c(0,1,2,NA), encoded to count the number of reference alleles at the locus, or NA for missing data.
-#'
-#' @param X Genotype matrix, BEDMatrix object, or a function X(mc) that returns the genotype matrix of all individuals at mc successive loci, and NULL when no loci are left.
-#' @param n Number of individuals (required only when X is a function, ignored otherwise)
-#' @param lociOnCols If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.
-#' @param memLim Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 2GB, except in linux it is the free memory in the system times 0.7.
-#'
-#' @return The A matrix.
-#'
-#' @examples
-#' \dontrun{
-#' ## This example assumes input is in BED format and is loaded using BEDMatrix
-#' ## "file" is path to BED file (excluding .bed extension)
-#' library(BEDMatrix)
-#' X <- BEDMatrix(file) # load genotype matrix object
-#' A <- getA(X) # calculate A from genotypes
-#' }
+#' @useDynLib popkin
+#' @importFrom Rcpp sourceCpp
+NULL
+
+## Compute A matrix from genotypes
+##
+## Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n}-by-\eqn{n} matrix \eqn{A} that satisfies
+## \deqn{E[A] = \alpha(\Phi - 1),}
+## where \eqn{\Phi} is the kinship matrix and \eqn{\alpha} is a nuisance scaling factor (determined by the unknown ancestral allele frequencies of each locus).
+## Thus a \eqn{\Phi} estimate can be recovered from \eqn{A} after a separate step that estimates \eqn{\alpha = -\min E[A]}{M = -min E[A]} (see \code{\link{minAvgSubpops}} for one example).
+##
+## The matrix X (or the vectors returned by the function X) must have values only in c(0,1,2,NA), encoded to count the number of reference alleles at the locus, or NA for missing data.
+##
+## @param X Genotype matrix, BEDMatrix object, or a function X(mc) that returns the genotype matrix of all individuals at mc successive loci, and NULL when no loci are left.
+## @param n Number of individuals (required only when X is a function, ignored otherwise)
+## @param lociOnCols If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.
+## @param memLim Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 2GB, except in linux it is the free memory in the system times 0.7.
+##
+## @return The A matrix.
+##
+## @examples
+## \dontrun{
+## ## This example assumes input is in BED format and is loaded using BEDMatrix
+## ## "file" is path to BED file (excluding .bed extension)
+## library(BEDMatrix)
+## X <- BEDMatrix(file) # load genotype matrix object
+## A <- getA(X) # calculate A from genotypes
+## }
 getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     ## determine some behaviors depending on data type
     ## first validate class and set key booleans
@@ -86,11 +90,6 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     ## return final estimate!
     A/M - 1
 }
-
-#' @useDynLib popkin
-#' @importFrom Rcpp sourceCpp
-NULL
-
 
 ## http://dirk.eddelbuettel.com/code/rcpp/Rcpp-package.pdf
 ## http://dirk.eddelbuettel.com/code/rcpp/Rcpp-FAQ.pdf
