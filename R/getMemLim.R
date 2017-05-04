@@ -9,7 +9,7 @@ getMemLim <- function(factor=0.7, verbose=FALSE) {
             ## https://stackoverflow.com/questions/6457290/how-to-check-the-amount-of-ram-in-r
             
             ## this reads file as a table with a single column
-            meminfo <- read.table('/proc/meminfo', sep="\n", stringsAsFactors=FALSE)
+            meminfo <- utils::read.table('/proc/meminfo', sep="\n", stringsAsFactors=FALSE)
             meminfo <- meminfo[[1]] ## reduce data frame to vector
             ## these annoying commands extract the two numbers of interest (MemTotal and MemFree)
             ## mem2 <- as.numeric(strsplit(meminfo[grepl('MemTotal', meminfo)], split=' +')[[1]][2])
