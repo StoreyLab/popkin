@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' ## suppose first we estimate the kinship matrix without subpopulations, which is more likely to be biased
+#' ## suppose we first estimate kinship without subpopulations, which will be more biased
 #' ## This example assumes input is in BED format and is loaded using BEDMatrix
 #' ## "file" is path to BED file (excluding .bed extension)
 #' library(BEDMatrix)
@@ -21,10 +21,14 @@
 #' Phi <- popkin(X) # calculate kinship from genotypes, WITHOUT subpopulation labels "subpops"
 #' ## then we visualize this matrix, figure out a reasonable subpopulation partition "subpops"
 #'
-#' Phi <- rescalePopkin(Phi, subpops) # direct way, recommended
-#' 
+#' ## now we can adjust the kinship matrix!
+#' Phi2 <- rescalePopkin(Phi, subpops) # direct way, recommended
+#' ## equivalent to re-estimating Phi from scratch (next), but much faster:
+#' ## Phi2 <- popkin(X, subpops) 
+#'
+#' ## can also manually set the level of relatedness we want to be zero:
 #' phiMin <- minAvgSubpops(Phi, subpops) # or first re-estimate the minimum kinship
-#' Phi <- rescalePopkin(Phi, phiMin=phiMin) # then set that level of relatedness to zero!
+#' Phi2 <- rescalePopkin(Phi, phiMin=phiMin) # then set that level of relatedness to zero!
 #' }
 #'
 #' @export
