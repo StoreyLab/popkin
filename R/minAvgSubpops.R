@@ -23,8 +23,6 @@
 #' ## a simple default for exploratory analysis
 #' AEMinHat <- minAvgSubpops(A) # == min(A)
 #' }
-#' 
-#' @export
 minAvgSubpops <- function(Y, subpops=NULL) {
     if (is.null(subpops)) return(min(Y))
     

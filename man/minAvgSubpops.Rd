@@ -34,5 +34,4 @@ AEMinHat <- minAvgSubpops(A, subpops)
 ## a simple default for exploratory analysis
 AEMinHat <- minAvgSubpops(A) # == min(A)
 }
-
 }

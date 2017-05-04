@@ -22,8 +22,6 @@
 #' X <- BEDMatrix(file) # load genotype matrix object
 #' A <- getA(X) # calculate A from genotypes
 #' }
-#' 
-#' @export
 getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     ## determine some behaviors depending on data type
     ## first validate class and set key booleans

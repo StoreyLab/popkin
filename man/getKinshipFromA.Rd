@@ -20,5 +20,4 @@ Simply rescales the matrix \eqn{A} using the estimate of its minimum expected va
 }
 \examples{
 \dontrun{Phi <- getKinshipFromA(A, AEmin)}
-
 }

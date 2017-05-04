@@ -35,5 +35,4 @@ library(BEDMatrix)
 X <- BEDMatrix(file) # load genotype matrix object
 A <- getA(X) # calculate A from genotypes
 }
-
 }

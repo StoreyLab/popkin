@@ -10,8 +10,6 @@
 #'
 #' @examples
 #' \dontrun{Phi <- getKinshipFromA(A, AEmin)}
-#'
-#' @export
 getKinshipFromA <- function(A, AEMin) {
     ## implements the simple transformation of A and AEMinHat into PhiHat
     Phi <- 1 - A/AEMin # return this matrix!

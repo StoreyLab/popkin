@@ -34,12 +34,11 @@ Phi <- popkin(X) # calculate kinship from genotypes, WITHOUT subpopulation label
 
 ## now we can adjust the kinship matrix!
 Phi2 <- rescalePopkin(Phi, subpops) # direct way, recommended
-## equivalent to re-estimating Phi from scratch (next), but much faster:
+## prev is faster but otherwise equivalent to re-estimating Phi from scratch with subpops:
 ## Phi2 <- popkin(X, subpops) 
 
-## can also manually set the level of relatedness we want to be zero:
-phiMin <- minAvgSubpops(Phi, subpops) # or first re-estimate the minimum kinship
-Phi2 <- rescalePopkin(Phi, phiMin=phiMin) # then set that level of relatedness to zero!
+## can also manually set the level of relatedness phiMin we want to be zero:
+Phi2 <- rescalePopkin(Phi, phiMin=phiMin)
 }
 
 }
