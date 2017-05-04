@@ -6,6 +6,7 @@ Description: Provides functions to estimate the kinship matrix of individuals fr
 Depends: 
 Imports: Rcpp (>= 0.12.10), RcppEigen (>= 0.3.2.9.1)
 LinkingTo: Rcpp, RcppEigen
+Suggests: testthat
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

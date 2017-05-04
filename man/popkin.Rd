@@ -4,15 +4,15 @@
 \alias{popkin}
 \title{Estimate kinship from a genotype matrix and subpopulation assignments}
 \usage{
-popkin(X, subpops, m = NA, lociOnCols = FALSE, memLim = NA,
+popkin(X, subpops = NULL, n = NA, lociOnCols = FALSE, memLim = NA,
   verbose = FALSE)
 }
 \arguments{
 \item{X}{Genotype matrix, class BEDMatrix object, or a function that returns the genotypes of all individuals at successive loci each time it is called, and NULL when no loci are left.}
 
-\item{subpops}{The length-\eqn{n} vector of subpopulation assignments for each individual.}
+\item{subpops}{The length-\eqn{n} vector of subpopulation assignments for each individual.  If missing, every individual is effectively treated as a different population.}
 
-\item{m}{Number of loci (optional, may truncate input when X is a function; ignored when X is a matrix or BEDMatrix object)}
+\item{n}{Number of individuals (required only when X is a function, ignored otherwise).  If n is missing but subpops is not, n is taken to be the length of the subpops vector.}
 
 \item{lociOnCols}{If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.}
 

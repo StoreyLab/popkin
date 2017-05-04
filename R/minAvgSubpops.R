@@ -12,7 +12,7 @@
 #' This default is provided for convenience, to explore the data when a correct choice of subpopulations is not clear, but is not recommended as a final approach.
 #' 
 #' @param Y A symmetric \eqn{n \times n} matrix with values between every individual pair, including self comparisons.
-#' @param subpops A length-\eqn{n} vector of subpopulation assignments for each individual.
+#' @param subpops A length-\eqn{n} vector of subpopulation assignments for each individual.  If missing, every individual is effectively treated as a different population.
 #'
 #' @return The scalar estimate of the minimum expected value of \eqn{Y}.
 #'

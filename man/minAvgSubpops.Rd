@@ -9,7 +9,7 @@ minAvgSubpops(Y, subpops = NULL)
 \arguments{
 \item{Y}{A symmetric \eqn{n \times n} matrix with values between every individual pair, including self comparisons.}
 
-\item{subpops}{A length-\eqn{n} vector of subpopulation assignments for each individual.}
+\item{subpops}{A length-\eqn{n} vector of subpopulation assignments for each individual.  If missing, every individual is effectively treated as a different population.}
 }
 \value{
 The scalar estimate of the minimum expected value of \eqn{Y}.

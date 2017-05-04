@@ -4,14 +4,12 @@
 \alias{getA}
 \title{Compute A matrix from genotypes}
 \usage{
-getA(X, n = NA, m = NA, memLim = NA, lociOnCols = FALSE)
+getA(X, n = NA, memLim = NA, lociOnCols = FALSE)
 }
 \arguments{
 \item{X}{Genotype matrix, BEDMatrix object, or a function X(mc) that returns the genotype matrix of all individuals at mc successive loci, and NULL when no loci are left.}
 
 \item{n}{Number of individuals (required only when X is a function, ignored otherwise)}
-
-\item{m}{Number of loci (optional, may truncate input when X is a function; ignored when X is a matrix or BEDMatrix object)}
 
 \item{memLim}{Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 2GB, except in linux it is the free memory in the system times 0.7.}
 
