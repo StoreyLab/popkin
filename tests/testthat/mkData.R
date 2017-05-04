@@ -13,6 +13,10 @@ stopifnot(ncol(X) == 10) # make sure in case it changes
 subpops0 <- 1:ncol(X) # trivial case
 subpops <- c(1,1,2,2,3,3,4,4,5,5) # group by pairs, still reasonable!
 
+## generate weights for tests
+w0 <- weightsSubpops(subpops0)
+w <- weightsSubpops(subpops)
+
 ## high-level estimation (what we expect most users to run)
 Phi0 <- popkin(X)
 Phi <- popkin(X, subpops)
@@ -21,19 +25,20 @@ Phi <- popkin(X, subpops)
 ## Phi3 <- rescalePopkin(Phi1, subpops2) # take kinship with no subpops and apply subpops now!
 
 ## make all intermediate data to compare to
-A <- getA(X)
-Amin0 <- minAvgSubpops(A) # minimum value
-Amin <- minAvgSubpops(A, subpops) # should also be minimum value
-phiMin0 <- minAvgSubpops(Phi0, subpops) # redo to bad kinship estimate
+A <- popkin:::getA(X)
+Amin0 <- popkin:::minAvgSubpops(A) # minimum value
+Amin <- popkin:::minAvgSubpops(A, subpops) # should also be minimum value
+phiMin0 <- popkin:::minAvgSubpops(Phi0, subpops) # redo to bad kinship estimate
 
 ## NOTE: won't test getKinshipFromA here, will do in testing code though!
 
 ## implied Fst
 fst <- fst(Phi)
+fstW <- fst(Phi, w)
 ## inbreeding vectors
 inbr <- inbr(Phi)
 ## and kinship matrices with inbreeding along diagonal
 PhiInbr <- inbrDiag(Phi)
 
 ## save these values, to use in testing later!
-save(X, subpops, subpops0, Phi, Phi0, A, Amin, Amin0, phiMin0, fst, inbr, PhiInbr, file='Xs.RData')
+save(X, subpops, subpops0, Phi, Phi0, A, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, PhiInbr, file='Xs.RData')
