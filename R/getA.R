@@ -68,7 +68,7 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     ## navigate chunks
     mcis <- seq.int(1, m, mc)
     for (mci in mcis) {
-        message('chunk ', match(mci,mcis), '/', length(mcis)) # DEBUGGING
+        ## message('chunk ', match(mci,mcis), '/', length(mcis)) # DEBUGGING
         is <- mci:min(mci+mc-1,m) ## range of SNPs to extract in this chunk
         if (isFn) {
             Xi <- X( length(is) ) # get next SNPs
