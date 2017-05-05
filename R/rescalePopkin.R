@@ -4,7 +4,8 @@
 #' \deqn{\Phi^{T'} = \frac{\Phi^T - \phi_{\mbox{min}}^T}{1 - \phi_{\mbox{min}}^T}.}{\Phi^T' = (\Phi^T - \phi_min^T)/(1 - \phi_min^T).}
 #' This is equivalent to changing the ancestral population \eqn{T} into \eqn{T'} such that \eqn{\phi_{\mbox{min}}^{T'} = 0}{\phi_min^T' = 0}.
 #' If subpopulation labels \code{subpops} are provided, they are used to estimate \eqn{\phi_{\mbox{min}}^T}{\phi_min^T}.
-#' If both \code{subpops} and \code{phiMin} are provided, script stops with a fatal error.
+#' If both \code{subpops} and \code{phiMin} are provided, only \code{phiMin} is used.
+#' If both \code{subpops} and \code{phiMin} are omitted, the adjustment is equivalent to \code{phiMin=min(Phi)}.
 #'
 #' @param Phi An \eqn{n \times n}{n-by-n} kinship matrix.
 #' @param subpops The length-\eqn{n} vector of subpopulation assignments for each individual.
@@ -29,6 +30,12 @@
 #'
 #' ## can also manually set the level of relatedness phiMin we want to be zero:
 #' Phi2 <- rescalePopkin(Phi, phiMin=phiMin)
+#'
+#' ## lastly, omiting both subpops and phiMin sets the minimum value in Phi to zero
+#' Phi3 <- rescalePopkin(Phi2)
+#' ## equivalent to both of:
+#' ## Phi3 <- popkin(X)
+#' ## Phi3 <- rescalePopkin(Phi2, phiMin=min(Phi))
 #' }
 #'
 #' @export
@@ -39,13 +46,9 @@ rescalePopkin <- function(Phi, subpops=NULL, phiMin=NA) {
     } else if (class(Phi) != 'matrix') {
         stop('Fatal: input kinship matrix "Phi" must be class "matrix"!')
     }
-    if (!is.null(subpops)) {
-        if (!is.na(phiMin)) {
-            stop('Fatal: provided both "subpops" and "phiMin"!  Please provide only one.')
-        } else {
-            phiMin <- minAvgSubpops(Phi, subpops)
-        }
-    } else if (is.na(phiMin)) stop('Fatal: did not provide either of "subpops" or "phiMin".  Please provide exactly one of these.')
+    if (is.na(phiMin)) {
+        phiMin <- minAvgSubpops(Phi, subpops)
+    }
     ## finally, perform a simple IBD rescaling
     Phi <- (Phi - phiMin)/(1 - phiMin) # return this matrix!
 }

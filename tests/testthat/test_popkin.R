@@ -84,6 +84,8 @@ test_that("function returns precomputed values: popkin", {
 test_that("function returns precomputed values: rescalePopkin", {
     expect_equal(rescalePopkin(Phi0, phiMin=phiMin0), Phi)
     expect_equal(rescalePopkin(Phi0, subpops), Phi)
+    expect_equal(rescalePopkin(Phi, subpops0), Phi0)
+    expect_equal(rescalePopkin(Phi), Phi0)
 })
 
 test_that("function returns precomputed values: fst", {

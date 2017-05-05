@@ -11,5 +11,13 @@ doc:
 test:
 	R -e 'devtools::test()'
 
+vig:
+	R -e 'devtools::build_vignettes()'
+
+.PHONY: man
+
+man:
+	cd ..; if [ -f popkin.pdf ]; then rm popkin.pdf; fi; R CMD Rd2pdf popkin
+
 install:
 	R -e 'devtools::install()'
