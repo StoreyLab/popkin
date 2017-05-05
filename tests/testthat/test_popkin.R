@@ -50,6 +50,9 @@ test_that("function returns precomputed values: weightsSubpops", {
 
 test_that("function returns precomputed values: getA", {
     expect_equal(getA(X), A)
+    expect_equal(getA(X+0), A) # turns numeric
+    expect_equal(getA(2L-X), A)
+    expect_equal(getA(2-X), A) # numeric version again
     expect_equal(nrow(A), ncol(A))
 })
 
@@ -73,6 +76,9 @@ test_that("function returns precomputed values: popkin", {
     expect_equal(popkin(X), Phi0)
     expect_equal(popkin(X, subpops0), Phi0)
     expect_equal(popkin(X, subpops), Phi)
+    expect_equal(popkin(X+0, subpops), Phi)
+    expect_equal(popkin(2L-X, subpops), Phi)
+    expect_equal(popkin(2-X, subpops), Phi)
 })
 
 test_that("function returns precomputed values: rescalePopkin", {

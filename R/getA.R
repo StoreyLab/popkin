@@ -79,6 +79,10 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
             Xi <- X[is,]
         }
 
+        ## before passing along to my RcppEigen code, I need to make sure the genotypes are treated by R as integers or RcppEigen dies on me
+        ## I'm not sure if this always works though...
+        if (storage.mode(Xi) != 'integer') storage.mode(Xi) <- 'integer'
+        
         ## solve chunk using very efficient RcppEigen code!
         ## it is both runtime and memory efficient!
         obj <- getMAInt(Xi)
