@@ -22,31 +22,33 @@ subpops <- colnames(X) # extract subpopulations vector
 ## ------------------------------------------------------------------------
 Phi <- popkin(X, subpops)
 
-## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
+## ------------------------------------------------------------------------
 # quick and dirty heatmap of the kinship matrix
 library(RColorBrewer)
 myHeatmap <- function(Phi, subpops=NULL) {
     # place subpop labels in middle of their ranges
     subpopLabs <- NULL
     if (!is.null(subpops)) {
-       	subpopLabs <- aggregate(1:length(subpops), list(subpop=subpops), mean) # mean index per subpop
+        # mean index per subpop
+       	subpopLabs <- aggregate(1:length(subpops), list(subpop=subpops), mean)
     }
     colHM <- brewer.pal(9, 'Reds') # heatmap colors
     par(xaxt='n', yaxt='n') # heatmap doesn't omit axes correctly, force here
     # plot as image, without reordering, dendrograms, etc
-    heatmap(Phi, Rowv=NA, Colv=NA, symm=TRUE, col=colHM, xlab='individuals', ylab='individuals',
-    add.expr={
-        # add population labels
-	if (!is.null(subpopLabs)) {
-	    mtext(subpopLabs$subpop, 1, at=subpopLabs$x, line=1, cex=0.7)
-	    mtext(subpopLabs$subpop, 4, at=subpopLabs$x, line=1, cex=0.7)
-	}
-    })
+    heatmap(Phi, Rowv=NA, Colv=NA, symm=TRUE, col=colHM,
+        xlab='individuals', ylab='individuals',
+        add.expr={
+            # add population labels
+	    if (!is.null(subpopLabs)) {
+	        mtext(subpopLabs$subpop, 1, at=subpopLabs$x, line=1, cex=0.7)
+	        mtext(subpopLabs$subpop, 4, at=subpopLabs$x, line=1, cex=0.7)
+	    }
+        })
     par(xaxt='s', yaxt='s') # reset to other plots aren't affected
     
 }
 
-# make plot
+## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
 myHeatmap(Phi, subpops)
 
 ## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
@@ -58,6 +60,15 @@ w <- weightsSubpops(subpops)
 # compute FST!
 # Note: don't use the output to inbrDiag(Phi) or FST will be wrong!
 fst(Phi, w)
+
+## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
+pwF <- pwfst(Phi) # compute pairwise FST matrix from kinship matrix
+myHeatmap(pwF, subpops) # NOTE no need for inbrDiag() here
+
+## ---- fig.width=6, fig.height=3, fig.align='center'----------------------
+inbrs <- inbr(Phi) # vector of inbreeding coefficients
+par(mar=c(4, 4, 0, 0) + 0.1) # reduce margins
+plot(density(inbrs), xlab='inbreeding coefficient', main='') # see their distribution
 
 ## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
 # filter to only keep individuals within AFR

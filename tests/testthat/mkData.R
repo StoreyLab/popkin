@@ -37,8 +37,10 @@ fst <- fst(Phi)
 fstW <- fst(Phi, w)
 ## inbreeding vectors
 inbr <- inbr(Phi)
+## pairwise Fst
+pwF <- pwfst(Phi)
 ## and kinship matrices with inbreeding along diagonal
 PhiInbr <- inbrDiag(Phi)
 
 ## save these values, to use in testing later!
-save(X, subpops, subpops0, Phi, Phi0, A, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, PhiInbr, file='Xs.RData')
+save(X, subpops, subpops0, Phi, Phi0, A, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, pwF, PhiInbr, file='Xs.RData')

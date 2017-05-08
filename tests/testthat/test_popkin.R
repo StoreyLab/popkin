@@ -106,6 +106,14 @@ test_that("function returns precomputed values: inbr", {
     expect_equal(inbr(Phi), inbr)
 })
 
+test_that("function returns precomputed values: pwfst", {
+    expect_equal(pwfst(Phi), pwF)
+    expect_equal(pwfst(Phi0), pwF)
+    expect_equal(diag(pwF), rep.int(0, nrow(pwF))) # test that diagonal is zero
+    expect_true(max(pwF) <= 1)
+    ## note estimates may be slightly negative though
+})
+
 test_that("function returns precomputed values: inbrDiag", {
     expect_equal(inbrDiag(Phi), PhiInbr)
 })

@@ -1,11 +1,13 @@
 ---
-title: "Estimate Kinship and $F_{\\text{ST}}$ under Arbirary Population Structure with `popkin`"
+title: "Estimate Kinship and $F_{\\text{ST}}$ under Arbitrary Population Structure with `popkin`"
 author: "Alejandro Ochoa and John D. Storey"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  - rmarkdown::html_vignette
+  - pdf_document
 bibliography: popkin.bib
 vignette: >
-  %\VignetteIndexEntry{Estimate Kinship and FST under Arbirary Population Structure}
+  %\VignetteIndexEntry{Estimate Kinship and FST under Arbitrary Population Structure}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -36,23 +38,33 @@ Thus, the only role $T$ plays in our estimates is determining the level of relat
 
 Note that the diagonal of our estimated $\Phi^T$ contains $\kt[j]$ values rather than $\ft$, which must be so for statistical modeling applications; however, for visualization purposes $\kt[j]$ tends to take on much greater values than $\kt$ for $j \ne k$, while $\ft \approx \kt$ for $j \ne k$ within panmictic subpopulations (see above), so replacing the diagonal of $\Phi^T$ with $\ft$ values results in more aesthetically-pleasing figures.
 
-## The Generalized $\Fst$
+## The generalized $\Fst$
 
 $\Fst$ is also an IBD probability that equals the mean inbreeding coefficients in a population partitioned into homogeneous subpopulations.
-We recently introduced a generalized $\Fst$ definition that applies to arbitrary population structures---droping the need for subpopulations--and partitions "total" inbreeding into "local" inbreeding (due to having unusually closely related parents) and "structural" inbreeding (due to the population structure) [@Ochoa083915].
+We recently introduced a generalized $\Fst$ definition that applies to arbitrary population structures---dropping the need for subpopulations---and partitions "total" inbreeding into "local" inbreeding (due to having unusually closely related parents) and "structural" inbreeding (due to the population structure) [@Ochoa083915].
 Future work will focus on extracting structural from total kinship, but in the meantime only the total kinship matrix $\Phi^T$ is estimated by `popkin`.
 However, when all individuals are "locally outbred"---the most common case in population data---$\Fst$ is simply the weighted mean inbreeding coefficient:
 $$
 \Fst = \sum_{j=1}^n w_j \ft,
 $$
-where $0<w_j<1,\sum_{j=1}^n w_j =1$ are weights for individuals intended to help users balance skewed samples (i.e. if there are subpopulations with much greater sample sizes than othes).
+where $0<w_j<1,\sum_{j=1}^n w_j =1$ are weights for individuals intended to help users balance skewed samples (i.e. if there are subpopulations with much greater sample sizes than others).
 The `popkin` package assumes all individuals are locally outbred in estimating $\Fst$.
+
+## The individual-level pairwise $\Fst$
+
+Another quantity of interest is the individual-level pairwise $\Fst$, which generalize the $\Fst$ between two populations to pairs of individuals.
+Here each comparison between two individuals has a different ancestral population, namely the MRCA population of the two individuals.
+When individuals are again locally outbred and also locally unrelated, the pairwise $\Fst$ is given in terms of the inbreeding and kinship coefficients [@Ochoa083915]:
+$$
+F_{jk} = \frac{\frac{\ft+\ft[k]}{2}-\kt}{1-\kt}.
+$$
+The `popkin` package also provides an estimator of the pairwise $\Fst$ matrix (containing $F_{jk}$ estimates between every pair of individuals).
 
 # Sample usage
 
 ## Loading data
 
-The `popkin` package does not come with its own data parsers, but accepts inputs in three forms.
+The `popkin` package does not come with its own data parser, but accepts inputs in three forms.
 
 1.  The simplest case assumes your genotypes are in an R matrix `X` that contains values only in `c(0L,1L,2L,NA)` (recall in R `0` is internally as double but `0L` is an integer; `popkin` handles both but providing only integers will be most efficient).
 This is a standard encoding for biallelic SNPs that counts reference alleles: 2 is homozygous for the reference allele, 0 is homozygous for the alternative allele, 1 is heterozygous, and NA is missing data.
@@ -116,31 +128,36 @@ Phi <- popkin(X, subpops)
 ```
 
 Let's visualize the data.  First let's setup a simple heatmap function:
-```{r, fig.width=6, fig.height=6, fig.align='center'}
+```{r}
 # quick and dirty heatmap of the kinship matrix
 library(RColorBrewer)
 myHeatmap <- function(Phi, subpops=NULL) {
     # place subpop labels in middle of their ranges
     subpopLabs <- NULL
     if (!is.null(subpops)) {
-       	subpopLabs <- aggregate(1:length(subpops), list(subpop=subpops), mean) # mean index per subpop
+        # mean index per subpop
+       	subpopLabs <- aggregate(1:length(subpops), list(subpop=subpops), mean)
     }
     colHM <- brewer.pal(9, 'Reds') # heatmap colors
     par(xaxt='n', yaxt='n') # heatmap doesn't omit axes correctly, force here
     # plot as image, without reordering, dendrograms, etc
-    heatmap(Phi, Rowv=NA, Colv=NA, symm=TRUE, col=colHM, xlab='individuals', ylab='individuals',
-    add.expr={
-        # add population labels
-	if (!is.null(subpopLabs)) {
-	    mtext(subpopLabs$subpop, 1, at=subpopLabs$x, line=1, cex=0.7)
-	    mtext(subpopLabs$subpop, 4, at=subpopLabs$x, line=1, cex=0.7)
-	}
-    })
+    heatmap(Phi, Rowv=NA, Colv=NA, symm=TRUE, col=colHM,
+        xlab='individuals', ylab='individuals',
+        add.expr={
+            # add population labels
+	    if (!is.null(subpopLabs)) {
+	        mtext(subpopLabs$subpop, 1, at=subpopLabs$x, line=1, cex=0.7)
+	        mtext(subpopLabs$subpop, 4, at=subpopLabs$x, line=1, cex=0.7)
+	    }
+        })
     par(xaxt='s', yaxt='s') # reset to other plots aren't affected
     
 }
+```
 
-# make plot
+Now let's visualize the raw kinship matrix estimate:
+
+```{r, fig.width=6, fig.height=6, fig.align='center'}
 myHeatmap(Phi, subpops)
 ```
 
@@ -166,10 +183,24 @@ w <- weightsSubpops(subpops)
 fst(Phi, w)
 ```
 
-If you compare these estimates to those we obtained for Human Origins [@Ochoa083915], you'll notice things look a bit different: $\Fst$ is smaller and the kinship within AFR is relatively much higher than within EUR or EAS.
+If you compare these estimates to those we obtained for Human Origins [@Ochoa083915], you'll notice things look a bit different: here $\Fst$ is smaller and the kinship within AFR is relatively much higher than within EUR or EAS.
 Besides containing many fewer SNPs, this HGDP sample is older and likely suffered from SNP ascertainment issues, which might explain the difference.
 
-***Missing: demonstration for `inbr` function!***
+We calculate individual-level pairwise $\Fst$ estimates from the previous kinship estimates using `pwfst`.
+Note that the pairwise $\Fst$ is a distance between pairs of individuals: approximately zero for individuals in the same population, and greater than zero and increasing for more distant pairs of individuals.
+
+```{r, fig.width=6, fig.height=6, fig.align='center'}
+pwF <- pwfst(Phi) # compute pairwise FST matrix from kinship matrix
+myHeatmap(pwF, subpops) # NOTE no need for inbrDiag() here
+```
+
+Lastly, we can extract the vector of inbreeding coefficients from the kinship matrix using `inbr`:
+
+```{r, fig.width=6, fig.height=3, fig.align='center'}
+inbrs <- inbr(Phi) # vector of inbreeding coefficients
+par(mar=c(4, 4, 0, 0) + 0.1) # reduce margins
+plot(density(inbrs), xlab='inbreeding coefficient', main='') # see their distribution
+```
 
 ## Rescale kinship matrix in a subset of the data
 
@@ -195,5 +226,6 @@ fst(PhiAfr)
 myHeatmap(inbrDiag(PhiAfr))
 ```
 
+In this sample dataset there are no labels for individuals or sub-subpopulations, so unfortunately we can't interpret this matrix further, beyond that there is clear substructure within Sub-Saharan Africa.
 
 # References
