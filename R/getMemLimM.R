@@ -40,7 +40,7 @@ getMemLimM <- function(m=NA, n=NA, mem=NA, factor=0.7, verbose=FALSE) {
             mc <- m # use the smaller one
         } else {
             ## should "redistribute" based on number of chunks, to lower memory even more per iteration
-            mc <- floor( m/ceiling(m/mc) ) # this lowers mc even more, balances load better
+            mc <- ceiling( m/ceiling(m/mc) ) # this lowers mc even more, balances load better
         }
     }
     
