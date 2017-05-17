@@ -64,7 +64,7 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
 
     ## infer the number of SNPs to break data into, since we're limited by memory
     mc <- getMemLimM(m, n, memLim)
-    
+
     ## navigate chunks
     mcis <- seq.int(1, m, mc)
     for (mci in mcis) {
@@ -74,9 +74,9 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
             Xi <- X( length(is) ) # get next SNPs
             if (is.null(Xi)) break # stop when SNPs run out (only happens for functions X, not matrices)
         } else if (lociOnCols) {
-            Xi <- t(X[,is]) # transpose for our usual setup
+            Xi <- t(X[,is, drop=FALSE]) # transpose for our usual setup
         } else  {
-            Xi <- X[is,]
+            Xi <- X[is, , drop=FALSE]
         }
 
         ## before passing along to my RcppEigen code, I need to make sure the genotypes are treated by R as integers or RcppEigen dies on me
