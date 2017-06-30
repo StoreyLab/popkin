@@ -3,8 +3,8 @@ title: "Estimate Kinship and $F_{\\text{ST}}$ under Arbitrary Population Structu
 author: "Alejandro Ochoa and John D. Storey"
 date: "`r Sys.Date()`"
 output:
-  - rmarkdown::html_vignette
   - pdf_document
+#  - rmarkdown::html_vignette
 bibliography: popkin.bib
 vignette: >
   %\VignetteIndexEntry{Estimate Kinship and FST under Arbitrary Population Structure}
