@@ -15,7 +15,7 @@
 #' Visualize one or more kinship matrices
 #'
 #' This function plots one or more kinship matrices and a shared legend for the color key.
-#' Thus, the same kinship value across matrices will take on the same color described in the legend.
+#' Many options allow for fine control of individual or subpopulation labeling.
 #'
 #' \code{plotPopkin} plots the input kinship matrices as-is.
 #' For best results, a standard kinship matrix (such as the output of \code{\link{popkin}}) should have its diagonal rescaled to contain inbreeding coefficients (\code{\link{inbrDiag}} does this) before \code{plotPopkin} is used.
@@ -34,6 +34,7 @@
 #' @param col Colors for heatmap
 #' @param xMar Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  By default the existing margin values are used without change
 #' @param diagLine If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)
+#' @param marPad Margin padding added to all panels (\code{xMar} above and \code{legMar} below).  Default 0.2.  Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
 #'
 #' AXIS LABEL OPTIONS
 #' 
@@ -49,7 +50,7 @@
 #' LEGEND (COLOR KEY) OPTIONS
 #' 
 #' @param legTitle The name of the variable that the heatmap colors measure (default "Kinship")
-#' @param legMar Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only
+#' @param legMar Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only.  If not provided, the margins used in the last panel are preserved with the exception that the left margin is set to zero (plus the value of \code{marPad}, see above).
 #' @param nPretty The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details)
 #'
 #' INDIVIDUAL LABEL OPTIONS
@@ -84,7 +85,7 @@
 #' }
 #'
 #' @export
-plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, diagLine=FALSE, ylab='Individuals', ylabAdj=NA, ylabLine=0,
+plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine=FALSE, ylab='Individuals', ylabAdj=NA, ylabLine=0,
                        addLayout=TRUE, nr=1, 
                        legTitle='Kinship', legMar=NULL, nPretty=5,
                        showNames=FALSE, namesCex=1, namesLine=NA,
@@ -150,7 +151,7 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, diagLine=FALSE, ylab
     ## breaks of all following plots should match!
     for (i in 1:n) {
         if (!is.null(xMar[[i]])) {
-            graphics::par(mar=xMar[[i]]+0.2) # change margins if necessary!
+            graphics::par(mar=xMar[[i]]+marPad) # change margins if necessary!
         }
         breaks <- plotPopkinSingle(x[[i]], xRange=rangeS, col=col, showNames=showNames[i], namesCex=namesCex[i], namesLine=namesLine[i], labs=labs[[i]], labsCex=labsCex[[i]], labsLas=labsLas[[i]], labsLine=labsLine[[i]], labsLwd=labsLwd[[i]], labsSkipLines=labsSkipLines[[i]], labsDoTicks=labsDoTicks[[i]], labsEven=labsEven[[i]], diagLine=diagLine[i], main=titles[i], ...)
         ## add ylab for every panel when there is more than one choice, and provided it was non-NA
@@ -160,7 +161,12 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, diagLine=FALSE, ylab
     }
 
     if (!is.null(legMar)) {
-        graphics::par(mar=legMar+0.2) # change margins if necessary!
+        graphics::par(mar=legMar+marPad) # change margins if necessary!
+    } else {
+        ## change the current left margin to the padding value
+        marTmp <- graphics::par('mar') # last margins
+        marTmp[2] <- marPad # replace left margin with zero plus pad
+        graphics::par(mar=marTmp) # update margins for legend only!
     }
     heatLegImage(breaks, xRange=rangeReal, varname=legTitle, col=col, nPretty=nPretty)
 

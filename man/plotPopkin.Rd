@@ -4,12 +4,13 @@
 \alias{plotPopkin}
 \title{Visualize one or more kinship matrices}
 \usage{
-plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, diagLine = FALSE,
-  ylab = "Individuals", ylabAdj = NA, ylabLine = 0, addLayout = TRUE,
-  nr = 1, legTitle = "Kinship", legMar = NULL, nPretty = 5,
-  showNames = FALSE, namesCex = 1, namesLine = NA, labs = NULL,
-  labsCex = 1, labsLas = 0, labsLine = 0, labsSkipLines = FALSE,
-  labsLwd = 1, labsDoTicks = FALSE, labsEven = FALSE, ...)
+plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
+  diagLine = FALSE, ylab = "Individuals", ylabAdj = NA, ylabLine = 0,
+  addLayout = TRUE, nr = 1, legTitle = "Kinship", legMar = NULL,
+  nPretty = 5, showNames = FALSE, namesCex = 1, namesLine = NA,
+  labs = NULL, labsCex = 1, labsLas = 0, labsLine = 0,
+  labsSkipLines = FALSE, labsLwd = 1, labsDoTicks = FALSE,
+  labsEven = FALSE, ...)
 }
 \arguments{
 \item{x}{A numeric kinship matrix or a list of matrices}
@@ -20,9 +21,11 @@ plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, diagLine = FALSE,
 
 \item{xMar}{Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  By default the existing margin values are used without change}
 
-\item{diagLine}{If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)
+\item{marPad}{Margin padding added to all panels (\code{xMar} above and \code{legMar} below).  Default 0.2.  Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
 
 AXIS LABEL OPTIONS}
+
+\item{diagLine}{If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)}
 
 \item{ylab}{The y-axis label (default "Individuals").  If \code{length(ylab)==1}, the label is placed in the outer margin (shared across panels); otherwise \code{length(ylab)} must equal the number of panels and each label is placed in the inner margin of the respective panel}
 
@@ -40,7 +43,7 @@ LEGEND (COLOR KEY) OPTIONS}
 
 \item{legTitle}{The name of the variable that the heatmap colors measure (default "Kinship")}
 
-\item{legMar}{Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only}
+\item{legMar}{Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only.  If not provided, the margins used in the last panel are preserved with the exception that the left margin is set to zero (plus the value of \code{marPad}, see above).}
 
 \item{nPretty}{The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details)
 
@@ -74,7 +77,7 @@ SUBPOPULATION LABEL OPTIONS}
 }
 \description{
 This function plots one or more kinship matrices and a shared legend for the color key.
-Thus, the same kinship value across matrices will take on the same color described in the legend.
+Many options allow for fine control of individual or subpopulation labeling.
 }
 \details{
 \code{plotPopkin} plots the input kinship matrices as-is.

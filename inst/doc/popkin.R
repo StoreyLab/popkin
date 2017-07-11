@@ -48,11 +48,24 @@ myHeatmap <- function(Phi, subpops=NULL) {
     
 }
 
-## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
-myHeatmap(Phi, subpops)
+## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
+# set outer margin for axis labels (left and right are non-zero)
+par(oma=c(0,1.5,0,3))
+# set inner margin for subpopulation labels (bottom and left are non-zero), add padding
+par(mar=c(1,1,0,0)+0.2)
+ # now plot!
+plotPopkin(Phi, labs=subpops)
 
-## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
-myHeatmap(inbrDiag(Phi), subpops)
+## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
+par(oma=c(0,1.5,0,3))
+par(mar=c(1,1,0,0)+0.2)
+plotPopkin(inbrDiag(Phi), labs=subpops)
+
+## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
+par(oma=c(0,1.5,0,3))
+# increase margins because labels go farther out
+par(mar=c(2,2,0,0)+0.2)
+plotPopkin(inbrDiag(Phi), labs=subpops, labsEven=TRUE, labsLine=1)
 
 ## ------------------------------------------------------------------------
 # get weights
@@ -61,16 +74,20 @@ w <- weightsSubpops(subpops)
 # Note: don't use the output to inbrDiag(Phi) or FST will be wrong!
 fst(Phi, w)
 
-## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
+## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
 pwF <- pwfst(Phi) # compute pairwise FST matrix from kinship matrix
-myHeatmap(pwF, subpops) # NOTE no need for inbrDiag() here
+legTitle <- expression(bold(paste('Pairwise ', F[ST]))) # fancy legend label
+par(oma=c(0,1.5,0,3))
+par(mar=c(2,2,0,0)+0.2)
+# NOTE no need for inbrDiag() here!
+plotPopkin(pwF, labs=subpops, labsEven=TRUE, labsLine=1, legTitle=legTitle)
 
 ## ---- fig.width=6, fig.height=3, fig.align='center'----------------------
 inbrs <- inbr(Phi) # vector of inbreeding coefficients
 par(mar=c(4, 4, 0, 0) + 0.1) # reduce margins
 plot(density(inbrs), xlab='inbreeding coefficient', main='') # see their distribution
 
-## ---- fig.width=6, fig.height=6, fig.align='center'----------------------
+## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
 # filter to only keep individuals within AFR
 indexesAfr <- subpops == 'AFR'
 PhiAfr <- Phi[indexesAfr,indexesAfr]
@@ -85,5 +102,8 @@ PhiAfr <- rescalePopkin(PhiAfr)
 # FST is now correct, relative to the MRCA of AFR individuals
 fst(PhiAfr)
 # kinship matrix visualization
-myHeatmap(inbrDiag(PhiAfr))
+par(oma=c(0,1.5,0,3))
+# use zero margins because there are no subpopulation labels
+par(mar=c(0,0,0,0)+0.2)
+plotPopkin(inbrDiag(PhiAfr))
 

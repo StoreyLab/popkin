@@ -36,19 +36,19 @@ Let $\Phi^T = (\kt)$ be the $n \times n$ matrix that contains all kinship coeffi
 The ancestral population $T$ is the most recent common ancestor (MRCA) population if and only if $\min \kt = 0$, assuming such unrelated pairs of individuals exist in the dataset.
 Thus, the only role $T$ plays in our estimates is determining the level of relatedness that is treated as zero.
 
-Note that the diagonal of our estimated $\Phi^T$ contains $\kt[j]$ values rather than $\ft$, which must be so for statistical modeling applications; however, for visualization purposes $\kt[j]$ tends to take on much greater values than $\kt$ for $j \ne k$, while $\ft \approx \kt$ for $j \ne k$ within panmictic subpopulations (see above), so replacing the diagonal of $\Phi^T$ with $\ft$ values results in more aesthetically-pleasing figures.
+Note that the diagonal of our estimated $\Phi^T$ contains $\kt[j]$ values rather than $\ft$, which is required for statistical modeling applications; however, $\kt[j]$ tends to take on much greater values than $\kt$ for $j \ne k$, while $\ft \approx \kt$ for $j \ne k$ within panmictic subpopulations (see above), so for visualization we strongly recommend replacing the diagonal of $\Phi^T$ with $\ft$ values.
 
 ## The generalized $\Fst$
 
 $\Fst$ is also an IBD probability that equals the mean inbreeding coefficients in a population partitioned into homogeneous subpopulations.
-We recently introduced a generalized $\Fst$ definition that applies to arbitrary population structures---dropping the need for subpopulations---and partitions "total" inbreeding into "local" inbreeding (due to having unusually closely related parents) and "structural" inbreeding (due to the population structure) [@Ochoa083915].
-Future work will focus on extracting structural from total kinship, but in the meantime only the total kinship matrix $\Phi^T$ is estimated by `popkin`.
+We recently generalized the $\Fst$ definition to arbitrary population structures---dropping the need for subpopulations---and generalized the partition of "total" inbreeding into "local" inbreeding (due to having unusually closely related parents) and "structural" inbreeding (due to the population structure) [@Ochoa083915].
+The current `popkin` estimates the total kinship matrix $\Phi^T$ only; in the future, `popkin` will also extract the structural kinship matrix.
 However, when all individuals are "locally outbred"---the most common case in population data---$\Fst$ is simply the weighted mean inbreeding coefficient:
 $$
 \Fst = \sum_{j=1}^n w_j \ft,
 $$
 where $0<w_j<1,\sum_{j=1}^n w_j =1$ are weights for individuals intended to help users balance skewed samples (i.e. if there are subpopulations with much greater sample sizes than others).
-The `popkin` package assumes all individuals are locally outbred in estimating $\Fst$.
+The current `popkin` version assumes all individuals are locally outbred in estimating $\Fst$.
 
 ## The individual-level pairwise $\Fst$
 
@@ -64,26 +64,25 @@ The `popkin` package also provides an estimator of the pairwise $\Fst$ matrix (c
 
 ## Loading data
 
-The `popkin` package does not come with its own data parser, but accepts inputs in three forms.
+The `popkin` function accepts biallelic genotype matrices in three forms:
 
-1.  The simplest case assumes your genotypes are in an R matrix `X` that contains values only in `c(0L,1L,2L,NA)` (recall in R `0` is internally as double but `0L` is an integer; `popkin` handles both but providing only integers will be most efficient).
-This is a standard encoding for biallelic SNPs that counts reference alleles: 2 is homozygous for the reference allele, 0 is homozygous for the alternative allele, 1 is heterozygous, and NA is missing data.
-Which allele is the reference does not matter, `popkin` gives the same kinship and $\Fst$ estimates if you input `X` or `2L-X`.
-By default `popkin` expects loci along rows and individuals along columns (an $m \times n$ matrix); you may input a transposed `X` matrix to the `popkin` function along with `lociOnCols=TRUE`.
+1.  A genotype matrix `X` with values in `c(0L,1L,2L,NA)` only (in R `0` is internally as double but `0L` is an integer; `popkin` handles both but providing only integers is best).
+This standard encoding for biallelic SNPs counts reference alleles: 2 is homozygous for the reference allele, 0 is homozygous for the alternative allele, 1 is heterozygous, and NA is missing data.
+Which allele is the reference does not matter: `popkin` estimates the same kinship and $\Fst$ for `X` and `2L-X`.
+By default `popkin` expects loci along rows and individuals along columns (an $m \times n$ matrix); a transposed `X` is handled best by also setting `lociOnCols=TRUE`.
 
-1.  If your data is in BED format, we recommend using the `BEDMatrix` package to load this data.
-For example, if you have the three files `myData.bed`, `myData.bim`, `myData.fam`, you can load the BEDMatrix object using:
+1.  BED-formatted data loaded with the `BEDMatrix` package, which `popkin` uses to keep memory usage low.
+For example, load `myData.bed`, `myData.bim`, `myData.fam` using:
 ```r
 library(BEDMatrix)
 X <- BEDMatrix('myData') # note: excluding extension is ok
 ```
-Note this `X` is not exactly like the regular matrix `X` in the first case because the data is not loaded onto memory until you access it, but `popkin` accepts either as input and just works.
-`popkin` is designed to work with `BEDMatrix` to use memory as efficiently as possible.
-The [plink2](https://www.cog-genomics.org/plink2) software can be used to convert many common formats into BED.
+This `BEDMatrix` object is not a regular matrix but `popkin` handles it correctly.
+Other genotype formats can be converted into BED using [plink2](https://www.cog-genomics.org/plink2) or other software.
 
-1.  The last option is to provide a function `X(m)` that when called loads the next $m$ SNPs of the data, returning an $m \times n$ matrix in the same format as `X` in the first case above.
-This option is provided for non-BED data that is too large to load into an R matrix.
-Since this requires the most work from users (who must write their own functions `X(m)` for their custom formats), we recommend converting the data into BED format and using `BEDMatrix` to load it.
+1.  A function `X(m)` that when called loads the next $m$ SNPs of the data, returning an $m \times n$ matrix in the format of Case 1 above.
+This option allows direct and memory-efficient processing of large non-BED data, but should be the last resort since users must write their own functions `X(m)` for their custom formats.
+Try first converting your data to BED and loading with `BEDMatrix`.
 
 
 ## Load and clean sample data
@@ -97,7 +96,7 @@ X <- hgdp_subset # rename for simplicity
 dim(X)
 ```
 
-Therefore, this data has $m=`r nrow(X)`$ loci and $n=`r ncol(X)`$ individuals, and is oriented as `popkin` expects by default.
+This data has $m=`r nrow(X)`$ loci and $n=`r ncol(X)`$ individuals, and is oriented as `popkin` expects by default.
 These samples have labels grouping them by continental subpopulation in `colnames(X)`.
 To make visualizations easier later on, let's shorten these labels and reorder to have nice blocks:
 
@@ -157,19 +156,36 @@ myHeatmap <- function(Phi, subpops=NULL) {
 
 Now let's visualize the raw kinship matrix estimate:
 
-```{r, fig.width=6, fig.height=6, fig.align='center'}
-myHeatmap(Phi, subpops)
+```{r, fig.width=6, fig.height=5, fig.align='center'}
+# set outer margin for axis labels (left and right are non-zero)
+par(oma=c(0,1.5,0,3))
+# set inner margin for subpopulation labels (bottom and left are non-zero), add padding
+par(mar=c(1,1,0,0)+0.2)
+ # now plot!
+plotPopkin(Phi, labs=subpops)
 ```
 
 In the previous plot it's clear that the self-kinship estimates (the diagonal) are much greater than the rest of the kinship values (the minimum along the diagonal is 0.5).
 It makes more sense to plot the inbreeding coefficients along the diagonal, so `popkin` includes the `inbrDiag` function that rescales the diagonal appropriately:
 
-```{r, fig.width=6, fig.height=6, fig.align='center'}
-myHeatmap(inbrDiag(Phi), subpops)
+```{r, fig.width=6, fig.height=5, fig.align='center'}
+par(oma=c(0,1.5,0,3))
+par(mar=c(1,1,0,0)+0.2)
+plotPopkin(inbrDiag(Phi), labs=subpops)
+```
+
+Lastly, let's fix the overlapping label problem by setting `labsEven=TRUE`, which sets the subpopulation labels with equal spacing and adds lines that map to their blocks.
+To see these new lines, we must move these labels further from the heatmap by setting `labsLine=1`:
+
+```{r, fig.width=6, fig.height=5, fig.align='center'}
+par(oma=c(0,1.5,0,3))
+# increase margins because labels go farther out
+par(mar=c(2,2,0,0)+0.2)
+plotPopkin(inbrDiag(Phi), labs=subpops, labsEven=TRUE, labsLine=1)
 ```
 
 This figure clearly shows the population structure of these worldwide samples, with block patterns that are coherent with serial founder effects in the dispersal of humans out of Africa.
-Since only $m=5000$ SNPs are included in this sample, the estimates are somewhat noisier than they would be in full data (datasets routinely have over 300 thousand SNPs).
+Since only $m=5000$ SNPs are included in this sample, the estimates are noisier than in more complete data (datasets routinely have over 300K SNPs).
 
 This figure also illustrates how subpopulations are used to estimate kinship by `popkin`: they are only set to set the zero kinship as the mean kinship between the two most distant populations, which in this case are AFR and AMR.
 
@@ -189,9 +205,13 @@ Besides containing many fewer SNPs, this HGDP sample is older and likely suffere
 We calculate individual-level pairwise $\Fst$ estimates from the previous kinship estimates using `pwfst`.
 Note that the pairwise $\Fst$ is a distance between pairs of individuals: approximately zero for individuals in the same population, and greater than zero and increasing for more distant pairs of individuals.
 
-```{r, fig.width=6, fig.height=6, fig.align='center'}
+```{r, fig.width=6, fig.height=5, fig.align='center'}
 pwF <- pwfst(Phi) # compute pairwise FST matrix from kinship matrix
-myHeatmap(pwF, subpops) # NOTE no need for inbrDiag() here
+legTitle <- expression(bold(paste('Pairwise ', F[ST]))) # fancy legend label
+par(oma=c(0,1.5,0,3))
+par(mar=c(2,2,0,0)+0.2)
+# NOTE no need for inbrDiag() here!
+plotPopkin(pwF, labs=subpops, labsEven=TRUE, labsLine=1, legTitle=legTitle)
 ```
 
 Lastly, we can extract the vector of inbreeding coefficients from the kinship matrix using `inbr`:
@@ -208,7 +228,7 @@ Suppose now you're interested in one subpopulation, say AFR.
 Removing other populations changes the MRCA population $T$, so the appropriate action is to re-estimate the kinship matrix in this subset only, although this could be slow if you have a very large dataset.
 Fortunately, you can take the kinship matrix you already had and manipulate it to get the same answer!
 
-```{r, fig.width=6, fig.height=6, fig.align='center'}
+```{r, fig.width=6, fig.height=5, fig.align='center'}
 # filter to only keep individuals within AFR
 indexesAfr <- subpops == 'AFR'
 PhiAfr <- Phi[indexesAfr,indexesAfr]
@@ -223,7 +243,10 @@ PhiAfr <- rescalePopkin(PhiAfr)
 # FST is now correct, relative to the MRCA of AFR individuals
 fst(PhiAfr)
 # kinship matrix visualization
-myHeatmap(inbrDiag(PhiAfr))
+par(oma=c(0,1.5,0,3))
+# use zero margins because there are no subpopulation labels
+par(mar=c(0,0,0,0)+0.2)
+plotPopkin(inbrDiag(PhiAfr))
 ```
 
 In this sample dataset there are no labels for individuals or sub-subpopulations, so unfortunately we can't interpret this matrix further, beyond that there is clear substructure within Sub-Saharan Africa.
