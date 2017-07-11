@@ -15,40 +15,41 @@
 #' Visualize one or more kinship matrices
 #'
 #' This function plots one or more kinship matrices and a shared legend for the color key.
-#' Thus, the same kinship value across matrices will have the same color as described in the legend.
+#' Thus, the same kinship value across matrices will take on the same color described in the legend.
 #'
 #' \code{plotPopkin} plots the input kinship matrices as-is.
 #' For best results, a standard kinship matrix (such as the output of \code{\link{popkin}}) should have its diagonal rescaled to contain inbreeding coefficients (\code{\link{inbrDiag}} does this) before \code{plotPopkin} is used.
-#' 
-#' The assumption is that many individuals are grouped into such subpopulations...
+#'
+#' This function permits the labeling of individuals (from row and column names when \code{showNames=TRUE}) and of subpopulations (passed through \code{labs}).
+#' The difference is that the labels passed through \code{labs} are assumed to be shared by many individuals, and lines (or other optional visual aids) are added to demarcate these subgroups.
 #'
 #' For flexibility, this function will work for non-symmetric and even non-square matrices, even though proper kinship matrices are both.
 #' For non-symmetric inputs, differing rownames and colnames will display correctly (if \code{showNames==TRUE}).
 #' However, numerous options implicitly assume symmetry.
 #' For example, only the y-axis is labeled under the assumption that the x-axis is the same.
-#' Also, the same subpopulation labels are reproduced on both axes (for clarity), which will likely be incorrect for non-square matrices.
+#' Also, the same subpopulation labels are reproduced on both axes (for clarity).
 #'
 #' @param x A numeric kinship matrix or a list of matrices
 #' @param titles Titles to add to each matrix panel (default is no titles)
 #' @param col Colors for heatmap
-#' @param xMar Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link{par(mar)}} expects.  By default the existing margin values are used without change
+#' @param xMar Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  By default the existing margin values are used without change
 #' @param diagLine If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)
 #'
 #' AXIS LABEL OPTIONS
 #' 
 #' @param ylab The y-axis label (default "Individuals").  If \code{length(ylab)==1}, the label is placed in the outer margin (shared across panels); otherwise \code{length(ylab)} must equal the number of panels and each label is placed in the inner margin of the respective panel
-#' @param ylabAdj The value of "adj" passed to \code{\link{mtext}}.  If \code{length(ylab)==1}, only the first value is used, otherwise \code{length(ylabAdj)} must equal the number of panels
-#' @param ylabLine The value of "line" passed to \code{\link{mtext}}.  If \code{length(ylab)==1}, only the first value is used, otherwise \code{length(ylabLine)} must equal the number of panels
+#' @param ylabAdj The value of "adj" passed to \code{\link[graphics]{mtext}}.  If \code{length(ylab)==1}, only the first value is used, otherwise \code{length(ylabAdj)} must equal the number of panels
+#' @param ylabLine The value of "line" passed to \code{\link[graphics]{mtext}}.  If \code{length(ylab)==1}, only the first value is used, otherwise \code{length(ylabLine)} must equal the number of panels
 #' 
 #' LAYOUT OPTIONS
 #' 
-#' @param addLayout If \code{TRUE} (default) then \code{\link{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{nr} below) plus the color key legend.  Set to FALSE and call \code{\link{layout}} beforehand if a non-standard layout or additional panels (beyond those provided by \code{plotPopkin}) are desired.
+#' @param addLayout If \code{TRUE} (default) then \code{\link[graphics]{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{nr} below) plus the color key legend.  Set to FALSE and call \code{\link[graphics]{layout}} beforehand if a non-standard layout or additional panels (beyond those provided by \code{plotPopkin}) are desired.
 #' @param nr Number of rows in layout, used only if \code{addLayout=TRUE}
 #'
 #' LEGEND (COLOR KEY) OPTIONS
 #' 
 #' @param legTitle The name of the variable that the heatmap colors measure (default "Kinship")
-#' @param legMar Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link{par(mar)}} expects) for the legend panel only
+#' @param legMar Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only
 #' @param nPretty The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details)
 #'
 #' INDIVIDUAL LABEL OPTIONS
@@ -59,16 +60,16 @@
 #'
 #' SUBPOPULATION LABEL OPTIONS
 #' 
-#' @param labs Subpopulation labels for individuals.  If input is a vector or a matrix, the same subpopulation labels are shown for every heatmap panel; the input must be a list of such vectors or matrices if the labels vary per panel.  Use a matrix of labels to show groupings at more than one level of a hierarchy
-#' @param labsCex A vector of label scaling factors for each level of the hierarchy of labs, or a list of such vectors if labels vary per panel
-#' @param labsLas A vector of label orientations (in format that \code{\link{mtext}} expects) for each level of the hierarchy of labs, or a list of such vectors if labels vary per panel
-#' @param labsLine A vector of lines where labels are placed (in format that \code{\link{mtext}} expects) for each level of the hierarchy of labs, or a list of such vectors if labels vary per panel
-#' @param labsSkipLines A vector of booleans that specify whether lines separating the subpopulations are drawn for each level of the hierarchy of labs, or a list of such vectors if labels vary per panel
-#' @param labsLwd A vector of line widths for the lines that divide subpopulations (if \code{labsSkipLines=FALSE}) for each level of the hierarchy of labs, or a list of such vectors if labels vary per panel
-#' @param labsDoTicks A vector of booleans that specify whether ticks separating the subpopulations are drawn for each level of the hierarchy of labs, or a list of such vectors if labels vary per panel
-#' @param labsEven A vector of booleans that specify whether the subpopulations labels are drawn with equal spacing for each level of the hierarchy of labs, or a list of such vectors if labels vary per panel.  When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn
+#' @param labs Subpopulation labels for individuals.  Use a matrix of labels to show groupings at more than one level (for a hierarchy or otherwise).  If input is a vector or a matrix, the same subpopulation labels are shown for every heatmap panel; the input must be a list of such vectors or matrices if the labels vary per panel
+#' @param labsCex A vector of label scaling factors for each level of labs, or a list of such vectors if labels vary per panel
+#' @param labsLas A vector of label orientations (in format that \code{\link[graphics]{mtext}} expects) for each level of labs, or a list of such vectors if labels vary per panel
+#' @param labsLine A vector of lines where labels are placed (in format that \code{\link[graphics]{mtext}} expects) for each level of labs, or a list of such vectors if labels vary per panel
+#' @param labsSkipLines A vector of booleans that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel
+#' @param labsLwd A vector of line widths for the lines that divide subpopulations (if \code{labsSkipLines=FALSE}) for each level of labs, or a list of such vectors if labels vary per panel
+#' @param labsDoTicks A vector of booleans that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel
+#' @param labsEven A vector of booleans that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.  When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn
 #' 
-#' @param ... Additional options passed to \code{\link{image}}
+#' @param ... Additional options passed to \code{\link[graphics]{image}}.  These are shared across panels
 #'
 #' @examples
 #' \dontrun{
@@ -144,31 +145,31 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, diagLine=FALSE, ylab
     ## figure out layout given a requested number of rows
     if (addLayout) plotPopkinLayout(n, nr)
     
-    marPre <- par()$mar # save original margins, in case there are changes
+    marPre <- graphics::par('mar') # save original margins, in case there are changes
     
     ## breaks of all following plots should match!
     for (i in 1:n) {
         if (!is.null(xMar[[i]])) {
-            par(mar=xMar[[i]]+0.2) # change margins if necessary!
+            graphics::par(mar=xMar[[i]]+0.2) # change margins if necessary!
         }
         breaks <- plotPopkinSingle(x[[i]], xRange=rangeS, col=col, showNames=showNames[i], namesCex=namesCex[i], namesLine=namesLine[i], labs=labs[[i]], labsCex=labsCex[[i]], labsLas=labsLas[[i]], labsLine=labsLine[[i]], labsLwd=labsLwd[[i]], labsSkipLines=labsSkipLines[[i]], labsDoTicks=labsDoTicks[[i]], labsEven=labsEven[[i]], diagLine=diagLine[i], main=titles[i], ...)
         ## add ylab for every panel when there is more than one choice, and provided it was non-NA
         ## uses inner rather than outer margin (only choice that makes sense)
         if (length(ylab) > 1 && !is.na(ylab[i])) 
-            mtext(ylab[i], side=2, adj=ylabAdj[i], line=ylabLine[i])
+            graphics::mtext(ylab[i], side=2, adj=ylabAdj[i], line=ylabLine[i])
     }
 
     if (!is.null(legMar)) {
-        par(mar=legMar+0.2) # change margins if necessary!
+        graphics::par(mar=legMar+0.2) # change margins if necessary!
     }
     heatLegImage(breaks, xRange=rangeReal, varname=legTitle, col=col, nPretty=nPretty)
 
     ## add margin only once if there was only one, place in outer margin (only choice that makes sense)
     if (length(ylab) == 1) {
-        mtext(ylab, side=2, adj=ylabAdj, outer=TRUE, line=ylabLine)
+        graphics::mtext(ylab, side=2, adj=ylabAdj, outer=TRUE, line=ylabLine)
     }
     
-    par(mar=marPre) # restore margins!
+    graphics::par(mar=marPre) # restore margins!
 }
 
 plotPopkinSingle <- function (x, xRange=range(x, na.rm=TRUE), col=NULL, showNames=FALSE, namesCex=1, namesLine=NA, xlab = "", ylab = "", labs=NULL, labsCex=1, labsLas=0, labsLine=0, labsLwd=1, labsSkipLines=FALSE, labsDoTicks=FALSE, labsEven=FALSE, diagLine=FALSE, ...) {
@@ -198,15 +199,15 @@ plotPopkinSingle <- function (x, xRange=range(x, na.rm=TRUE), col=NULL, showName
     
     ## main plot!
     x <- x[nr:1,]
-    image(1:nc, 1:nr, t(x), xlim = 0.5 + c(0, nc), ylim = 0.5 + c(0, nr), axes = FALSE, xlab = xlab, ylab = ylab, col = col, breaks = breaks, useRaster=TRUE, ...)
+    graphics::image(1:nc, 1:nr, t(x), xlim = 0.5 + c(0, nc), ylim = 0.5 + c(0, nr), axes = FALSE, xlab = xlab, ylab = ylab, col = col, breaks = breaks, useRaster=TRUE, ...)
     if (showNames) {
         ## if we want to show labels, use the row/col names to add to picture
         ## labels will be perpendicular to axis (las=2)
-        axis(1, 1:nc, colnames(x), las=2, cex.axis=namesCex, tick = FALSE, line=namesLine)
-        axis(2, 1:nr, rownames(x), las=2, cex.axis=namesCex, tick = FALSE, line=namesLine)
+        graphics::axis(1, 1:nc, colnames(x), las=2, cex.axis=namesCex, tick = FALSE, line=namesLine)
+        graphics::axis(2, 1:nr, rownames(x), las=2, cex.axis=namesCex, tick = FALSE, line=namesLine)
     }
     if (diagLine) {
-        lines(c(1,nr),c(nc,1)) # diagonal line
+        graphics::lines(c(1,nr),c(nc,1)) # diagonal line
     }
 
     ## add subpo labels if present
@@ -261,7 +262,7 @@ repOrDieList <- function(vals, n) {
 ## Plot color key for heatmap
 ##
 ## This plots an image with a single column, showing the relationship between colors and values in the heatmap.
-## The image fills the entire panel; use \code{\link{layout}} to make sure this panel is scaled correctly, usually so it is taller rather than wider.
+## The image fills the entire panel; use \code{\link[graphics]{layout}} to make sure this panel is scaled correctly, usually so it is taller rather than wider.
 ##
 ## This function is provided for users that want greater flexibility in creating plot layouts.
 ## However, \code{\link{plotPopkin}} will be easier to use and should suffice in most cases, please consider using that before calling this function directly.
@@ -324,7 +325,7 @@ heatLegImage <- function(breaks, xRange, varname='Kinship', col=NULL, nPretty=5)
     ## NOTE: breaks[2:length(breaks)] plots the sequence of colors because (from ?image):
     ## > intervals are closed on the right and open on the left except for the lowest interval which is closed at both ends.
     ## so plotting all top values of breaks works!
-    image(z = matrix(breaks[2:nb], nrow = 1), col = col, breaks = breaks, xaxt = "n", yaxt = "n")
+    graphics::image(z = matrix(breaks[2:nb], nrow = 1), col = col, breaks = breaks, xaxt = "n", yaxt = "n")
 
     ## now we should add axis numbers/ticks
     ## this is a real pain, because 0 and 1 are in the middle of the first and last boxes
@@ -334,10 +335,10 @@ heatLegImage <- function(breaks, xRange, varname='Kinship', col=NULL, nPretty=5)
     ## we actually want ends to be at c(-delta, 1+delta)
     lv <- pretty(breaks, n=nPretty)
     xv <- scaleDelta(as.numeric(lv), breaks[1], breaks[nb], delta)
-    axis(4, at = xv, labels = lv)
+    graphics::axis(4, at = xv, labels = lv)
     
     ## lastly, add axis label
-    mtext(side = 4, varname, line = 2)
+    graphics::mtext(side = 4, varname, line = 2)
 }
 
 ## internal use only
@@ -366,7 +367,7 @@ plotPopkinLayout <- function(n, nr) {
     ## step 3: set up widths vector too
     layoutWidths <- c(rep.int(1, nc), 0.1) # last column for color key is 10% the width of the rest
     ## make layout now!
-    layout(layoutMat, widths=layoutWidths) # note rows are all equal height
+    graphics::layout(layoutMat, widths=layoutWidths) # note rows are all equal height
 }
 
 ## make internal function?
@@ -404,20 +405,20 @@ boundaryLabs <- function(labs) {
 line2user <- function(line, side) {
     ## awesome function from:
     ## http://stackoverflow.com/questions/30765866/get-margin-line-locations-in-log-space/30835971#30835971
-    lh <- par('cin')[2] * par('cex') * par('lheight')
-    x_off <- diff(grconvertX(c(0, lh), 'inches', 'npc'))
-    y_off <- diff(grconvertY(c(0, lh), 'inches', 'npc'))
+    lh <- graphics::par('cin')[2] * graphics::par('cex') * graphics::par('lheight')
+    x_off <- diff(graphics::grconvertX(c(0, lh), 'inches', 'npc'))
+    y_off <- diff(graphics::grconvertY(c(0, lh), 'inches', 'npc'))
     switch(side,
-           `1` = grconvertY(-line * y_off, 'npc', 'user'),
-           `2` = grconvertX(-line * x_off, 'npc', 'user'),
-           `3` = grconvertY(1 + line * y_off, 'npc', 'user'),
-           `4` = grconvertX(1 + line * x_off, 'npc', 'user'),
+           `1` = graphics::grconvertY(-line * y_off, 'npc', 'user'),
+           `2` = graphics::grconvertX(-line * x_off, 'npc', 'user'),
+           `3` = graphics::grconvertY(1 + line * y_off, 'npc', 'user'),
+           `4` = graphics::grconvertX(1 + line * x_off, 'npc', 'user'),
            stop("Side must be 1, 2, 3, or 4", call.=FALSE))
 }
 
 ## unused so far but useful!
 panelLetter <- function(letter) {
-    mtext(letter, line=0.5, adj=0, cex=1.5)
+    graphics::mtext(letter, line=0.5, adj=0, cex=1.5)
 }
 
 printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0) {
@@ -444,15 +445,15 @@ printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE,
 
     ## add ticks using axis()
     if (doTicks) {
-        axis(1, at=at, labels=FALSE, lwd=lwd)
-        if (doMat) axis(2, at=xMax-at, labels=FALSE, lwd=lwd)
+        graphics::axis(1, at=at, labels=FALSE, lwd=lwd)
+        if (doMat) graphics::axis(2, at=xMax-at, labels=FALSE, lwd=lwd)
     }
     
     if (!skipLines) {
         ## draw black horizontal lines at every boundary (including ends, looks weird otherwise)
         ## assume regular spacing
-        abline(v=at, lwd=lwd)
-        if (doMat) abline(h=xMax-at, lwd=lwd)
+        graphics::abline(v=at, lwd=lwd)
+        if (doMat) graphics::abline(h=xMax-at, lwd=lwd)
     }
 
     ## label placement, ticky connector line calcs for "even" case
@@ -476,8 +477,8 @@ printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE,
             ## don't forget that end is first element of next group, so we always need to reduce it by one
             xi <- at[i] # coincides with tick positions
             yi <- y2[i] # boundary of words
-            lines(c(xi, yi), ysLines, lwd=lwd, xpd=NA) # draw line for x-axis
-            if (doMat) lines(xsLines, xMax - c(xi, yi), lwd=lwd, xpd=NA)
+            graphics::lines(c(xi, yi), ysLines, lwd=lwd, xpd=NA) # draw line for x-axis
+            if (doMat) graphics::lines(xsLines, xMax - c(xi, yi), lwd=lwd, xpd=NA)
         }
         
     } else {
@@ -486,7 +487,7 @@ printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE,
     }
 
     ## place labels at "y" (set according to "even=TRUE" or otherwise)
-    mtext(l, side=1, at=y, cex=cex, las=las, line=line)
+    graphics::mtext(l, side=1, at=y, cex=cex, las=las, line=line)
     ## for matrices, do both ways!
-    if (doMat) mtext(l, side=2, at=xMax-y, cex=cex, las=las, line=line)
+    if (doMat) graphics::mtext(l, side=2, at=xMax-y, cex=cex, las=las, line=line)
 }
