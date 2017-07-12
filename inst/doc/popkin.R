@@ -22,38 +22,12 @@ subpops <- colnames(X) # extract subpopulations vector
 ## ------------------------------------------------------------------------
 Phi <- popkin(X, subpops)
 
-## ------------------------------------------------------------------------
-# quick and dirty heatmap of the kinship matrix
-library(RColorBrewer)
-myHeatmap <- function(Phi, subpops=NULL) {
-    # place subpop labels in middle of their ranges
-    subpopLabs <- NULL
-    if (!is.null(subpops)) {
-        # mean index per subpop
-       	subpopLabs <- aggregate(1:length(subpops), list(subpop=subpops), mean)
-    }
-    colHM <- brewer.pal(9, 'Reds') # heatmap colors
-    par(xaxt='n', yaxt='n') # heatmap doesn't omit axes correctly, force here
-    # plot as image, without reordering, dendrograms, etc
-    heatmap(Phi, Rowv=NA, Colv=NA, symm=TRUE, col=colHM,
-        xlab='individuals', ylab='individuals',
-        add.expr={
-            # add population labels
-	    if (!is.null(subpopLabs)) {
-	        mtext(subpopLabs$subpop, 1, at=subpopLabs$x, line=1, cex=0.7)
-	        mtext(subpopLabs$subpop, 4, at=subpopLabs$x, line=1, cex=0.7)
-	    }
-        })
-    par(xaxt='s', yaxt='s') # reset to other plots aren't affected
-    
-}
-
 ## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
 # set outer margin for axis labels (left and right are non-zero)
 par(oma=c(0,1.5,0,3))
 # set inner margin for subpopulation labels (bottom and left are non-zero), add padding
 par(mar=c(1,1,0,0)+0.2)
- # now plot!
+# now plot!
 plotPopkin(Phi, labs=subpops)
 
 ## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
@@ -82,12 +56,12 @@ par(mar=c(2,2,0,0)+0.2)
 # NOTE no need for inbrDiag() here!
 plotPopkin(pwF, labs=subpops, labsEven=TRUE, labsLine=1, legTitle=legTitle)
 
-## ---- fig.width=6, fig.height=3, fig.align='center'----------------------
+## ---- fig.width=4, fig.height=2, fig.align='center'----------------------
 inbrs <- inbr(Phi) # vector of inbreeding coefficients
 par(mar=c(4, 4, 0, 0) + 0.1) # reduce margins
 plot(density(inbrs), xlab='inbreeding coefficient', main='') # see their distribution
 
-## ---- fig.width=6, fig.height=5, fig.align='center'----------------------
+## ---- fig.width=3, fig.height=2, fig.align='center'----------------------
 # filter to only keep individuals within AFR
 indexesAfr <- subpops == 'AFR'
 PhiAfr <- Phi[indexesAfr,indexesAfr]
@@ -106,4 +80,17 @@ par(oma=c(0,1.5,0,3))
 # use zero margins because there are no subpopulation labels
 par(mar=c(0,0,0,0)+0.2)
 plotPopkin(inbrDiag(PhiAfr))
+
+## ---- fig.width=6, fig.height=2.5, fig.align='center'--------------------
+par(oma=c(0,1.5,0,3))
+par(mar=c(2,2,0,0)+0.2)
+# transform both matrices and store in a list
+x <- list(inbrDiag(Phi), inbrDiag(PhiAfr))
+# dummy labels to have lines in second panel
+subpopsAfr <- subpops[indexesAfr]
+# pass labels that differ per panel using a list
+labs <- list(subpops, subpopsAfr)
+# labsEven and labsLine passed as scalars are shared across panels
+# labsCex reduces the label size, since there's less space here!
+plotPopkin(x, labs=labs, labsEven=TRUE, labsLine=1, labsCex=0.5)
 
