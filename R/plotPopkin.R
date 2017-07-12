@@ -470,11 +470,11 @@ printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE,
         ## positions (length of labels)
         gapY <- (xMax - xMin)/n # first divide range into even segments
         y <- xMin + gapY*((1:n) - 0.5) # sequence of middles: length n
-        y2 <- xMin + gapY*(0:n) # sequence of boundaries: length n+1
+        y2 <- xMin + gapY*(0:n) - gapX # sequence of boundaries: length n+1
         ## NOTE: y[1] == xMin + gapY/2 # so it starts in middle of first bin
         ## NOTE: y[n] == xMax - gapY/2 # so it ends in the middle of last bin
-        ## NOTE: y2[1] == xMin and y2[n+1] == xMax match boundaries exactly
-
+        ## NOTE: y2[1] == xMin - gapX and y2[n+1] == xMax - gapX match boundaries with half pixel shift
+        
         ## connect label boundaries to irregular boundaries in plot
         ysLines <- line2user(c(0,line), 1) # shared by every label boundary on x-axis
         xsLines <- line2user(c(0,line), 2) # shared by every label boundary on y-axis
