@@ -1,15 +1,13 @@
-## TODO
-## - document pub functions!!!
-## - add to package!
-## - test in vignette!
 ## DONE
 ## - figure out dependencies, what needs to be public or not, etc:
 ##   - plotPopkin: def pub!
 ##   - heatLegImage: used internally for maps: MapAlleleFreq2.R, humanOrigins12.mapsCombFig.R
-##   - panelLetter: unused!!!
 ##   - printLabs: used for admixture plots too: tgpPopKin03.admixPlot.R, teraStruc03.figs.R
-## DEFERRED
+## - document pub functions!!!
+## - add to package!
+## - test in vignette!
 ## - add letters to panels automatically, actually use this in my fst paper figures!
+## DEFERRED
 ## - potentially clean up so rangeS is made internally in plotPopkinSingle (to accept rangeReal instead?)
 
 #' Visualize one or more kinship matrices
@@ -33,8 +31,10 @@
 #' @param titles Titles to add to each matrix panel (default is no titles)
 #' @param col Colors for heatmap
 #' @param xMar Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  By default the existing margin values are used without change
-#' @param diagLine If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)
 #' @param marPad Margin padding added to all panels (\code{xMar} above and \code{legMar} below).  Default 0.2.  Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
+#' @param diagLine If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)
+#' @param panelLetters Vector of strings for labeling panels (default A-Z).  No labels are added when there is only one panel, or if `panelLetters=NULL`
+#' @param panelLetterCex Scaling factor of panel letters (default 1.5)
 #'
 #' AXIS LABEL OPTIONS
 #' 
@@ -85,7 +85,9 @@
 #' }
 #'
 #' @export
-plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine=FALSE, ylab='Individuals', ylabAdj=NA, ylabLine=0,
+plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine=FALSE,
+                       panelLetters=toupper(letters), panelLetterCex=1.5,
+                       ylab='Individuals', ylabAdj=NA, ylabLine=0,
                        addLayout=TRUE, nr=1, 
                        legTitle='Kinship', legMar=NULL, nPretty=5,
                        showNames=FALSE, namesCex=1, namesLine=NA,
@@ -158,6 +160,11 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
         ## uses inner rather than outer margin (only choice that makes sense)
         if (length(ylab) > 1 && !is.na(ylab[i])) 
             graphics::mtext(ylab[i], side=2, adj=ylabAdj[i], line=ylabLine[i])
+        ## add letters only when there is more than one panel
+        ## if panelLetters is null then don't add
+        if (!is.null(panelLetters) && 1<n && n<=length(panelLetters)) { # for humongous N's we run out of letters, just prevent obvious errors...
+            panelLetter(panelLetters[i], cex=panelLetterCex)
+        }
     }
 
     if (!is.null(legMar)) {
@@ -422,9 +429,8 @@ line2user <- function(line, side) {
            stop("Side must be 1, 2, 3, or 4", call.=FALSE))
 }
 
-## unused so far but useful!
-panelLetter <- function(letter) {
-    graphics::mtext(letter, line=0.5, adj=0, cex=1.5)
+panelLetter <- function(letter, cex=1.5, line=0.5, adj=0) {
+    graphics::mtext(letter, cex=cex, line=line, adj=adj)
 }
 
 printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0) {

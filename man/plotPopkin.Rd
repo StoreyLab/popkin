@@ -5,12 +5,12 @@
 \title{Visualize one or more kinship matrices}
 \usage{
 plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
-  diagLine = FALSE, ylab = "Individuals", ylabAdj = NA, ylabLine = 0,
-  addLayout = TRUE, nr = 1, legTitle = "Kinship", legMar = NULL,
-  nPretty = 5, showNames = FALSE, namesCex = 1, namesLine = NA,
-  labs = NULL, labsCex = 1, labsLas = 0, labsLine = 0,
-  labsSkipLines = FALSE, labsLwd = 1, labsDoTicks = FALSE,
-  labsEven = FALSE, ...)
+  diagLine = FALSE, panelLetters = toupper(letters), panelLetterCex = 1.5,
+  ylab = "Individuals", ylabAdj = NA, ylabLine = 0, addLayout = TRUE,
+  nr = 1, legTitle = "Kinship", legMar = NULL, nPretty = 5,
+  showNames = FALSE, namesCex = 1, namesLine = NA, labs = NULL,
+  labsCex = 1, labsLas = 0, labsLine = 0, labsSkipLines = FALSE,
+  labsLwd = 1, labsDoTicks = FALSE, labsEven = FALSE, ...)
 }
 \arguments{
 \item{x}{A numeric kinship matrix or a list of matrices}
@@ -21,11 +21,15 @@ plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
 
 \item{xMar}{Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  By default the existing margin values are used without change}
 
-\item{marPad}{Margin padding added to all panels (\code{xMar} above and \code{legMar} below).  Default 0.2.  Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
-
-AXIS LABEL OPTIONS}
+\item{marPad}{Margin padding added to all panels (\code{xMar} above and \code{legMar} below).  Default 0.2.  Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.}
 
 \item{diagLine}{If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)}
+
+\item{panelLetters}{Vector of strings for labeling panels (default A-Z).  No labels are added when there is only one panel, or if `panelLetters=NULL`}
+
+\item{panelLetterCex}{Scaling factor of panel letters (default 1.5)
+
+AXIS LABEL OPTIONS}
 
 \item{ylab}{The y-axis label (default "Individuals").  If \code{length(ylab)==1}, the label is placed in the outer margin (shared across panels); otherwise \code{length(ylab)} must equal the number of panels and each label is placed in the inner margin of the respective panel}
 
