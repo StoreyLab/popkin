@@ -1,5 +1,5 @@
 ## uses lots of hacks to try to estimate a reasonable amount of memory to use, in the most common systems!
-## currently only linux is actually supported
+## currently only linux and windows are actually supported
 getMemLim <- function(factor=0.7, verbose=FALSE) {
     mem <- NA # to know if we've succeeded or not...
     
@@ -33,8 +33,8 @@ getMemLim <- function(factor=0.7, verbose=FALSE) {
         mem <- mem*1024 # previous units were KB, convert to bytes
     }
     if (is.na(mem)) {
-        warning("Could not infer available memory, will default to 2GB!\nPlease specify a memory limit if your run exceeds memory or if default is too low!")
-        mem <- 2*1024*1024*1024 # when we can't determine free or available memory from system, default to using 2GB!
+        warning("Could not infer available memory, will default to 1GB!\nPlease specify a memory limit if your run exceeds memory or if default is too low!")
+        mem <- 1024*1024*1024 # when we can't determine free or available memory from system, default to using 2GB!
     } else {
         mem <- mem*factor # shrink memory by a factor to leave some more memory
     }
