@@ -44,15 +44,11 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
         if (lociOnCols) {
             if (!is.na(n) && n != nrow(X)) 
                 warning('User set number of samples that does not match X dimensions (will go with latter): ', n, ' != ', nrow(X))
-            ## if (!is.na(m) && m != ncol(X)) 
-            ##     warning('User set number of loci that does not match X dimensions (will go with latter): ', m, ' != ', ncol(X))
             n <- nrow(X)
             m <- ncol(X)
         } else {
             if (!is.na(n) && n != ncol(X)) 
                 warning('User set number of samples that does not match X dimensions (will go with latter): ', n, ' != ', ncol(X))
-            ## if (!is.na(m) && m != nrow(X)) 
-            ##     warning('User set number of loci that does not match X dimensions (will go with latter): ', m, ' != ', nrow(X))
             n <- ncol(X)
             m <- nrow(X)
         }
@@ -68,7 +64,6 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     ## navigate chunks
     mcis <- seq.int(1, m, mc)
     for (mci in mcis) {
-        ## message('chunk ', match(mci,mcis), '/', length(mcis)) # DEBUGGING
         is <- mci:min(mci+mc-1,m) ## range of SNPs to extract in this chunk
         if (isFn) {
             Xi <- X( length(is) ) # get next SNPs
@@ -94,28 +89,3 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     ## return final estimate!
     A/M - 1
 }
-
-## http://dirk.eddelbuettel.com/code/rcpp/Rcpp-package.pdf
-## http://dirk.eddelbuettel.com/code/rcpp/Rcpp-FAQ.pdf
-## https://cran.r-project.org/web/packages/RcppEigen/vignettes/RcppEigen-Introduction.pdf
-## https://stackoverflow.com/questions/13956292/rcpp-inline-creating-and-calling-additional-functions
-## https://stackoverflow.com/questions/27490659/rcppeigen-going-from-inline-to-a-cpp-function-in-a-package-and-map
-
-## library(RcppEigen)
-## library(inline)
-
-## crossprodSelfIntCpp <- '
-## using Eigen::Map;
-## using Eigen::MatrixXi;
-## using Eigen::Lower;
-## // Map the integer matrix AA from R
-## const Map<MatrixXi> A(as<Map<MatrixXi>  >(AA));
-## // evaluate and return crossprod(A)
-## const int           n(A.cols());
-## MatrixXi          AtA(MatrixXi(n, n).setZero().selfadjointView<Lower>().rankUpdate(A.adjoint()));
-## // wrap and return!
-## return wrap(AtA);
-## '
-## crossprodSelfInt <- cxxfunction(signature(AA = "matrix"), crossprodSelfIntCpp, "RcppEigen")
-## SA2 <- crossprodSelfInt(X) # verified this returns ints!
-
