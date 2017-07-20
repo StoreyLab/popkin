@@ -59,7 +59,7 @@ plot(density(inbrs), xlab='inbreeding coefficient', main='') # see their distrib
 
 ## ---- fig.width=4.2, fig.height=3, fig.align='center'--------------------
 pwF <- pwfst(Phi) # compute pairwise FST matrix from kinship matrix
-legTitle <- expression(bold(paste('Pairwise ', F[ST]))) # fancy legend label
+legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
 par(oma=c(0,1.5,0,3))
 par(mar=c(2,2,0.2,0)+0.2)
 # NOTE no need for inbrDiag() here!
