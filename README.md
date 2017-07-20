@@ -20,32 +20,34 @@ While the repository remains private to Storey Lab members, install [following t
 Synopsis of commands
 ===
 
-This is a quick overview for estimating and visualize kinship and FST from a genotype matrix.
+This is a quick overview of every `popkin` function, covering estimation and visualization of kinship and FST from a genotype matrix.
 
-We begin assuming the following data are present for `n` individuals and `m` loci:
+We assume the following R data variables are present for `n` individuals and `m` loci:
 * The `m`-by-`n` genotype matrix `X`, containing only unphased biallelic variants encoded as 0,1,2 counting a given reference allele per locus.
 * The length-`n` vector `subpops` that assigns each individual to a subpopulation.
-The second ...
 
-This example assumes input is in BED format and is loaded using BEDMatrix "file" is path to BED file (excluding .bed extension)
+The `subpops` vector is not required, but its use is recommended to improve estimation of the baseline kinship value treated as zero.
+
+If your data is in BED format, `popkin` will process it efficiently using BEDMatrix.
+If `file` is the path to the BED file (excluding .bed extension):
 ```R
 library(BEDMatrix)
 X <- BEDMatrix(file) # load genotype matrix object
 ```
 
-Estimate the kinship matrix "Phi" from the genotypes "X"!
-All downstream analysis require "Phi", none use "X" after this
+First estimate the kinship matrix `Phi` from the genotypes `X`!
+All downstream analysis require `Phi`, none use `X` after this
 ```R
 Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 ```
 
-Plot the kinship matrix, marking the subpopulations
-Note inbrDiag replaces the diagonal of Phi with inbreeding coefficients
+Plot the kinship matrix, marking the subpopulations.
+Note `inbrDiag` replaces the diagonal of `Phi` with inbreeding coefficients
 ```R
 plotPopkin( inbrDiag(Phi), labels=subpops )
 ```
 
-Extract inbreeding coefficients from Phi
+Extract inbreeding coefficients from `Phi`
 ```R
 inbr <- inbr(Phi)
 ```
