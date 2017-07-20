@@ -1,6 +1,6 @@
-#' popkin: a package for estimating kinship and FST under arbitrary population structure
+#' A package for estimating kinship and FST under arbitrary population structure
 #'
-#' The key function of this package is also named \code{\link{popkin}}, which estimates the kinship matrix of all individual pairs from their genotype matrix.
+#' The heart of this package is the \code{\link{popkin}} function, which estimates the kinship matrix of all individual pairs from their genotype matrix.
 #' Inbreeding coefficients, the generalized \eqn{F_{ST}}{FST}, and the individual-level pairwise \eqn{F_{ST}}{FST} matrix are extracted from the kinship matrix using \code{\link{inbr}}, \code{\link{fst}}, and \code{\link{pwfst}}, respectively.
 #' \code{\link{fst}} accepts weights for individuals to balance subpopulations obtained with \code{\link{weightsSubpops}}.
 #' Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using \code{\link{rescalePopkin}}.
@@ -33,9 +33,8 @@
 #' Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
 #' Fst <- fst(inbr, w) # estimate more directly from inbreeding vector (same result)
 #'
-#' ## estimate the pairwise FST matrix
-#' pwF <- pwfst(Phi)
-#' ## ... and visualize it
+#' ## estimate and visualize the pairwise FST matrix
+#' pwF <- pwfst(Phi) # estimated matrix
 #' legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
 #' plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbrDiag() here!
 #'
@@ -45,5 +44,6 @@
 #'
 #' @docType package
 #' @name popkin-package
+#' @aliases popkin-package
 "_PACKAGE"
 
