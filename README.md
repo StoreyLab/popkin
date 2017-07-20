@@ -20,7 +20,7 @@ While the repository remains private to Storey Lab members, install [following t
 Input data
 ===
 
-We assume the following R data variables are present for `n` individuals and `m` loci:
+The examples below assume the following R data variables are present for `n` individuals and `m` loci:
 * The `m`-by-`n` genotype matrix `X`, containing only unphased biallelic variants encoded as 0,1,2 counting a given reference allele per locus.
 * The length-`n` vector `subpops` that assigns each individual to a subpopulation.
 
@@ -69,7 +69,7 @@ legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
 plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbrDiag() here!
 ```
 
-Rescale the kinship matrix using different subpopulations (implicitly changes the MRCA)
+Rescale the kinship matrix using different subpopulations (implicitly changes the most recent common ancestor population used as reference)
 ```R
 Phi2 <- rescalePopkin(Phi, subpops2)
 ```
