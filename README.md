@@ -17,10 +17,8 @@ install_github('StoreyLab/alexviiia/fst/software/popkin')
 
 While the repository remains private to Storey Lab members, install [following these instructions](https://github.com/StoreyLab/misc/blob/master/github.md).
 
-Synopsis of commands
+Input data
 ===
-
-This is a quick overview of every `popkin` function, covering estimation and visualization of kinship and FST from a genotype matrix.
 
 We assume the following R data variables are present for `n` individuals and `m` loci:
 * The `m`-by-`n` genotype matrix `X`, containing only unphased biallelic variants encoded as 0,1,2 counting a given reference allele per locus.
@@ -35,7 +33,12 @@ library(BEDMatrix)
 X <- BEDMatrix(file) # load genotype matrix object
 ```
 
-First estimate the kinship matrix `Phi` from the genotypes `X`!
+Synopsis of commands
+===
+
+This is a quick overview of every `popkin` function, covering estimation and visualization of kinship and FST from a genotype matrix.
+
+First estimate the kinship matrix `Phi` from the genotypes `X`.
 All downstream analysis require `Phi`, none use `X` after this
 ```R
 Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
@@ -80,6 +83,6 @@ Please see the [popkin vignette](https://github.com/StoreyLab/alexviiia/blob/mas
 Citations
 ===
 
-Ochoa, Alejandro, and John D. Storey. 2016a. "FST And Kinship for Arbitrary Population Structures I: Generalized Definitions." bioRxiv doi:10.1101/083915. Cold Spring Harbor Labs Journals.
+Ochoa, Alejandro, and John D. Storey. 2016a. "FST And Kinship for Arbitrary Population Structures I: Generalized Definitions." bioRxiv [doi:10.1101/083915](http://doi.org/10.1101/083915).
 
-Ochoa, Alejandro, and John D. Storey. 2016b. "FST And Kinship for Arbitrary Population Structures II: Method of Moments Estimators." bioRxiv doi:10.1101/083923. Cold Spring Harbor Labs Journals.
+Ochoa, Alejandro, and John D. Storey. 2016b. "FST And Kinship for Arbitrary Population Structures II: Method of Moments Estimators." bioRxiv [doi:10.1101/083923](http://doi.org/10.1101/083923).
