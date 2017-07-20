@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // getMAInt
 Rcpp::List getMAInt(Eigen::Map<Eigen::MatrixXi>& X);
-RcppExport SEXP popkin_getMAInt(SEXP XSEXP) {
+RcppExport SEXP _popkin_getMAInt(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"popkin_getMAInt", (DL_FUNC) &popkin_getMAInt, 1},
+    {"_popkin_getMAInt", (DL_FUNC) &_popkin_getMAInt, 1},
     {NULL, NULL, 0}
 };
 
