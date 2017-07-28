@@ -36,5 +36,5 @@ weightsSubpops <- function(subpops) {
     ## count number of subpopulations
     K <- length(subpop2c)
     ## construct weights, return!
-    w <- 1/(K*subpop2c[match(subpops, names(subpop2c))])
+    1/(K*subpop2c[match(subpops, names(subpop2c))])
 }
