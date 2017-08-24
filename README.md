@@ -41,6 +41,7 @@ This is a quick overview of every `popkin` function, covering estimation and vis
 First estimate the kinship matrix `Phi` from the genotypes `X`.
 All downstream analysis require `Phi`, none use `X` after this
 ```R
+library(popkin)
 Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 ```
 
