@@ -1,15 +1,3 @@
-## DONE
-## - figure out dependencies, what needs to be public or not, etc:
-##   - plotPopkin: def pub!
-##   - heatLegImage: used internally for maps: MapAlleleFreq2.R, humanOrigins12.mapsCombFig.R
-##   - printLabs: used for admixture plots too: tgpPopKin03.admixPlot.R, teraStruc03.figs.R
-## - document pub functions!!!
-## - add to package!
-## - test in vignette!
-## - add letters to panels automatically, actually use this in my fst paper figures!
-## DEFERRED
-## - potentially clean up so rangeS is made internally in plotPopkinSingle (to accept rangeReal instead?)
-
 #' Visualize one or more kinship matrices
 #'
 #' This function plots one or more kinship matrices and a shared legend for the color key.
