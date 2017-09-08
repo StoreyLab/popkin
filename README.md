@@ -12,10 +12,8 @@ You can install the package from the GitHub repository using `devtools`:
 ```R
 install.packages("devtools") # if needed
 library(devtools)
-install_github('StoreyLab/alexviiia/fst/software/popkin')
+install_github('StoreyLab/popkin')
 ```
-
-While the repository remains private to Storey Lab members, install [following these instructions](https://github.com/StoreyLab/misc/blob/master/github.md).
 
 Input data
 ===
@@ -79,7 +77,7 @@ Phi2 <- rescalePopkin(Phi, subpops2)
 More details
 ===
 
-Please see the [popkin vignette](https://github.com/StoreyLab/alexviiia/blob/master/fst/software/popkin/inst/doc/popkin.pdf) for a description of the key parameters and more detailed examples, including complex plots with multiple kinship matrices and multi-level subpopulation labeling.
+Please see the [popkin vignette](https://github.com/StoreyLab/popkin/raw/master/inst/doc/popkin.pdf) for a description of the key parameters and more detailed examples, including complex plots with multiple kinship matrices and multi-level subpopulation labeling.
 
 Citations
 ===
