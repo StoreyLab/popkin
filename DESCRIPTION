@@ -1,7 +1,10 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbirary Population Structure
 Version: 1.0.0.9000
-Authors@R: person("Alejandro", "Ochoa", email = "ochoa@princeton.edu", role = c("aut", "cre"))
+Authors@R: c(
+	   person("Alejandro", "Ochoa", email = "ochoa@princeton.edu", role = c("aut", "cre")),
+	   person("John", "Storey", email = "jstorey@princeton.edu", role = c("aut"))
+	   )
 Description: Provides functions to estimate the kinship matrix of individuals from a large set of biallelic SNPs, and extract inbreeding coefficients and the generalized FST.
 Depends: 
 Imports: Rcpp (>= 0.12.10), RcppEigen (>= 0.3.2.9.1), RColorBrewer, graphics
