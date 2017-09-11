@@ -54,7 +54,7 @@ Phi2 <- rescalePopkin(Phi, subpops2)
 
 Authors:
 \itemize{
-  \item John Storey \email{jstorey@princeton.edu}
+  \item John D. Storey \email{jstorey@princeton.edu}
 }
 
 }
