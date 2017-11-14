@@ -10,7 +10,8 @@ plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
   nr = 1, legTitle = "Kinship", legMar = NULL, nPretty = 5,
   showNames = FALSE, namesCex = 1, namesLine = NA, labs = NULL,
   labsCex = 1, labsLas = 0, labsLine = 0, labsSkipLines = FALSE,
-  labsLwd = 1, labsDoTicks = FALSE, labsEven = FALSE, ...)
+  labsLwd = 1, labsDoTicks = FALSE, labsDoText = TRUE, labsEven = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{A numeric kinship matrix or a list of matrices}
@@ -74,6 +75,8 @@ SUBPOPULATION LABEL OPTIONS}
 \item{labsLwd}{A vector of line widths for the lines that divide subpopulations (if \code{labsSkipLines=FALSE}) for each level of labs, or a list of such vectors if labels vary per panel}
 
 \item{labsDoTicks}{A vector of booleans that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel}
+
+\item{labsDoText}{A vector of booleans that specify whether the subpopulation labels are shown for each level of labs, or a list of such vectors if labels vary per panel.  Useful for including separating lines or ticks without text.}
 
 \item{labsEven}{A vector of booleans that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.  When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn}
 

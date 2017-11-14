@@ -56,6 +56,7 @@
 #' @param labsSkipLines A vector of booleans that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel
 #' @param labsLwd A vector of line widths for the lines that divide subpopulations (if \code{labsSkipLines=FALSE}) for each level of labs, or a list of such vectors if labels vary per panel
 #' @param labsDoTicks A vector of booleans that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel
+#' @param labsDoText A vector of booleans that specify whether the subpopulation labels are shown for each level of labs, or a list of such vectors if labels vary per panel.  Useful for including separating lines or ticks without text.
 #' @param labsEven A vector of booleans that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.  When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn
 #' 
 #' @param ... Additional options passed to \code{\link[graphics]{image}}.  These are shared across panels
@@ -79,7 +80,7 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
                        addLayout=TRUE, nr=1, 
                        legTitle='Kinship', legMar=NULL, nPretty=5,
                        showNames=FALSE, namesCex=1, namesLine=NA,
-                       labs=NULL, labsCex=1, labsLas=0, labsLine=0, labsSkipLines=FALSE, labsLwd=1, labsDoTicks=FALSE, labsEven=FALSE,
+                       labs=NULL, labsCex=1, labsLas=0, labsLine=0, labsSkipLines=FALSE, labsLwd=1, labsDoTicks=FALSE, labsDoText=TRUE, labsEven=FALSE,
                        ...) {
     ## wrapper around individual panels and color key
     ## does not set PDF output, margins, layout, etc
@@ -116,6 +117,7 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
     labsLwd <- repOrDieList(labsLwd, n)
     labsSkipLines <- repOrDieList(labsSkipLines, n)
     labsDoTicks <- repOrDieList(labsDoTicks, n)
+    labsDoText <- repOrDieList(labsDoText, n)
     labsEven <- repOrDieList(labsEven, n)
     ## ylab behavior is more dynamic!
     if (length(ylab) > 1) {
@@ -143,7 +145,7 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
         if (!is.null(xMar[[i]])) {
             graphics::par(mar=xMar[[i]]+marPad) # change margins if necessary!
         }
-        breaks <- plotPopkinSingle(x[[i]], xRange=rangeS, col=col, showNames=showNames[i], namesCex=namesCex[i], namesLine=namesLine[i], labs=labs[[i]], labsCex=labsCex[[i]], labsLas=labsLas[[i]], labsLine=labsLine[[i]], labsLwd=labsLwd[[i]], labsSkipLines=labsSkipLines[[i]], labsDoTicks=labsDoTicks[[i]], labsEven=labsEven[[i]], diagLine=diagLine[i], main=titles[i], ...)
+        breaks <- plotPopkinSingle(x[[i]], xRange=rangeS, col=col, showNames=showNames[i], namesCex=namesCex[i], namesLine=namesLine[i], labs=labs[[i]], labsCex=labsCex[[i]], labsLas=labsLas[[i]], labsLine=labsLine[[i]], labsLwd=labsLwd[[i]], labsSkipLines=labsSkipLines[[i]], labsDoTicks=labsDoTicks[[i]], labsDoText=labsDoText[[i]], labsEven=labsEven[[i]], diagLine=diagLine[i], main=titles[i], ...)
         ## add ylab for every panel when there is more than one choice, and provided it was non-NA
         ## uses inner rather than outer margin (only choice that makes sense)
         if (length(ylab) > 1 && !is.na(ylab[i])) 
@@ -173,7 +175,7 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
     graphics::par(mar=marPre) # restore margins!
 }
 
-plotPopkinSingle <- function (x, xRange=range(x, na.rm=TRUE), col=NULL, showNames=FALSE, namesCex=1, namesLine=NA, xlab = "", ylab = "", labs=NULL, labsCex=1, labsLas=0, labsLine=0, labsLwd=1, labsSkipLines=FALSE, labsDoTicks=FALSE, labsEven=FALSE, diagLine=FALSE, ...) {
+plotPopkinSingle <- function (x, xRange=range(x, na.rm=TRUE), col=NULL, showNames=FALSE, namesCex=1, namesLine=NA, xlab = "", ylab = "", labs=NULL, labsCex=1, labsLas=0, labsLine=0, labsLwd=1, labsSkipLines=FALSE, labsDoTicks=FALSE, labsDoText=TRUE, labsEven=FALSE, diagLine=FALSE, ...) {
     ## this "raw" version does not plot legend or set margins, best for optimized scenarios...
     
     ## data validation
@@ -214,13 +216,13 @@ plotPopkinSingle <- function (x, xRange=range(x, na.rm=TRUE), col=NULL, showName
     ## add subpo labels if present
     if (!is.null(labs)) {
         ## this function figures out multilevel labeling (loops/repeats as needed)
-        printLabsMulti(labs, labsCex, labsLas, labsLine, labsLwd, labsSkipLines, labsEven, labsDoTicks)
+        printLabsMulti(labs, labsCex, labsLas, labsLine, labsLwd, labsSkipLines, labsEven, labsDoTicks, labsDoText)
     }
     
     breaks # return breaks, since legends need it!
 }
 
-printLabsMulti <- function(labs, labsCex, labsLas, labsLine, labsLwd, labsSkipLines, labsEven, labsDoTicks) {
+printLabsMulti <- function(labs, labsCex, labsLas, labsLine, labsLwd, labsSkipLines, labsEven, labsDoTicks, labsDoText) {
     ## normalize so we can loop over cases (assume arbitrary label levels)
     if (class(labs) != 'matrix') {
         labs <- cbind(labs) # a col vector
@@ -235,10 +237,11 @@ printLabsMulti <- function(labs, labsCex, labsLas, labsLine, labsLwd, labsSkipLi
         labsSkipLines <- repOrDie(labsSkipLines, n)
         labsEven <- repOrDie(labsEven, n)
         labsDoTicks <- repOrDie(labsDoTicks, n)
+        labsDoText <- repOrDie(labsDoText, n)
     }
     ## loop through now
     for (i in 1:n) {
-        printLabs(labs[,i], cex=labsCex[i], las=labsLas[i], line=labsLine[i], lwd=labsLwd[i], skipLines=labsSkipLines[i], even=labsEven[i], doTicks=labsDoTicks[i])
+        printLabs(labs[,i], cex=labsCex[i], las=labsLas[i], line=labsLine[i], lwd=labsLwd[i], skipLines=labsSkipLines[i], even=labsEven[i], doTicks=labsDoTicks[i], doText=labsDoText[i])
     }
 }
 
@@ -421,7 +424,7 @@ panelLetter <- function(letter, cex=1.5, line=0.5, adj=0) {
     graphics::mtext(letter, cex=cex, line=line, adj=adj)
 }
 
-printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0) {
+printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0, doText=TRUE) {
     labsObj <- boundaryLabs(labs)
     ## extract the data (smaller var names)
     l <- labsObj$labels
@@ -485,9 +488,11 @@ printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE,
         ## put labels in middle of each range
         y <- (at[1:n] + at[2:(n+1)])/2 # sequence of label positions
     }
-
-    ## place labels at "y" (set according to "even=TRUE" or otherwise)
-    graphics::mtext(l, side=1, at=y, cex=cex, las=las, line=line)
-    ## for matrices, do both ways!
-    if (doMat) graphics::mtext(l, side=2, at=xMax-y, cex=cex, las=las, line=line)
+    
+    if (doText) { # can skip if doText==FALSE
+        ## place labels at "y" (set according to "even=TRUE" or otherwise)
+        graphics::mtext(l, side=1, at=y, cex=cex, las=las, line=line)
+        ## for matrices, do both ways!
+        if (doMat) graphics::mtext(l, side=2, at=xMax-y, cex=cex, las=las, line=line)
+    }
 }
