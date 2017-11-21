@@ -15,7 +15,7 @@ popkin(X, subpops = NULL, n = NA, lociOnCols = FALSE, memLim = NA)
 
 \item{lociOnCols}{If true, \eqn{X} has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns. Has no effect if \eqn{X} is a function.  If \eqn{X} is a BEDMatrix object, \code{lociOnCols=TRUE} is set automatically.}
 
-\item{memLim}{Memory limit in GB, used to break up genotype data into chunks for very large datasets. Note memory usage is somewhat underestimated and is not controlled strictly.  Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 2GB (OSX and other systems).}
+\item{memLim}{Memory limit in GB, used to break up genotype data into chunks for very large datasets. Note memory usage is somewhat underestimated and is not controlled strictly.  Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 1GB (OSX and other systems).}
 }
 \value{
 The estimated \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T}.

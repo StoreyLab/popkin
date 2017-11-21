@@ -13,7 +13,7 @@
 #' @param subpops The length-\eqn{n} vector of subpopulation assignments for each individual.  If missing, every individual is effectively treated as a different population.
 #' @param n Number of individuals (required only when \eqn{X} is a function, ignored otherwise).  If \eqn{n} is missing but \code{subpops} is not, \eqn{n} is taken to be the length of \code{subpops}.
 #' @param lociOnCols If true, \eqn{X} has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns. Has no effect if \eqn{X} is a function.  If \eqn{X} is a BEDMatrix object, \code{lociOnCols=TRUE} is set automatically.
-#' @param memLim Memory limit in GB, used to break up genotype data into chunks for very large datasets. Note memory usage is somewhat underestimated and is not controlled strictly.  Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 2GB (OSX and other systems).
+#' @param memLim Memory limit in GB, used to break up genotype data into chunks for very large datasets. Note memory usage is somewhat underestimated and is not controlled strictly.  Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 1GB (OSX and other systems).
 #'
 #' @return The estimated \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T}.
 #'

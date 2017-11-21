@@ -34,7 +34,7 @@ getMemLim <- function(factor=0.7, verbose=FALSE) {
     }
     if (is.na(mem)) {
         warning("Could not infer available memory, will default to 1GB!\nPlease specify a memory limit if your run exceeds memory or if default is too low!")
-        mem <- 1024*1024*1024 # when we can't determine free or available memory from system, default to using 2GB!
+        mem <- 1024*1024*1024 # when we can't determine free or available memory from system, default to using 1GB!
     } else {
         mem <- mem*factor # shrink memory by a factor to leave some more memory
     }
