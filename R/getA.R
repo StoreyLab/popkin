@@ -14,7 +14,7 @@ NULL
 ## @param X Genotype matrix, BEDMatrix object, or a function X(mc) that returns the genotype matrix of all individuals at mc successive loci, and NULL when no loci are left.
 ## @param n Number of individuals (required only when X is a function, ignored otherwise)
 ## @param lociOnCols If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, lociOnCols=TRUE is set automatically.
-## @param memLim Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 2GB, except in linux it is the free memory in the system times 0.7.
+## @param memLim Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 1GB, except in linux it is the free memory in the system times 0.7.
 ##
 ## @return The A matrix.
 ##
@@ -40,7 +40,9 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     } 
     
     ## extract dimensions from data (not possible for function version)
-    if (!isFn) {
+    if (isFn) {
+        m <- NA # have to define as NA to pass to getMemLimM below
+    } else {
         if (lociOnCols) {
             if (!is.na(n) && n != nrow(X)) 
                 warning('User set number of samples that does not match X dimensions (will go with latter): ', n, ' != ', nrow(X))
@@ -62,16 +64,21 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     mc <- getMemLimM(m, n, memLim)
 
     ## navigate chunks
-    mcis <- seq.int(1, m, mc)
-    for (mci in mcis) {
-        is <- mci:min(mci+mc-1,m) ## range of SNPs to extract in this chunk
+    mci <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)
+    while(TRUE) { # start an infinite loop, break inside as needed
         if (isFn) {
-            Xi <- X( length(is) ) # get next SNPs
+            Xi <- X( mc ) # get next "mc" SNPs
             if (is.null(Xi)) break # stop when SNPs run out (only happens for functions X, not matrices)
-        } else if (lociOnCols) {
-            Xi <- t(X[,is, drop=FALSE]) # transpose for our usual setup
-        } else  {
-            Xi <- X[is, , drop=FALSE]
+        } else {
+            ## here m is known...
+            if (mci > m) break # this means all SNPs have been covered!
+            is <- mci:min(mci+mc-1,m) ## range of SNPs to extract in this chunk
+            if (lociOnCols) {
+                Xi <- t(X[,is, drop=FALSE]) # transpose for our usual setup
+            } else  {
+                Xi <- X[is, , drop=FALSE]
+            }
+            mci <- mci+mc # update starting point for next chunk! (overshoots at the end, that's ok)
         }
 
         ## before passing along to my RcppEigen code, I need to make sure the genotypes are treated by R as integers or RcppEigen dies on me
