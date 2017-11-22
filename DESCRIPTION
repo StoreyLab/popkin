@@ -1,6 +1,6 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbirary Population Structure
-Version: 1.0.0.9000
+Version: 1.0.1.9000
 Authors@R: c(
 	   person("Alejandro", "Ochoa", email = "ochoa@princeton.edu", role = c("aut", "cre")),
 	   person("John D.", "Storey", email = "jstorey@princeton.edu", role = c("aut"))
