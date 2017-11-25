@@ -10,8 +10,8 @@ plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
   nr = 1, legTitle = "Kinship", legMar = NULL, nPretty = 5,
   showNames = FALSE, namesCex = 1, namesLine = NA, labs = NULL,
   labsCex = 1, labsLas = 0, labsLine = 0, labsSkipLines = FALSE,
-  labsLwd = 1, labsDoTicks = FALSE, labsDoText = TRUE, labsEven = FALSE,
-  ...)
+  labsLwd = 1, labsCol = "black", labsDoTicks = FALSE,
+  labsDoText = TRUE, labsEven = FALSE, ...)
 }
 \arguments{
 \item{x}{A numeric kinship matrix or a list of matrices}
@@ -73,6 +73,8 @@ SUBPOPULATION LABEL OPTIONS}
 \item{labsSkipLines}{A vector of booleans that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel}
 
 \item{labsLwd}{A vector of line widths for the lines that divide subpopulations (if \code{labsSkipLines=FALSE}) for each level of labs, or a list of such vectors if labels vary per panel}
+
+\item{labsCol}{A vector of colors for the lines that divide subpopulations (if \code{labsSkipLines=FALSE}) for each level of labs, or a list of such vectors if labels vary per panel}
 
 \item{labsDoTicks}{A vector of booleans that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel}
 

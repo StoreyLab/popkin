@@ -6,3 +6,7 @@
 
 * Fix a bug in which genotypes input to popkin via a function (rather than a regular matrix or a BEDMatrix object) caused popkin to die.  Now popkin behaves as expected.  New test unit cases were added to test function inputs (previously this case was untested).
 
+# 2017-11-24 - popkin 1.0.2.9000
+
+* Added option to set colors for the lines that separate subpopulations.
+
