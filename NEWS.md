@@ -10,3 +10,7 @@
 
 * Added option to set colors for the lines that separate subpopulations.
 
+# 2018-01-08 - popkin 1.0.3
+
+* Minor non-code changes for first CRAN submission.
+

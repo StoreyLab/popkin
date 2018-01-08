@@ -4,7 +4,16 @@
 # actually runs document and test internally, but doesn't install
 # --no-build-vignettes so we use the vignettes that are there already (were manually compressed with vigcomp, which is undone without this option)
 all:
-	R -e 'devtools::check(build_args="--no-build-vignettes")'
+	R -e 'devtools::check(vignettes=FALSE)'
+
+build:
+	R -e 'devtools::build(vignettes=FALSE)'
+
+buildWinR:
+	R -e 'devtools::build_win(args="--no-build-vignettes", version="R-release")'
+
+buildWinD:
+	R -e 'devtools::build_win(args="--no-build-vignettes")' # R-devel
 
 doc:
 	R -e 'devtools::document()'
@@ -25,3 +34,6 @@ man:
 
 install:
 	R -e 'devtools::install()'
+
+release:
+	R -e 'devtools::release()'
