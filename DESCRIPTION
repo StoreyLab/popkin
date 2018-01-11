@@ -5,7 +5,7 @@ Authors@R: c(
 	   person("Alejandro", "Ochoa", email = "ochoa@princeton.edu", role = c("aut", "cre")),
 	   person("John D.", "Storey", email = "jstorey@princeton.edu", role = c("aut"))
 	   )
-Description: Provides functions to estimate the kinship matrix of individuals from a large set of biallelic SNPs, and extract inbreeding coefficients and the generalized FST.
+Description: Provides functions to estimate the kinship matrix of individuals from a large set of biallelic SNPs, and extract inbreeding coefficients and the generalized FST (Wright's fixation index).  Method described in Ochoa and Storey (2016) <doi:10.1101/083923>.
 Depends: 
 Imports: Rcpp (>= 0.12.10), RColorBrewer, graphics
 LinkingTo: Rcpp, RcppEigen
@@ -15,3 +15,5 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1.9000
 VignetteBuilder: knitr
+URL: https://github.com/StoreyLab/popkin/
+BugReports: https://github.com/StoreyLab/popkin/issues

@@ -49,6 +49,14 @@ Phi2 <- rescalePopkin(Phi, subpops2)
 }
 
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/StoreyLab/popkin/}
+  \item Report bugs at \url{https://github.com/StoreyLab/popkin/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Alejandro Ochoa \email{ochoa@princeton.edu}
 
