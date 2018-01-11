@@ -5,12 +5,11 @@ date: "`r Sys.Date()`"
 output:
   pdf_document:
     number_sections: true
-#  - rmarkdown::html_vignette
 bibliography: popkin.bib
 vignette: >
   %\VignetteIndexEntry{Estimate Kinship and FST under Arbitrary Population Structure}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 \newcommand{\Fst}{F_{\text{ST}}}
