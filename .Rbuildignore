@@ -3,5 +3,5 @@
 \.git
 \.gitignore
 ^README\.md$
-Makefile
+^Makefile$
 ^cran-comments\.md$
