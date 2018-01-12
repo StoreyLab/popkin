@@ -9,7 +9,18 @@
 ## @return The estimated \eqn{n \times n}{n-by-n} kinship matrix, with a minimum expected value of zero.
 ##
 ## @examples
-## \dontrun{Phi <- getKinshipFromA(A, AEmin)}
+## ## Construct toy data
+## X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+## subpops <- c(1,1,2) # subpopulation assignments for individuals
+##
+## ## NOTE: for BED-formatted input, use BEDMatrix!
+## ## "file" is path to BED file (excluding .bed extension)
+## # library(BEDMatrix)
+## # X <- BEDMatrix(file) # load genotype matrix object
+##
+## A <- getA(X) # calculate A from genotypes
+## AEMin <- minAvgSubpops(A, subpops)
+## Phi <- getKinshipFromA(A, AEmin)
 getKinshipFromA <- function(A, AEMin) {
     ## implements the simple transformation of A and AEMinHat into PhiHat
     Phi <- 1 - A/AEMin # return this matrix!

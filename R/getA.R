@@ -19,13 +19,16 @@ NULL
 ## @return The A matrix.
 ##
 ## @examples
-## \dontrun{
-## ## This example assumes input is in BED format and is loaded using BEDMatrix
+## ## Construct toy data
+## X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+##
+## ## NOTE: for BED-formatted input, use BEDMatrix!
 ## ## "file" is path to BED file (excluding .bed extension)
-## library(BEDMatrix)
-## X <- BEDMatrix(file) # load genotype matrix object
+## # library(BEDMatrix)
+## # X <- BEDMatrix(file) # load genotype matrix object
+##
 ## A <- getA(X) # calculate A from genotypes
-## }
+## 
 getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     ## determine some behaviors depending on data type
     ## first validate class and set key booleans

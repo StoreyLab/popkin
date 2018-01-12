@@ -13,15 +13,17 @@ Kinship matrices can be renormalized (to change the most recent common ancestor 
 Lastly, kinship and pairwise \eqn{F_{ST}}{FST} matrices can be visualized using \code{\link{plotPopkin}} (with the help of \code{\link{inbrDiag}} for kinship matrices only).
 }
 \examples{
-\dontrun{
 ## estimate and visualize kinship and FST from a genotype matrix
 
-## This example assumes input is in BED format and is loaded using BEDMatrix
-## "file" is path to BED file (excluding .bed extension)
-library(BEDMatrix)
-X <- BEDMatrix(file) # load genotype matrix object
+## Construct toy data
+X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+subpops <- c(1,1,2) # subpopulation assignments for individuals
+subpops2 <- 1:3 # alternate labels treat every individual as a different subpop
 
-## "subpops" below is a vector of subpopulation assignments for individuals
+## NOTE: for BED-formatted input, use BEDMatrix!
+## "file" is path to BED file (excluding .bed extension)
+# library(BEDMatrix)
+# X <- BEDMatrix(file) # load genotype matrix object
 
 ## estimate the kinship matrix "Phi" from the genotypes "X"!
 ## all downstream analysis require "Phi", none use "X" after this
@@ -29,7 +31,7 @@ Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 
 ## plot the kinship matrix, marking the subpopulations
 ## note inbrDiag replaces the diagonal of Phi with inbreeding coefficients
-plotPopkin( inbrDiag(Phi), labels=subpops )
+plotPopkin( inbrDiag(Phi), labs=subpops )
 
 ## extract inbreeding coefficients from Phi
 inbr <- inbr(Phi)
@@ -46,7 +48,6 @@ plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbrDiag() h
 
 ## rescale the kinship matrix using different subpopulations (implicitly changes the MRCA)
 Phi2 <- rescalePopkin(Phi, subpops2)
-}
 
 }
 \seealso{

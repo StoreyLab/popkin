@@ -102,15 +102,21 @@ For example, only the y-axis is labeled under the assumption that the x-axis is 
 Also, the same subpopulation labels are reproduced on both axes (for clarity).
 }
 \examples{
-\dontrun{
-## This example assumes input is in BED format and is loaded using BEDMatrix
+## Construct toy data
+X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+subpops <- c(1,1,2) # subpopulation assignments for individuals
+
+## NOTE: for BED-formatted input, use BEDMatrix!
 ## "file" is path to BED file (excluding .bed extension)
-library(BEDMatrix)
-X <- BEDMatrix(file) # load genotype matrix object
-Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
-## simple plot without labels or any other non-default options
+# library(BEDMatrix)
+# X <- BEDMatrix(file) # load genotype matrix object
+
+## estimate the kinship matrix "Phi" from the genotypes "X"!
+Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
+
+## simple plot of the kinship matrix, marking the subpopulations only
+## note inbrDiag replaces the diagonal of Phi with inbreeding coefficients
 ## (see vignette for more elaborate examples)
-plotPopkin( inbrDiag(Phi) ) # plot the kinship matrix after transforming the diagonal
-}
+plotPopkin( inbrDiag(Phi), labs=subpops )
 
 }

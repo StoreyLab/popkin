@@ -63,16 +63,22 @@
 #' @param ... Additional options passed to \code{\link[graphics]{image}}.  These are shared across panels
 #'
 #' @examples
-#' \dontrun{
-#' ## This example assumes input is in BED format and is loaded using BEDMatrix
+#' ## Construct toy data
+#' X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+#' subpops <- c(1,1,2) # subpopulation assignments for individuals
+#' 
+#' ## NOTE: for BED-formatted input, use BEDMatrix!
 #' ## "file" is path to BED file (excluding .bed extension)
-#' library(BEDMatrix)
-#' X <- BEDMatrix(file) # load genotype matrix object
-#' Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
-#' ## simple plot without labels or any other non-default options
+#' # library(BEDMatrix)
+#' # X <- BEDMatrix(file) # load genotype matrix object
+#'
+#' ## estimate the kinship matrix "Phi" from the genotypes "X"!
+#' Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
+#'
+#' ## simple plot of the kinship matrix, marking the subpopulations only
+#' ## note inbrDiag replaces the diagonal of Phi with inbreeding coefficients
 #' ## (see vignette for more elaborate examples)
-#' plotPopkin( inbrDiag(Phi) ) # plot the kinship matrix after transforming the diagonal
-#' }
+#' plotPopkin( inbrDiag(Phi), labs=subpops )
 #'
 #' @export
 plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine=FALSE,
@@ -286,7 +292,19 @@ repOrDieList <- function(vals, n) {
 ## @return Nothing
 ##
 ## @examples
-## \dontrun{
+## ## Construct toy data
+## X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+## subpops <- c(1,1,2) # subpopulation assignments for individuals
+## 
+## ## NOTE: for BED-formatted input, use BEDMatrix!
+## ## "file" is path to BED file (excluding .bed extension)
+## # library(BEDMatrix)
+## # X <- BEDMatrix(file) # load genotype matrix object
+##
+## ## estimate the kinship matrix "Phi" from the genotypes "X"!
+## Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
+## Phi <- inbrDiag(Phi) # transform diagonal permanently
+##
 ## ## suppose Phi is the only kinship matrix to plot, then...
 ##
 ## ## VERSION 1: direct plot through plotPopkin (easiest but restricts layout/margin choices)
@@ -306,7 +324,6 @@ repOrDieList <- function(vals, n) {
 ## heatLegImage(breaks, xRange=rangeReal) # pass real range here
 ## ## label y-axis on outer margin
 ## mtext('Individuals', side=2, outer=TRUE)
-## }
 ##
 ## @export
 heatLegImage <- function(breaks, xRange, varname='Kinship', col=NULL, nPretty=5) {

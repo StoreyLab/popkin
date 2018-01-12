@@ -32,12 +32,15 @@ it suffices to rescale the given \eqn{\Phi^T} using \code{\link{rescalePopkin}}
 The matrix \eqn{X} must have values only in \code{c(0,1,2,NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.
 }
 \examples{
-\dontrun{
-## This example assumes input is in BED format and is loaded using BEDMatrix
+## Construct toy data
+X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+subpops <- c(1,1,2) # subpopulation assignments for individuals
+
+## NOTE: for BED-formatted input, use BEDMatrix!
 ## "file" is path to BED file (excluding .bed extension)
-library(BEDMatrix)
-X <- BEDMatrix(file) # load genotype matrix object
+# library(BEDMatrix)
+# X <- BEDMatrix(file) # load genotype matrix object
+
 Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
-}
 
 }

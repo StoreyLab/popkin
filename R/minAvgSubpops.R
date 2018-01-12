@@ -17,12 +17,22 @@
 ## @return The scalar estimate of the minimum expected value of \eqn{Y}.
 ##
 ## @examples
-## \dontrun{
+## ## Construct toy data
+## X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+## subpops <- c(1,1,2) # subpopulation assignments for individuals
+##
+## ## NOTE: for BED-formatted input, use BEDMatrix!
+## ## "file" is path to BED file (excluding .bed extension)
+## # library(BEDMatrix)
+## # X <- BEDMatrix(file) # load genotype matrix object
+##
+## A <- getA(X) # calculate A from genotypes
+## 
 ## ## the recommended form using appropriate subpopulation labels
 ## AEMinHat <- minAvgSubpops(A, subpops)
 ## ## a simple default for exploratory analysis
 ## AEMinHat <- minAvgSubpops(A) # == min(A)
-## }
+## 
 minAvgSubpops <- function(Y, subpops=NULL) {
     if (is.null(subpops)) return(min(Y))
     

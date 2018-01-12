@@ -18,13 +18,16 @@
 #' @return The estimated \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T}.
 #'
 #' @examples
-#' \dontrun{
-#' ## This example assumes input is in BED format and is loaded using BEDMatrix
+#' ## Construct toy data
+#' X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+#' subpops <- c(1,1,2) # subpopulation assignments for individuals
+#' 
+#' ## NOTE: for BED-formatted input, use BEDMatrix!
 #' ## "file" is path to BED file (excluding .bed extension)
-#' library(BEDMatrix)
-#' X <- BEDMatrix(file) # load genotype matrix object
+#' # library(BEDMatrix)
+#' # X <- BEDMatrix(file) # load genotype matrix object
+#'
 #' Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
-#' }
 #'
 #' @export
 popkin <- function(X, subpops=NULL, n=NA, lociOnCols=FALSE, memLim=NA) {
