@@ -17,3 +17,22 @@ There was 1 NOTE:
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
+
+## Comments from last submission
+
+* Package has a VignetteBuilder field but no prebuilt vignette index.
+
+  Fixed.
+
+* Is there some reference about the method you can add in the Description field in the form Authors (year) <doi:.....>?
+
+  Added a reference to the Description field of the DESCRIPTION file.
+
+* Please also explain acronyms like FST in your description.
+
+  Done. (FST is not an acronym but is commonly described as "Wright's fixation index").
+
+* Is there any reason why most of your examples are wreapped in \dontrun{}? Why not \donttest{} or completely unwrapped?
+
+  All examples have been modified to be runnable by making use of toy data that was previously absent.
+
