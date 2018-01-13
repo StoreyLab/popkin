@@ -1,0 +1,23 @@
+bibentry(
+    bibtype = "Article",
+    title   = "{FST} and kinship for arbitrary population structures {II}: Method of moments estimators",
+    author  = personList(
+        person("Alejandro", "Ochoa"),
+        person("John D.", "Storey")
+    ),
+    journal = "bioRxiv",
+    year    = "2016",
+    doi     = '10.1101/083923',
+    )
+
+bibentry(
+    bibtype = "Article",
+    title   = "{FST} and kinship for arbitrary population structures {I}: Generalized definitions",
+    author  = personList(
+        person("Alejandro", "Ochoa"),
+        person("John D.", "Storey")
+    ),
+    journal = "bioRxiv",
+    year    = "2016",
+    doi     = '10.1101/083915',
+    )
