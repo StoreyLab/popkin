@@ -29,6 +29,8 @@ vigcomp:
 
 .PHONY: man
 
+.PHONY: build
+
 man:
 	cd ..; if [ -f popkin.pdf ]; then rm popkin.pdf; fi; R CMD Rd2pdf popkin
 

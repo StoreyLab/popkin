@@ -14,3 +14,9 @@
 
 * Minor non-code changes for first CRAN submission.
 
+# 2018-01-13 - popkin 1.0.4
+
+* All doc examples are now run (all used to be "dontrun").
+
+* Other minor non-code changes for first CRAN submission.
+
