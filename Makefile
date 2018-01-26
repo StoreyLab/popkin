@@ -40,8 +40,9 @@ install:
 ### required steps (first time only):
 # dnf install aspell aspell-en valgrind
 # install.packages(c('rversions', 'hunspell'))
-release:
-	R -e 'devtools::release(args="--no-build-vignettes")'
+### can't run this way (must be interactive session), but need this trick:
+# release:
+# 	R -e 'devtools::release(args="--no-build-vignettes")'
 
 ### after building, ran this separately:
 # R CMD check --use-valgrind popkin_1.0.3.tar.gz 
