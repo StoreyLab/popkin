@@ -27,6 +27,9 @@ vig:
 vigcomp:
 	R -e 'tools::compactPDF("inst/doc/", gs_quality = "printer")'
 
+revdep:
+	R -e 'devtools::revdep_check()'
+
 .PHONY: man
 
 .PHONY: build
