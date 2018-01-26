@@ -46,7 +46,7 @@ Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 Plot the kinship matrix, marking the subpopulations.
 Note `inbrDiag` replaces the diagonal of `Phi` with inbreeding coefficients
 ```R
-plotPopkin( inbrDiag(Phi), labels=subpops )
+plotPopkin( inbrDiag(Phi), labs=subpops )
 ```
 
 Extract inbreeding coefficients from `Phi`
