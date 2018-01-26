@@ -12,6 +12,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, cache=FALSE, include=FALSE}
+## copied from examples from the "simmer" R package
+## after: https://www.enchufa2.es/archives/suggests-and-vignettes.html
+## by Iñaki Úcar
+required <- c("lfa") # not a CRAN package, only suggested since popkin doesn't need it to run...
+
+if (!all(sapply(required, requireNamespace, quietly = TRUE)))
+  knitr::opts_chunk$set(eval = FALSE)
+```
+
 \newcommand{\Fst}{F_{\text{ST}}}
 \newcommand{\ft}[1][j]{f_{#1}^T}
 \newcommand{\kt}[1][k]{\varphi_{j#1}^T} % total kinship coefficient
@@ -97,7 +107,11 @@ X <- hgdp_subset # rename for simplicity
 dim(X)
 ```
 
-This data has $m=`r nrow(X)`$ loci and $n=`r ncol(X)`$ individuals, and is oriented as `popkin` expects by default.
+This data has
+$m=`r if(exists("X")) nrow(X) else NA`$ <!-- exists test needed for when "lfa" is unavailable at CRAN servers... -->
+loci and
+$n=`r if(exists("X")) ncol(X) else NA`$ <!-- exists test needed for when "lfa" is unavailable at CRAN servers... -->
+individuals, and is oriented as `popkin` expects by default.
 These samples have labels grouping them by continental subpopulation in `colnames(X)`.
 To make visualizations easier later on, let's shorten these labels and reorder to have nice blocks:
 

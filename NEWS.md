@@ -20,3 +20,7 @@
 
 * Other minor non-code changes for first CRAN submission.
 
+# 2018-01-26 - popkin 1.0.5
+
+* Updated vignette code to work when suggested package "lfa" is not available (needed for CRAN tests).  This change is not visible in rendered vignette included in package.
+

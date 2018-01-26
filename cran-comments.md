@@ -7,8 +7,6 @@ There were no ERRORs or WARNINGs.
 
 There was 1 NOTE:
 
-* New submission
-
 * Possibly mis-spelled words in DESCRIPTION:
     FST (2:29, 8:171)
     biallelic (8:99)
@@ -16,23 +14,21 @@ There was 1 NOTE:
   These two words are spelled correctly.
 
 ## Downstream dependencies
-There are currently no downstream dependencies for this package.
+Tested 'bnpsd' (only downstream dependency) and found no errors or warnings.
 
 ## Comments from last submission
 
-* Package has a VignetteBuilder field but no prebuilt vignette index.
+* You are not using Suggests packages conditionally as required in §1.1.3.1 of the manual.
+Output from https://cran.r-project.org/web/checks/check_results_popkin.html :
+Version: 1.0.4
+Check: re-building of vignette outputs
+Result: WARN
+    Error in re-building vignettes:
+     ...
+    Quitting from lines 94-98 (popkin.Rmd)
+    Error: processing vignette 'popkin.Rmd' failed with diagnostics:
+    there is no package called 'lfa'
+    Execution halted
+Flavors: r-devel-linux-x86_64-fedora-clang, r-devel-linux-x86_64-fedora-gcc
 
-  Fixed.
-
-* Is there some reference about the method you can add in the Description field in the form Authors (year) <doi:.....>?
-
-  Added a reference to the Description field of the DESCRIPTION file.
-
-* Please also explain acronyms like FST in your description.
-
-  Done. (FST is not an acronym but is commonly described as "Wright's fixation index").
-
-* Is there any reason why most of your examples are wreapped in \dontrun{}? Why not \donttest{} or completely unwrapped?
-
-  All examples have been modified to be runnable by making use of toy data that was previously absent.
-
+  I have modified the vignette to rebuild without errors when 'lfa' is not available.
