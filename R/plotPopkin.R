@@ -15,10 +15,10 @@
 #' For example, only the y-axis is labeled under the assumption that the x-axis is the same.
 #' Also, the same subpopulation labels are reproduced on both axes (for clarity).
 #'
-#' @param x A numeric kinship matrix or a list of matrices
+#' @param x A numeric kinship matrix or a list of matrices.  Note \code{x} may contain \code{NULL} elements (makes blank plots with titles; good for placeholders or non-existent data)
 #' @param titles Titles to add to each matrix panel (default is no titles)
 #' @param col Colors for heatmap
-#' @param xMar Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  By default the existing margin values are used without change
+#' @param xMar Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  Note the padding \code{marPad} below is also added to every margin if set.  By default the existing margin values are used without change
 #' @param marPad Margin padding added to all panels (\code{xMar} above and \code{legMar} below).  Default 0.2.  Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
 #' @param diagLine If \code{TRUE} adds a line along the diagonal (default no line).  May also be a vector of booleans to set per panel (lengths must agree)
 #' @param panelLetters Vector of strings for labeling panels (default A-Z).  No labels are added when there is only one panel, or if `panelLetters=NULL`
@@ -133,12 +133,16 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
         ylabAdj <- repOrDie(ylabAdj, n)
         ylabLine <- repOrDie(ylabLine, n)
     }
+
+    ## figure out which data are non-NULL
+    isNonNull <- !sapply(x, is.null)
+    if (!any(isNonNull)) stop('Fatal: every element of list "x" is NULL!')
     
     ## code needs two versions of the range
     ## - rangeReal is the real range, used in the end so the color key doesn't show values that weren't actually used
     ## - rangeS is a symmetric range, used internally to ensure zero is in the exact middle (set to white in the default)
     ## get range and construct symmetric range that helps with plotting nice colors with white at zero
-    rangeReal <- range( unlist(lapply(x, range, na.rm=TRUE)) )  # range of all data plotted
+    rangeReal <- range( unlist(lapply(x[isNonNull], range, na.rm=TRUE)) )  # range of all non-NULL data plotted
     ## these next few lines force symmetry for colors (might look better, not sure)
     maxS <- max(abs(rangeReal))
     rangeS <- c(-maxS, maxS)
@@ -149,11 +153,13 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
     marPre <- graphics::par('mar') # save original margins, in case there are changes
     
     ## breaks of all following plots should match!
+    breaks <- NULL
     for (i in 1:n) {
         if (!is.null(xMar[[i]])) {
             graphics::par(mar=xMar[[i]]+marPad) # change margins if necessary!
         }
-        breaks <- plotPopkinSingle(x[[i]], xRange=rangeS, col=col, showNames=showNames[i], namesCex=namesCex[i], namesLine=namesLine[i], labs=labs[[i]], labsCex=labsCex[[i]], labsLas=labsLas[[i]], labsLine=labsLine[[i]], labsLwd=labsLwd[[i]], labsSkipLines=labsSkipLines[[i]], labsDoTicks=labsDoTicks[[i]], labsDoText=labsDoText[[i]], labsCol=labsCol[[i]], labsEven=labsEven[[i]], diagLine=diagLine[i], main=titles[i], ...)
+        breaksi <- plotPopkinSingle(x[[i]], xRange=rangeS, col=col, showNames=showNames[i], namesCex=namesCex[i], namesLine=namesLine[i], labs=labs[[i]], labsCex=labsCex[[i]], labsLas=labsLas[[i]], labsLine=labsLine[[i]], labsLwd=labsLwd[[i]], labsSkipLines=labsSkipLines[[i]], labsDoTicks=labsDoTicks[[i]], labsDoText=labsDoText[[i]], labsCol=labsCol[[i]], labsEven=labsEven[[i]], diagLine=diagLine[i], main=titles[i], ...)
+        if (!is.null(breaksi)) breaks <- breaksi # don't overwrite for non-data x[[i]] cases
         ## add ylab for every panel when there is more than one choice, and provided it was non-NA
         ## uses inner rather than outer margin (only choice that makes sense)
         if (length(ylab) > 1 && !is.na(ylab[i])) 
@@ -183,8 +189,16 @@ plotPopkin <- function(x, titles=NULL, col=NULL, xMar=NULL, marPad=0.2, diagLine
     graphics::par(mar=marPre) # restore margins!
 }
 
-plotPopkinSingle <- function (x, xRange=range(x, na.rm=TRUE), col=NULL, showNames=FALSE, namesCex=1, namesLine=NA, xlab = "", ylab = "", labs=NULL, labsCex=1, labsLas=0, labsLine=0, labsLwd=1, labsSkipLines=FALSE, labsDoTicks=FALSE, labsDoText=TRUE, labsCol='black', labsEven=FALSE, diagLine=FALSE, ...) {
+plotPopkinSingle <- function (x=NULL, xRange=range(x, na.rm=TRUE), col=NULL, showNames=FALSE, namesCex=1, namesLine=NA, xlab = "", ylab = "", labs=NULL, labsCex=1, labsLas=0, labsLine=0, labsLwd=1, labsSkipLines=FALSE, labsDoTicks=FALSE, labsDoText=TRUE, labsCol='black', labsEven=FALSE, diagLine=FALSE, ...) {
     ## this "raw" version does not plot legend or set margins, best for optimized scenarios...
+
+    ## shortcut when there's no data to plot (placeholders)
+    ## let's still start a new plot with a title, nothing else gets added
+    if (is.null(x)) {
+        graphics::plot.new() # new blank figure
+        graphics::title(...) # this works?
+        return(NULL) # return null breaks in this case only!
+    }
     
     ## data validation
     if (is.null(col)) col <- palPopkin() # default coloring

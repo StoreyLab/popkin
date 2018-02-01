@@ -24,3 +24,11 @@
 
 * Updated vignette code to work when suggested package "lfa" is not available (needed for CRAN tests).  This change is not visible in rendered vignette included in package.
 
+# 2018-02-01 - popkin 1.0.5.9000
+
+* plotPopkin now allows NULL elements in input list x, makes empty plots with titles (good for placeholders or other non-existent data)
+
+* Clarified plotPopkin documentation (that marPad is added to xMar values if set)
+
+* README.md now contains instructions for installing from CRAN as well as from GitHub.
+

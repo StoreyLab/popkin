@@ -14,13 +14,13 @@ plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
   labsDoText = TRUE, labsEven = FALSE, ...)
 }
 \arguments{
-\item{x}{A numeric kinship matrix or a list of matrices}
+\item{x}{A numeric kinship matrix or a list of matrices.  Note \code{x} may contain \code{NULL} elements (makes blank plots with titles; good for placeholders or non-existent data)}
 
 \item{titles}{Titles to add to each matrix panel (default is no titles)}
 
 \item{col}{Colors for heatmap}
 
-\item{xMar}{Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  By default the existing margin values are used without change}
+\item{xMar}{Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  Note the padding \code{marPad} below is also added to every margin if set.  By default the existing margin values are used without change}
 
 \item{marPad}{Margin padding added to all panels (\code{xMar} above and \code{legMar} below).  Default 0.2.  Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.}
 
