@@ -7,8 +7,12 @@ Our estimation framework is the first to be practically unbiased under arbitrary
 Installation
 ===
 
-You can install the package from the GitHub repository using `devtools`:
+The stable version of the package is now on CRAN and can be installed using
+```R
+install.packages("popkin")
+```
 
+The current development version can be installed from the GitHub repository using `devtools`:
 ```R
 install.packages("devtools") # if needed
 library(devtools)
