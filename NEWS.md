@@ -32,3 +32,7 @@
 
 * README.md now contains instructions for installing from CRAN as well as from GitHub.
 
+# 2018-07-30 - popkin 1.0.6.9000
+
+* internal function printLabs (used by plotPopkin) is now more flexible in where it places its labels (new args "side1" and "side2")
+

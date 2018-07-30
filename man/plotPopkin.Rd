@@ -5,13 +5,14 @@
 \title{Visualize one or more kinship matrices}
 \usage{
 plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
-  diagLine = FALSE, panelLetters = toupper(letters), panelLetterCex = 1.5,
-  ylab = "Individuals", ylabAdj = NA, ylabLine = 0, addLayout = TRUE,
-  nr = 1, legTitle = "Kinship", legMar = NULL, nPretty = 5,
-  showNames = FALSE, namesCex = 1, namesLine = NA, labs = NULL,
-  labsCex = 1, labsLas = 0, labsLine = 0, labsSkipLines = FALSE,
-  labsLwd = 1, labsCol = "black", labsDoTicks = FALSE,
-  labsDoText = TRUE, labsEven = FALSE, ...)
+  diagLine = FALSE, panelLetters = toupper(letters),
+  panelLetterCex = 1.5, ylab = "Individuals", ylabAdj = NA,
+  ylabLine = 0, addLayout = TRUE, nr = 1, legTitle = "Kinship",
+  legMar = NULL, nPretty = 5, showNames = FALSE, namesCex = 1,
+  namesLine = NA, labs = NULL, labsCex = 1, labsLas = 0,
+  labsLine = 0, labsSkipLines = FALSE, labsLwd = 1,
+  labsCol = "black", labsDoTicks = FALSE, labsDoText = TRUE,
+  labsEven = FALSE, ...)
 }
 \arguments{
 \item{x}{A numeric kinship matrix or a list of matrices.  Note \code{x} may contain \code{NULL} elements (makes blank plots with titles; good for placeholders or non-existent data)}

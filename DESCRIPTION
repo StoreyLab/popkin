@@ -1,6 +1,6 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbitrary Population Structure
-Version: 1.0.5.9000
+Version: 1.0.6.9000
 Authors@R: c(
 	   person("Alejandro", "Ochoa", email = "ochoa@princeton.edu", role = c("aut", "cre")),
 	   person("John D.", "Storey", email = "jstorey@princeton.edu", role = c("aut"))
@@ -13,7 +13,7 @@ Suggests: BEDMatrix, testthat, knitr, rmarkdown, lfa
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr
 URL: https://github.com/StoreyLab/popkin/
 BugReports: https://github.com/StoreyLab/popkin/issues

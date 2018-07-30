@@ -458,7 +458,7 @@ panelLetter <- function(letter, cex=1.5, line=0.5, adj=0) {
     graphics::mtext(letter, cex=cex, line=line, adj=adj)
 }
 
-printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0, doText=TRUE, col='black') {
+printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0, doText=TRUE, col='black', side1=1, side2=2) {
     labsObj <- boundaryLabs(labs)
     ## extract the data (smaller var names)
     l <- labsObj$labels
@@ -525,8 +525,8 @@ printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE,
     
     if (doText) { # can skip if doText==FALSE
         ## place labels at "y" (set according to "even=TRUE" or otherwise)
-        graphics::mtext(l, side=1, at=y, cex=cex, las=las, line=line)
+        graphics::mtext(l, side=side1, at=y, cex=cex, las=las, line=line)
         ## for matrices, do both ways!
-        if (doMat) graphics::mtext(l, side=2, at=xMax-y, cex=cex, las=las, line=line)
+        if (doMat) graphics::mtext(l, side=side2, at=xMax-y, cex=cex, las=las, line=line)
     }
 }
