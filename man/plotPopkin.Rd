@@ -4,22 +4,26 @@
 \alias{plotPopkin}
 \title{Visualize one or more kinship matrices}
 \usage{
-plotPopkin(x, titles = NULL, col = NULL, xMar = NULL, marPad = 0.2,
-  diagLine = FALSE, panelLetters = toupper(letters),
-  panelLetterCex = 1.5, ylab = "Individuals", ylabAdj = NA,
-  ylabLine = 0, addLayout = TRUE, nr = 1, legTitle = "Kinship",
-  legMar = NULL, nPretty = 5, showNames = FALSE, namesCex = 1,
-  namesLine = NA, labs = NULL, labsCex = 1, labsLas = 0,
-  labsLine = 0, labsSkipLines = FALSE, labsLwd = 1,
-  labsCol = "black", labsDoTicks = FALSE, labsDoText = TRUE,
-  labsEven = FALSE, ...)
+plotPopkin(x, titles = NULL, col = NULL, colCont = FALSE,
+  coln = 100, xMar = NULL, marPad = 0.2, diagLine = FALSE,
+  panelLetters = toupper(letters), panelLetterCex = 1.5,
+  ylab = "Individuals", ylabAdj = NA, ylabLine = 0,
+  addLayout = TRUE, nr = 1, legTitle = "Kinship", legMar = NULL,
+  nPretty = 5, showNames = FALSE, namesCex = 1, namesLine = NA,
+  labs = NULL, labsCex = 1, labsLas = 0, labsLine = 0,
+  labsSkipLines = FALSE, labsLwd = 1, labsCol = "black",
+  labsDoTicks = FALSE, labsDoText = TRUE, labsEven = FALSE, ...)
 }
 \arguments{
 \item{x}{A numeric kinship matrix or a list of matrices.  Note \code{x} may contain \code{NULL} elements (makes blank plots with titles; good for placeholders or non-existent data)}
 
 \item{titles}{Titles to add to each matrix panel (default is no titles)}
 
-\item{col}{Colors for heatmap}
+\item{col}{Colors for heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).}
+
+\item{colCont}{If \code{TRUE} then \code{coln} colors will be used in the palette, otherwise (default) only 17 colors are used (those obtained directly from RColorBrewer).  A large value of \code{coln} will give the appearance of continuous colors.}
+
+\item{coln}{The number of colors to use in the heatmap if \code{colCont==TRUE}.}
 
 \item{xMar}{Margins for each panel (if a list) or for all panels (if a vector).  Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.  Note the padding \code{marPad} below is also added to every margin if set.  By default the existing margin values are used without change}
 
