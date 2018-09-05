@@ -4,7 +4,7 @@
 \alias{fst}
 \title{Extract FST from a population-level kinship matrix or vector of inbreeding coefficients}
 \usage{
-fst(x, w)
+fst(x, w = NULL)
 }
 \arguments{
 \item{x}{The vector of inbreeding coefficients \eqn{(f_j^T)}, or the kinship matrix \eqn{\Phi^T} if \code{x} is a matrix.}
@@ -16,7 +16,7 @@ fst(x, w)
 }
 \description{
 This function simply returns the weighted mean inbreeding coefficient \eqn{f_j^T}.
-If no weights are provided, the regular mean \eqn{f_j^T} is returned.
+If weights are \code{NULL} (default), the regular mean \eqn{f_j^T} is returned.
 If a kinship matrix \eqn{\Phi^T} is provided, then \eqn{f_j^T} are extracted from its diagonal using \code{\link{inbr}} (assumes the diagonal of \eqn{\Phi^T} is \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} as \code{\link{popkin}} returns, and not \eqn{f_j^T} as \code{\link{inbrDiag}} returns).
 }
 \details{
@@ -41,7 +41,7 @@ Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 w <- weightsSubpops(subpops) # can weigh individuals so subpopulations are balanced
 Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
 
-Fst <- fst(Phi) # no weights implies uniform weights
+Fst <- fst(Phi) # no (or NULL) weights implies uniform weights
 
 inbr <- inbr(Phi) # if you extracted inbr for some other analysis...
 Fst <- fst(inbr, w) # ...use this inbreeding vector as input too!

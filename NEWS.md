@@ -40,3 +40,7 @@
 
 * Added option for continuous colors, off by default.  Default is still to use only the 17 colors given directly by RColorBrewer.
 
+# 2018-09-05 - popkin 1.0.8.9000
+
+* Changed some function parameter defaults from missing to NULL, added more validation tests (affects fst, inbr, plotPopkin).
+

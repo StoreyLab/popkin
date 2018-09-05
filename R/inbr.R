@@ -24,6 +24,12 @@
 #' 
 #' @export
 inbr <- function(Phi) {
+    ## validate inputs
+    if (missing(Phi)) {
+        stop('Fatal: you must provide a kinship matrix!')
+    } else if (class(Phi) != 'matrix') {
+        stop('Fatal: input kinship matrix must be class "matrix"!')
+    }
     2 * diag(Phi) - 1  # returns vector of inbreeding coefficients!
 }
 

@@ -342,12 +342,12 @@ repOrDieList <- function(vals, n) {
 ## mtext('Individuals', side=2, outer=TRUE)
 ##
 ## @export
-heatLegImage <- function(breaks, xRange, varname='Kinship', col=NULL, colCont=FALSE, coln=100, nPretty=5) {
+heatLegImage <- function(breaks, xRange=NULL, varname='Kinship', col=NULL, colCont=FALSE, coln=100, nPretty=5) {
     ## creates a nicer heatmap legend, but it has to be a standalone image (in its own panel, preferably through layout so it's a skinny panel)
     ## this function fills panel, so here we don't set margins/etc (it's best left to the end user)
 
     if (is.null(col)) col <- palPopkin(cont=colCont, n=coln) # default coloring
-    if (!missing(xRange)) {
+    if (!is.null(xRange)) {
         ## here's a case where we only want to plot things within an altered range than that of breaks/col
         ## expected application is xRange is real data range, while breaks/col are rigged to be wider (particularly because we forced them to be symmetric, and have a white color at zero)
         ## so we'll proceed by assuming xRange is contained in breaks, but we might want to remove breaks and colors with them
@@ -469,7 +469,7 @@ panelLetter <- function(letter, cex=1.5, line=0.5, adj=0) {
     graphics::mtext(letter, cex=cex, line=line, adj=adj)
 }
 
-printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0, doText=TRUE, col='black', side1=1, side2=2) {
+printLabs <- function(labs, x=NULL, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE, doTicks=FALSE, even=FALSE, line=0, doText=TRUE, col='black', side1=1, side2=2) {
     labsObj <- boundaryLabs(labs)
     ## extract the data (smaller var names)
     l <- labsObj$labels
@@ -477,7 +477,7 @@ printLabs <- function(labs, x, doMat=TRUE, cex=1, las=0, lwd=1, skipLines=FALSE,
     n <- length(l) # number of labels (or number of boundaries minus one)
     m <- max(b) # number of individuals plus 1 (usually n+1, but here I messed up notation above, meh)
     ## for non-barplots, the sensible default is to use the indexes as coordinates (or do they have to be normalized?)
-    if (missing(x)) {
+    if (is.null(x)) {
         x <- 1:m
     } else {
         ## a hack necessary for barplots at least
