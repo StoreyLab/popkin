@@ -118,3 +118,93 @@ test_that("function returns precomputed values: inbrDiag", {
     expect_equal(inbrDiag(Phi), PhiInbr)
 })
 
+test_that("neff works", {
+
+    # a small toy case!
+    F <- 0.4 # for this case to produce negative weights, need F > 1/3
+    K <- (1+F)/2 # the self kinship values
+    Phi3 <- matrix(c(K,F,0,F,K,F,0,F,K),nrow=3)
+    w3 <- c(0.4, 0.2, 0.4) # dummy weights for a test
+
+    # default case is sum of elements of inverse matrix!
+    expect_equal(neff(Phi3, retW=FALSE, nonneg=FALSE), sum(solve(Phi3)))
+    # non-max case returns inverse of mean kinship (with uniform weights)
+    expect_equal(neff(Phi3, retW=FALSE, max=FALSE), 1/mean(Phi3))
+    # non-max case returns inverse of weighted mean kinship (with provided non-uniform weights)
+    expect_equal(neff(Phi3, retW=FALSE, max=FALSE, w=w3), 1/drop(w3 %*% Phi3 %*% w3))
+    # test that gradient descent is the default
+    expect_equal(neff(Phi3, retW=FALSE), neff(Phi3, retW=FALSE, algo='G'))
+    # basic inequalities
+    expect_true(neff(Phi3, retW=FALSE) >= 1) # min possible value
+    expect_true(neff(Phi3, retW=FALSE, algo='G') >= 1) # min possible value
+    expect_true(neff(Phi3, retW=FALSE, algo='N') >= 1) # min possible value
+    expect_true(neff(Phi3, retW=FALSE, algo='H') >= 1) # min possible value
+    expect_true(neff(Phi3, retW=FALSE, nonneg=FALSE) >= 1) # min possible value
+    expect_true(neff(Phi3, retW=FALSE, max=FALSE) >= 1) # min possible value
+    expect_true(neff(Phi3, retW=FALSE, max=FALSE, w=w3) >= 1) # min possible value
+    expect_true(neff(Phi3, retW=FALSE) <= 2*nrow(Phi3)) # max possible value
+    expect_true(neff(Phi3, retW=FALSE, algo='G') <= 2*nrow(Phi3)) # max possible value
+    expect_true(neff(Phi3, retW=FALSE, algo='N') <= 2*nrow(Phi3)) # max possible value
+    expect_true(neff(Phi3, retW=FALSE, algo='H') <= 2*nrow(Phi3)) # max possible value
+    expect_true(neff(Phi3, retW=FALSE, nonneg=FALSE) <= 2*nrow(Phi3)) # max possible value
+    expect_true(neff(Phi3, retW=FALSE, nonneg=FALSE) >= neff(Phi3, retW=FALSE)) # the max nEff should really be larger than a non-max case (non-optimal weights)
+    expect_true(neff(Phi3, retW=FALSE, nonneg=FALSE) >= neff(Phi3, retW=FALSE, max=FALSE)) # the max nEff should really be larger than a non-max case (non-optimal weights)
+    expect_true(neff(Phi3, retW=FALSE, nonneg=FALSE) >= neff(Phi3, retW=FALSE, max=FALSE, w=w3)) # the max nEff should really be larger than a non-max case (non-optimal weights)
+    expect_true(neff(Phi3, retW=FALSE) >= neff(Phi3, retW=FALSE, max=FALSE)) # hope the numeric max with non-negative weights gives a larger value than a uniform weights estimate (actually not gauranteed to perform better)
+    expect_true(neff(Phi3, retW=FALSE, algo='G') >= neff(Phi3, retW=FALSE, max=FALSE))
+    expect_true(neff(Phi3, retW=FALSE, algo='N') >= neff(Phi3, retW=FALSE, max=FALSE))
+    expect_true(neff(Phi3, retW=FALSE, algo='H') >= neff(Phi3, retW=FALSE, max=FALSE))
+
+    # construct some other toy data tests
+    # check that we get 2*n on unstructured kinship matrix
+    expect_equal(neff(diag(1/2, 10, 10), retW=FALSE), 20)
+    # check that we get K on extreme Fst=1 independent subpopulations
+    # NOTE: FAILS because it's not invertible... what should we do here???
+    #    expect_equal(neff(matrix(c(1, 1, 0, 1, 1, 0, 0, 0, 1), nrow=3), retW=FALSE), 2)
+    # maybe construct Fst<1 case and compare to theoretical expectation there
+
+    # normally weights are returned too, but their values are less constrained (by construction they sum to one, that's it!)
+    # do test both max versions since nEff is not directly constructed from the weights (test that it's what it should be)
+    # test outputs in that setting now
+    obj <- neff(Phi3, algo='G') # this tests Gradient version
+    expect_equal(class(obj), 'list') # return class is list
+    expect_equal(length(obj), 2) # only have two elements
+    # roughly retest that first element is an nEff
+    expect_true(obj$neff >= 1) # min possible value
+    expect_true(obj$neff <= 2*nrow(Phi3)) # max possible value
+    # roughly test weights
+    expect_equal(sum(obj$w), 1) # verify that weights sum to 1
+    expect_equal(obj$neff, 1/meanKin(Phi3, obj$w)) # verify that neff has the value it should have given the weights
+    
+    obj <- neff(Phi3, algo='N') # this tests Newton version
+    expect_equal(class(obj), 'list') # return class is list
+    expect_equal(length(obj), 2) # only have two elements
+    # roughly retest that first element is an nEff
+    expect_true(obj$neff >= 1) # min possible value
+    expect_true(obj$neff <= 2*nrow(Phi3)) # max possible value
+    # roughly test weights
+    expect_equal(sum(obj$w), 1) # verify that weights sum to 1
+    expect_equal(obj$neff, 1/meanKin(Phi3, obj$w)) # verify that neff has the value it should have given the weights
+    
+    obj <- neff(Phi3, algo='H') # this tests Heuristic version
+    expect_equal(class(obj), 'list') # return class is list
+    expect_equal(length(obj), 2) # only have two elements
+    # roughly retest that first element is an nEff
+    expect_true(obj$neff >= 1) # min possible value
+    expect_true(obj$neff <= 2*nrow(Phi3)) # max possible value
+    # roughly test weights
+    expect_equal(sum(obj$w), 1) # verify that weights sum to 1
+    expect_equal(obj$neff, 1/meanKin(Phi3, obj$w)) # verify that neff has the value it should have given the weights
+    
+    obj <- neff(Phi3, nonneg=FALSE) # this tests optimal version (with possibly negative weights)
+    expect_equal(class(obj), 'list') # return class is list
+    expect_equal(length(obj), 2) # only have two elements
+    # roughly retest that first element is an nEff
+    expect_true(obj$neff >= 1) # min possible value
+    expect_true(obj$neff <= 2*nrow(Phi3)) # max possible value
+    # roughly test weights
+    expect_equal(sum(obj$w), 1) # verify that weights sum to 1
+    expect_equal(obj$neff, 1/meanKin(Phi3, obj$w)) # verify that neff has the value it should have given the weights
+    expect_true(min(obj$w) < 0) # this example must have negative weights, or it's useless!
+})
+

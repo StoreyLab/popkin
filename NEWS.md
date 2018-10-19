@@ -44,3 +44,6 @@
 
 * Changed some function parameter defaults from missing to NULL, added more validation tests (affects fst, inbr, plotPopkin).
 
+# 2018-10-19 - popkin 1.1.0.9000
+
+* Added neff function (estimates effective sample size given a kinship matrix and weights; can find optimal weights that are non-negative or sign-unconstrained, yielding maximum neff values)

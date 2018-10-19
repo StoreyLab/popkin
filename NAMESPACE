@@ -3,6 +3,7 @@
 export(fst)
 export(inbr)
 export(inbrDiag)
+export(neff)
 export(plotPopkin)
 export(popkin)
 export(pwfst)
