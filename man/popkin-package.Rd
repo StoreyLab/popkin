@@ -59,7 +59,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Alejandro Ochoa \email{ochoa@princeton.edu}
+\strong{Maintainer}: Alejandro Ochoa \email{alejandro.ochoa@duke.edu}
 
 Authors:
 \itemize{
