@@ -1,29 +1,29 @@
 #' Calculates the effective sample size of the data
 #'
-#' The effective sample size (\eqn{n_\text{eff}}{n_eff}) is the equivalent number of independent haplotypes that gives the same variance as that observed under the given population.
+#' The effective sample size (\eqn{n_{eff}}{n_eff}) is the equivalent number of independent haplotypes that gives the same variance as that observed under the given population.
 #' The variance in question is for the weighted sample mean ancestral allele frequency estimator.
-#' It follows that \eqn{n_\text{eff}}{n_eff} equals the inverse of the weighted mean kinship.
-#' If \code{max=TRUE}, a calculation is performed that implicitly uses optimal weights which maximize \eqn{n_\text{eff}}{n_eff}: here \eqn{n_\text{eff}}{n_eff} equals the sum of the elements of the inverse kinship matrix.
+#' It follows that \eqn{n_{eff}}{n_eff} equals the inverse of the weighted mean kinship.
+#' If \code{max=TRUE}, a calculation is performed that implicitly uses optimal weights which maximize \eqn{n_{eff}}{n_eff}: here \eqn{n_{eff}}{n_eff} equals the sum of the elements of the inverse kinship matrix.
 #' However, if \code{nonneg=TRUE} and if the above solution has negative weights (common), optimal non-negative weights are found instead (there are three algorithms available, see \code{algo}).
 #' If \code{max=FALSE}, then the input weights are used in this calculation, and if weights are \code{NULL}, uniform weights are used.
 #' 
-#' The maximum \eqn{n_\text{eff}}{n_eff} possible is \eqn{2n}, where \eqn{n} is the number of individuals; this value is attained only when all haplotypes are independent (a completely unstructured population in Hardy-Weinberg equilibrium).
-#' The minimum \eqn{n_\text{eff}}{n_eff} possible is 1, which is attained in an extremely structured population with \eqn{F_{ST}}{FST} of 1, where every individual has exactly the same haplotype at every locus (no heterozygotes).
-#' Moreover, for \eqn{K} extremely-differentiated subpopulations (\eqn{F_{ST}}{FST}=1 per subpopulation) \eqn{n_\text{eff}}{n_eff} equals \eqn{K}.
-#' In this way, \eqn{n_\text{eff}}{n_eff} is smaller than the ideal value of \eqn{2n} depending on the amount of kinship (covariance) in the data.
+#' The maximum \eqn{n_{eff}}{n_eff} possible is \eqn{2n}, where \eqn{n} is the number of individuals; this value is attained only when all haplotypes are independent (a completely unstructured population in Hardy-Weinberg equilibrium).
+#' The minimum \eqn{n_{eff}}{n_eff} possible is 1, which is attained in an extremely structured population with \eqn{F_{ST}}{FST} of 1, where every individual has exactly the same haplotype at every locus (no heterozygotes).
+#' Moreover, for \eqn{K} extremely-differentiated subpopulations (\eqn{F_{ST}}{FST}=1 per subpopulation) \eqn{n_{eff}}{n_eff} equals \eqn{K}.
+#' In this way, \eqn{n_{eff}}{n_eff} is smaller than the ideal value of \eqn{2n} depending on the amount of kinship (covariance) in the data.
 #'
 #' @param Phi An \eqn{n \times n}{n-by-n} kinship matrix.
-#' @param max If \code{TRUE}, returns the maximum \eqn{n_\text{eff}}{n_eff} value among those computed using all possible vectors of weights that sum to one (and which are additionally non-negative if \code{nonneg=TRUE}).  If \code{FALSE}, \eqn{n_\text{eff}}{n_eff} is computed using the specific weight vector provided.
+#' @param max If \code{TRUE}, returns the maximum \eqn{n_{eff}}{n_eff} value among those computed using all possible vectors of weights that sum to one (and which are additionally non-negative if \code{nonneg=TRUE}).  If \code{FALSE}, \eqn{n_{eff}}{n_eff} is computed using the specific weight vector provided.
 #' @param w Weights for individuals (optional). If \code{NULL}, uniform weights are used.  This parameter is ignored if \code{max=TRUE}.
-#' @param retW If \code{TRUE} (default), the (input or optimal) weights are returned in addition to \eqn{n_\text{eff}}{n_eff} (see return value below).  This is highly recommended for troubleshooting when \code{max=TRUE}, as optimal weights may be zero or negative.
-#' @param nonneg If \code{TRUE} (default) and \code{max=TRUE}, non-negative weights that maximize \eqn{n_\text{eff}}{n_eff} are found.  See \code{algo}.  This has no effect if \code{max=FALSE}.
+#' @param retW If \code{TRUE} (default), the (input or optimal) weights are returned in addition to \eqn{n_{eff}}{n_eff} (see return value below).  This is highly recommended for troubleshooting when \code{max=TRUE}, as optimal weights may be zero or negative.
+#' @param nonneg If \code{TRUE} (default) and \code{max=TRUE}, non-negative weights that maximize \eqn{n_{eff}}{n_eff} are found.  See \code{algo}.  This has no effect if \code{max=FALSE}.
 #' @param algo Algorithm for finding optimal non-negative weights (applicable only if \code{nonneg=TRUE} and \code{max=TRUE} and the weights found by matrix inversion are non-negative).
 #' If "Gradient" (default), an optimized gradient descent algorithm is used (fastest; recommended).
 #' If "Newton", the exact multivariate Newton's Method is used (slowest since \eqn{(n+1) \times (n+1)}{(n+1)-by-(n+1)} Hessian matrix needs to be inverted at every iteration; use if possible to confirm that "Gradient" gives the best answer).
 #' If "Heuristic", if the optimal solution by the inverse matrix method contains negative weights, the most negative weight in an iteration is forced to be zero in all subsequent iterations and the rest of the weights are solved for using the inverse matrix method, repeating until all resulting weights are non-negative (also slow, since inversion of large matrices is required; least likely to find optimal solution).
 #' @param tol Tolerance parameter for "Gradient" and "Newton" algorithms. The algorithms converge when the norm of the step vector is smaller than this tolerance value. 
 #'
-#' @return If \code{retW=TRUE}, a list containing \eqn{n_\text{eff}}{n_eff} and the (input [if \code{max=FALSE}] or optimal [if \code{max=TRUE}]) weights are returned.  Otherwise only \eqn{n_\text{eff}}{n_eff} is returned.
+#' @return If \code{retW=TRUE}, a list containing \eqn{n_{eff}}{n_eff} and the (input [if \code{max=FALSE}] or optimal [if \code{max=TRUE}]) weights are returned.  Otherwise only \eqn{n_{eff}}{n_eff} is returned.
 #'
 #' @examples
 #' ## Get nEff from a genotype matrix
