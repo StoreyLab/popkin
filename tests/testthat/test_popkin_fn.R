@@ -19,6 +19,12 @@ Xf <- function(m) {
 }
 n <- ncol(X) # need to pass it separately for function inputs
 
+# NOTE: function version doesn't preserve names, so let's erase names from the matrices to compare to make sure they agree in that sense
+# this is the proper way to do this (setting each of colnames/rownames to NULL is not enough!)
+dimnames(A) <- NULL
+dimnames(Phi0) <- NULL
+dimnames(Phi) <- NULL
+
 ## only repeat tests where genotypes X is input!
 
 test_that("function returns precomputed values: getA", {
@@ -37,3 +43,8 @@ test_that("function returns precomputed values: popkin", {
     ml <<- 1 # reset function after we're done!
 })
 
+test_that("popkin individual names do not exist in this case", {
+    # looks dumb to be testing the precomputed value, but earlier test proved that this agrees with fresh outputs so meh
+    expect_null(colnames(Phi))
+    expect_null(rownames(Phi))
+})

@@ -25,4 +25,10 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         expect_equal(popkin(X, subpops), Phi)
     })
 
+    test_that("popkin preserves names of individuals", {
+        # in this case X is the wide matrix (individuals along rows)
+        expect_equal(rownames(X), colnames(Phi))
+        expect_equal(rownames(X), rownames(Phi))
+    })
+
 }

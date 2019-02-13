@@ -81,6 +81,12 @@ test_that("function returns precomputed values: popkin", {
     expect_equal(popkin(2-X, subpops), Phi)
 })
 
+test_that("popkin preserves names of individuals", {
+    # in this case X is the regular tall matrix (individuals along columns)
+    expect_equal(colnames(X), colnames(Phi))
+    expect_equal(colnames(X), rownames(Phi))
+})
+
 test_that("function returns precomputed values: rescalePopkin", {
     expect_equal(rescalePopkin(Phi0, phiMin=phiMin0), Phi)
     expect_equal(rescalePopkin(Phi0, subpops), Phi)
@@ -109,7 +115,7 @@ test_that("function returns precomputed values: inbr", {
 test_that("function returns precomputed values: pwfst", {
     expect_equal(pwfst(Phi), pwF)
     expect_equal(pwfst(Phi0), pwF)
-    expect_equal(diag(pwF), rep.int(0, nrow(pwF))) # test that diagonal is zero
+    expect_equivalent(diag(pwF), rep.int(0, nrow(pwF))) # test that diagonal is zero ("equivalent" ignores label mismatches)
     expect_true(max(pwF) <= 1)
     ## note estimates may be slightly negative though
 })
