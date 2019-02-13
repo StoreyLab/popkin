@@ -2,15 +2,27 @@
 title: "Estimate Kinship and $F_{\\text{ST}}$ under Arbitrary Population Structure with `popkin`"
 author: "Alejandro Ochoa and John D. Storey"
 date: "`r Sys.Date()`"
-output:
-  pdf_document:
-    number_sections: true
+output: rmarkdown::html_vignette
 bibliography: popkin.bib
 vignette: >
   %\VignetteIndexEntry{Estimate Kinship and FST under Arbitrary Population Structure}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+<!-- Weird way to include these definitions for HTML Markdown -->
+$$
+\newcommand{\Fst}{F_{\text{ST}}}
+\newcommand{\ft}[1][j]{f_{#1}^T}
+\newcommand{\kt}[1][k]{\varphi_{j#1}^T}
+$$
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 ```{r, cache=FALSE, include=FALSE}
 ## copied from examples from the "simmer" R package
@@ -21,10 +33,6 @@ required <- c("lfa") # not a CRAN package, only suggested since popkin doesn't n
 if (!all(sapply(required, requireNamespace, quietly = TRUE)))
   knitr::opts_chunk$set(eval = FALSE)
 ```
-
-\newcommand{\Fst}{F_{\text{ST}}}
-\newcommand{\ft}[1][j]{f_{#1}^T}
-\newcommand{\kt}[1][k]{\varphi_{j#1}^T}
 
 # Introduction
 
