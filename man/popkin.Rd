@@ -19,6 +19,7 @@ popkin(X, subpops = NULL, n = NA, lociOnCols = FALSE, memLim = NA)
 }
 \value{
 The estimated \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T}.
+If \eqn{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
 }
 \description{
 Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T} such that the kinship estimate between the most distant subpopulations is zero on average (this sets the ancestral population \eqn{T} to the most recent common ancestor population).

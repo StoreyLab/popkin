@@ -16,6 +16,7 @@
 #' @param memLim Memory limit in GB, used to break up genotype data into chunks for very large datasets. Note memory usage is somewhat underestimated and is not controlled strictly.  Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 1GB (OSX and other systems).
 #'
 #' @return The estimated \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T}.
+#' If \eqn{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
 #'
 #' @examples
 #' ## Construct toy data
