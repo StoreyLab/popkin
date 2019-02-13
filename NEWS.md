@@ -53,3 +53,5 @@
 * Now the `popkin` function preserves the individual names if they are present in the input genotype matrix.
 These names get copied to the rows and columns of the output kinship matrix.
 
+* Converted the vignette from PDF to HTML
+
