@@ -43,6 +43,8 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     } 
     
     ## extract dimensions from data (not possible for function version)
+    # also get individual names (IDs)
+    namesX <- NULL # default
     if (isFn) {
         m <- NA # have to define as NA to pass to getMemLimM below
     } else {
@@ -51,21 +53,31 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
                 warning('User set number of samples that does not match X dimensions (will go with latter): ', n, ' != ', nrow(X))
             n <- nrow(X)
             m <- ncol(X)
+            namesX <- rownames(X)
         } else {
             if (!is.na(n) && n != ncol(X)) 
                 warning('User set number of samples that does not match X dimensions (will go with latter): ', n, ' != ', ncol(X))
             n <- ncol(X)
             m <- nrow(X)
+            namesX <- colnames(X)
         }
     } 
     
     ## initialize desired matrix
     A <- matrix(0, nrow=n, ncol=n)
     M <- matrix(0, nrow=n, ncol=n) # normalization now varies per individual pair (this tracks NAs, so subtract from overall m below)
-
+    
+    # transfer names from X to A if present
+    # this will carry over all the way to the final kinship matrix!
+    # (M need not have names at all)
+    if (!is.null(namesX)) {
+        colnames(A) <- namesX
+        rownames(A) <- namesX
+    }
+    
     ## infer the number of SNPs to break data into, since we're limited by memory
     mc <- getMemLimM(m, n, memLim)
-
+    
     ## navigate chunks
     mci <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)
     while(TRUE) { # start an infinite loop, break inside as needed
