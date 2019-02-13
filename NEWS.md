@@ -47,3 +47,9 @@
 # 2018-10-19 - popkin 1.1.0.9000
 
 * Added neff function (estimates effective sample size given a kinship matrix and weights; can find optimal weights that are non-negative or sign-unconstrained, yielding maximum neff values)
+
+# 2019-02-13 - popkin 1.1.1.9000
+
+* Now the `popkin` function preserves the individual names if they are present in the input genotype matrix.
+These names get copied to the rows and columns of the output kinship matrix.
+
