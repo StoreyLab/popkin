@@ -55,3 +55,7 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 * Converted the vignette from PDF to HTML
 
+# 2019-02-13 - popkin 1.1.2
+
+* Minor non-code changes for second CRAN submission.
+
