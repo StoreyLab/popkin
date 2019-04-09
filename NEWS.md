@@ -59,9 +59,8 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 * Minor non-code changes for second CRAN submission.
 
-# 2019-04-09 - popkin 1.9.0.9000
+# 2019-04-09 - popkin 1.2.0.9000
 
-* Essentially beta version of 2.0.x series
 * Renamed functions to fit tidyverse naming style
   * `inbrDiag` -> `inbr_diag`
   * `weightsSubpops` -> `weights_subpops`

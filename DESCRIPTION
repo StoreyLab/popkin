@@ -1,6 +1,6 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbitrary Population Structure
-Version: 1.9.0.9000
+Version: 1.2.0.9000
 Authors@R: c(
 	   person("Alejandro", "Ochoa", email = "alejandro.ochoa@duke.edu", role = c("aut", "cre")),
 	   person("John D.", "Storey", email = "jstorey@princeton.edu", role = c("aut"))
