@@ -54,9 +54,9 @@ Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 ```
 
 Plot the kinship matrix, marking the subpopulations.
-Note `inbrDiag` replaces the diagonal of `Phi` with inbreeding coefficients
+Note `inbr_diag` replaces the diagonal of `Phi` with inbreeding coefficients
 ```R
-plotPopkin( inbrDiag(Phi), labs=subpops )
+plotPopkin( inbr_diag(Phi), labs=subpops )
 ```
 
 Extract inbreeding coefficients from `Phi`
@@ -75,7 +75,7 @@ Estimate and visualize the pairwise FST matrix
 ```R
 pwF <- pwfst(Phi) # estimated matrix
 legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
-plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbrDiag() here!
+plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbr_diag() here!
 ```
 
 Rescale the kinship matrix using different subpopulations (implicitly changes the most recent common ancestor population used as reference)

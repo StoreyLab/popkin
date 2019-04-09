@@ -12,6 +12,29 @@ load('Xs.RData')
 
 ## start with lower-level/internal tests, more informative that higher-level function errors
 
+test_that("validate_kinship works", {
+    # validate positive examples
+    expect_silent( validate_kinship( Phi ) )
+    expect_silent( validate_kinship( Phi0 ) )
+    expect_silent( validate_kinship( A ) ) # not real kinship but satisfies requirements
+
+    # negative examples
+    # dies if input is missing
+    expect_error( validate_kinship() )
+    
+    # and if input is not a matrix
+    expect_error( validate_kinship( 1:5 ) )
+    
+    # and for non-numeric matrices
+    char_mat <- matrix(c('a', 'b', 'c', 'd'), nrow=2)
+    expect_error( validate_kinship( char_mat ) )
+    
+    # and non-square matrices
+    non_kinship <- matrix(1:2, nrow=2)
+    expect_error( validate_kinship( non_kinship ) )
+})
+
+
 test_that("getMemLim returns positive numbers", {
     mem <- getMemLim()
     expect_equal(class(mem), 'numeric')
@@ -120,8 +143,13 @@ test_that("function returns precomputed values: pwfst", {
     ## note estimates may be slightly negative though
 })
 
-test_that("function returns precomputed values: inbrDiag", {
-    expect_equal(inbrDiag(Phi), PhiInbr)
+test_that("inbr_diag works", {
+    # dies when kinship matrix is missing
+    expect_error( inbr_diag() )
+    # make sure precomputed values match
+    expect_equal( inbr_diag(Phi), PhiInbr )
+    # test list version (just duplicates things)
+    expect_equal( inbr_diag(list(Phi, Phi)), list(PhiInbr, PhiInbr) )
 })
 
 test_that("neff works", {

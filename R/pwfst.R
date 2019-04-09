@@ -30,7 +30,7 @@ pwfst <- function(Phi) {
     ## sanity check
     if (nrow(Phi) != ncol(Phi)) stop('Fatal: input kinship matrix is not square (dims: ', nrow(Phi), ' x ', ncol(Phi), ')')
     ## the below code works best with Phi scaled like a coancestry matrix
-    Phi <- inbrDiag(Phi)
+    Phi <- inbr_diag(Phi)
     ## extract inbreeding coefficients
     inbrs <- diag(Phi)
     ## construct other things for estimation

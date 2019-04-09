@@ -168,12 +168,12 @@ plotPopkin(Phi, labs=subpops)
 ```
 
 Ignoring the overlapping labels for a moment, this plot shows that self-kinship (the diagonal) is much greater than kinship between different individuals (min $\kt[j] \ge 0.5$).
-It makes more sense to plot inbreeding ($\ft$) values on the diagonal (they are on the same scale as $\kt$ for $j \ne k$), which is achieved using `inbrDiag`:
+It makes more sense to plot inbreeding ($\ft$) values on the diagonal (they are on the same scale as $\kt$ for $j \ne k$), which is achieved using `inbr_diag`:
 
 ```{r, fig.width=4.2, fig.height=3, fig.align='center'}
 par(oma=c(0,1.5,0,3))
 par(mar=c(1,1,0,0)+0.2)
-plotPopkin(inbrDiag(Phi), labs=subpops)
+plotPopkin(inbr_diag(Phi), labs=subpops)
 ```
 
 Now let's tweak the plot.
@@ -185,7 +185,7 @@ We shrink the labels with `labsCex=0.7`.
 par(oma=c(0,1.5,0,3))
 # increase margins because labels go farther out
 par(mar=c(2,2,0,0)+0.2)
-plotPopkin(inbrDiag(Phi), labs=subpops, labsEven=TRUE, labsLine=1, labsCex=0.7)
+plotPopkin(inbr_diag(Phi), labs=subpops, labsEven=TRUE, labsLine=1, labsCex=0.7)
 ```
 
 This figure clearly shows the population structure of these worldwide samples, with block patterns that are coherent with serial founder effects in the dispersal of humans out of Africa.
@@ -200,7 +200,7 @@ Since $\Fst$ is the weighted mean of the inbreeding coefficients, and since some
 # get weights
 w <- weightsSubpops(subpops)
 # compute FST!
-# Note: don't use the output to inbrDiag(Phi) or FST will be wrong!
+# Note: don't use the output to inbr_diag(Phi) or FST will be wrong!
 fst(Phi, w)
 ```
 
@@ -226,7 +226,7 @@ pwF <- pwfst(Phi) # compute pairwise FST matrix from kinship matrix
 legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
 par(oma=c(0,1.5,0,3))
 par(mar=c(2,2,0.2,0)+0.2)
-# NOTE no need for inbrDiag() here!
+# NOTE no need for inbr_diag() here!
 plotPopkin(pwF, labs=subpops, labsEven=TRUE, labsLine=1, labsCex=0.7, legTitle=legTitle)
 ```
 
@@ -243,7 +243,7 @@ PhiAfr <- Phi[indexesAfr,indexesAfr]
 # kinship matrix plot
 par(oma=c(0,1.5,0,3))
 par(mar=c(0,0,0,0)+0.2) # zero margins for no labels
-plotPopkin(inbrDiag(PhiAfr))
+plotPopkin(inbr_diag(PhiAfr))
 
 # estimate FST before rescaling (this value will be wrong, too high!)
 fst(PhiAfr)
@@ -261,7 +261,7 @@ PhiAfr <- rescalePopkin(PhiAfr)
 # kinship matrix plot
 par(oma=c(0,1.5,0,3))
 par(mar=c(0,0,0,0)+0.2) # zero margins for no labels
-plotPopkin(inbrDiag(PhiAfr))
+plotPopkin(inbr_diag(PhiAfr))
 
 # FST is now correct, relative to the MRCA of AFR individuals
 fst(PhiAfr)
@@ -280,13 +280,13 @@ par(mar=c(2,2,2,0)+0.2)
 # dummy labels to have lines in second panel
 subpopsAfr <- subpops[indexesAfr]
 plotPopkin(
-	list(inbrDiag(Phi), inbrDiag(PhiAfr)), # list of matrices
-	titles=c('All', 'AFR only, rescaled'), # title of each panel
-	labs=list(subpops, subpopsAfr), # pass per-panel labels using a list
-	labsEven=TRUE, # scalar options are shared across panels
-	labsLine=1,
-	labsCex=0.5
-	)
+    inbr_diag(list(Phi, PhiAfr)), # inbr_diag also works on a list of matrices
+    titles=c('All', 'AFR only, rescaled'), # title of each panel
+    labs=list(subpops, subpopsAfr), # pass per-panel labels using a list
+    labsEven=TRUE, # scalar options are shared across panels
+    labsLine=1,
+    labsCex=0.5
+)
 ```
 
 ## Plot kinship matrices with multiple levels of labels
@@ -314,7 +314,7 @@ par(oma=c(0,1.5,0,3))
 par(mar=c(3,3,0,0)+0.2)
 # plotting with different options per level is more complicated...
 plotPopkin(
-	inbrDiag(Phi),
+	inbr_diag(Phi),
 	labs=cbind(subpops,blocks),   # ... labs is now a matrix with levels on columns
 	labsEven=c(TRUE, FALSE),      # ... even spacing for first level only
 	labsLine=c(1,2),              # ... put second level further out
@@ -330,7 +330,7 @@ The final example adds a second panel to what we have above, showing how options
 par(oma=c(0,1.5,0,3))
 par(mar=c(3,3,2,0)+0.2)
 plotPopkin(
-	list(inbrDiag(Phi), inbrDiag(PhiAfr)),
+    inbr_diag(list(Phi, PhiAfr)),
 	titles=c('All', 'AFR only, rescaled'),
 	labs=list(cbind(subpops,blocks), subpopsAfr), # list of matrices
 	labsEven=c(TRUE, FALSE), # non-list: values are reused for both panels

@@ -4,7 +4,7 @@
 #' Many options allow for fine control of individual or subpopulation labeling.
 #'
 #' \code{plotPopkin} plots the input kinship matrices as-is.
-#' For best results, a standard kinship matrix (such as the output of \code{\link{popkin}}) should have its diagonal rescaled to contain inbreeding coefficients (\code{\link{inbrDiag}} does this) before \code{plotPopkin} is used.
+#' For best results, a standard kinship matrix (such as the output of \code{\link{popkin}}) should have its diagonal rescaled to contain inbreeding coefficients (\code{\link{inbr_diag}} does this) before \code{plotPopkin} is used.
 #'
 #' This function permits the labeling of individuals (from row and column names when \code{showNames=TRUE}) and of subpopulations (passed through \code{labs}).
 #' The difference is that the labels passed through \code{labs} are assumed to be shared by many individuals, and lines (or other optional visual aids) are added to demarcate these subgroups.
@@ -78,9 +78,9 @@
 #' Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 #'
 #' ## simple plot of the kinship matrix, marking the subpopulations only
-#' ## note inbrDiag replaces the diagonal of Phi with inbreeding coefficients
+#' ## note inbr_diag replaces the diagonal of Phi with inbreeding coefficients
 #' ## (see vignette for more elaborate examples)
-#' plotPopkin( inbrDiag(Phi), labs=subpops )
+#' plotPopkin( inbr_diag(Phi), labs=subpops )
 #'
 #' @export
 plotPopkin <- function(x, titles=NULL, col=NULL, colCont=FALSE, coln=100, xMar=NULL, marPad=0.2, diagLine=FALSE,
@@ -319,7 +319,7 @@ repOrDieList <- function(vals, n) {
 ##
 ## ## estimate the kinship matrix "Phi" from the genotypes "X"!
 ## Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
-## Phi <- inbrDiag(Phi) # transform diagonal permanently
+## Phi <- inbr_diag(Phi) # transform diagonal permanently
 ##
 ## ## suppose Phi is the only kinship matrix to plot, then...
 ##

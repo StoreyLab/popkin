@@ -2,7 +2,7 @@
 #'
 #' This function simply returns the weighted mean inbreeding coefficient \eqn{f_j^T}.
 #' If weights are \code{NULL} (default), the regular mean \eqn{f_j^T} is returned.
-#' If a kinship matrix \eqn{\Phi^T} is provided, then \eqn{f_j^T} are extracted from its diagonal using \code{\link{inbr}} (assumes the diagonal of \eqn{\Phi^T} is \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} as \code{\link{popkin}} returns, and not \eqn{f_j^T} as \code{\link{inbrDiag}} returns).
+#' If a kinship matrix \eqn{\Phi^T} is provided, then \eqn{f_j^T} are extracted from its diagonal using \code{\link{inbr}} (assumes the diagonal of \eqn{\Phi^T} is \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} as \code{\link{popkin}} returns, and not \eqn{f_j^T} as \code{\link{inbr_diag}} returns).
 #'
 #' The returned weighted mean inbreeding coefficient equals the generalized \eqn{F_{ST}}{FST} if all individuals are "locally outbred" (i.e. if the self relatedness of every individual stems entirely from the population structure rather than due partly to having unusually closely related parents, such as first or second cousins).
 #' Note most individuals in population-scale human data are locally outbred.
