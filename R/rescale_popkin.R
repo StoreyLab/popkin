@@ -53,7 +53,7 @@ rescale_popkin <- function(kinship, subpops = NULL, min_kinship = NA) {
     validate_kinship(kinship)
 
     if (is.na(min_kinship))
-        min_kinship <- minAvgSubpops(kinship, subpops)
+        min_kinship <- min_mean_subpops(kinship, subpops)
     
     # finally, perform a simple IBD rescaling
     kinship <- (kinship - min_kinship)/(1 - min_kinship) # return this matrix!

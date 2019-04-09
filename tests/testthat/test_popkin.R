@@ -79,11 +79,11 @@ test_that("function returns precomputed values: getA", {
     expect_equal(nrow(A), ncol(A))
 })
 
-test_that("function returns precomputed values: minAvgSubpops", {
-    expect_equal(minAvgSubpops(A), min(A))
-    expect_equal(minAvgSubpops(A), Amin0)
-    expect_equal(minAvgSubpops(A, subpops0), Amin0)
-    expect_equal(minAvgSubpops(A, subpops), Amin)
+test_that("function returns precomputed values: min_mean_subpops", {
+    expect_equal(min_mean_subpops(A), min(A))
+    expect_equal(min_mean_subpops(A), Amin0)
+    expect_equal(min_mean_subpops(A, subpops0), Amin0)
+    expect_equal(min_mean_subpops(A, subpops), Amin)
 })
 
 test_that("function returns precomputed values: getKinshipFromA", {

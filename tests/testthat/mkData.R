@@ -26,9 +26,9 @@ Phi <- popkin(X, subpops)
 
 ## make all intermediate data to compare to
 A <- popkin:::getA(X)
-Amin0 <- popkin:::minAvgSubpops(A) # minimum value
-Amin <- popkin:::minAvgSubpops(A, subpops) # should also be minimum value
-phiMin0 <- popkin:::minAvgSubpops(Phi0, subpops) # redo to bad kinship estimate
+Amin0 <- popkin:::min_mean_subpops(A) # minimum value
+Amin <- popkin:::min_mean_subpops(A, subpops) # should also be minimum value
+phiMin0 <- popkin:::min_mean_subpops(Phi0, subpops) # redo to bad kinship estimate
 
 ## NOTE: won't test getKinshipFromA here, will do in testing code though!
 

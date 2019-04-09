@@ -29,12 +29,13 @@
 ## A <- getA(X) # calculate A from genotypes
 ## 
 ## ## the recommended form using appropriate subpopulation labels
-## AEMinHat <- minAvgSubpops(A, subpops)
+## AEMinHat <- min_mean_subpops(A, subpops)
 ## ## a simple default for exploratory analysis
-## AEMinHat <- minAvgSubpops(A) # == min(A)
+## AEMinHat <- min_mean_subpops(A) # == min(A)
 ## 
-minAvgSubpops <- function(Y, subpops=NULL) {
-    if (is.null(subpops)) return(min(Y))
+min_mean_subpops <- function(Y, subpops = NULL) {
+    if (is.null(subpops))
+        return(min(Y))
     
     ## check the dimensions
     n <- nrow(Y)

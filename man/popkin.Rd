@@ -18,16 +18,16 @@ popkin(X, subpops = NULL, n = NA, lociOnCols = FALSE, memLim = NA)
 \item{memLim}{Memory limit in GB, used to break up genotype data into chunks for very large datasets. Note memory usage is somewhat underestimated and is not controlled strictly.  Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 1GB (OSX and other systems).}
 }
 \value{
-The estimated \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T}.
+The estimated \eqn{n \times n}{n-by-n} kinship matrix.
 If \eqn{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
 }
 \description{
-Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n \times n}{n-by-n} kinship matrix \eqn{\Phi^T} such that the kinship estimate between the most distant subpopulations is zero on average (this sets the ancestral population \eqn{T} to the most recent common ancestor population).
+Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n \times n}{n-by-n} kinship matrix such that the kinship estimate between the most distant subpopulations is zero on average (this sets the ancestral population \eqn{T} to the most recent common ancestor population).
 }
 \details{
 The subpopulation assignments are only used to estimate the baseline kinship (the zero value).
-If the user wants to re-estimate \eqn{\Phi^T} using different subpopulation labels,
-it suffices to rescale the given \eqn{\Phi^T} using \code{\link{rescale_popkin}}
+If the user wants to re-estimate the kinship matrix using different subpopulation labels,
+it suffices to rescale it using \code{\link{rescale_popkin}}
 (as opposed to starting from the genotypes again, which gives the same answer less efficiently).
 
 The matrix \eqn{X} must have values only in \code{c(0,1,2,NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.
@@ -42,6 +42,6 @@ subpops <- c(1,1,2) # subpopulation assignments for individuals
 # library(BEDMatrix)
 # X <- BEDMatrix(file) # load genotype matrix object
 
-Phi <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
+kinship <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
 
 }

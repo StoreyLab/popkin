@@ -19,7 +19,7 @@
 ## # X <- BEDMatrix(file) # load genotype matrix object
 ##
 ## A <- getA(X) # calculate A from genotypes
-## AEMin <- minAvgSubpops(A, subpops)
+## AEMin <- min_mean_subpops(A, subpops)
 ## Phi <- getKinshipFromA(A, AEmin)
 getKinshipFromA <- function(A, AEMin) {
     ## implements the simple transformation of A and AEMinHat into PhiHat
