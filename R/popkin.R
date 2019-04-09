@@ -57,8 +57,11 @@ popkin <- function(X, subpops = NULL, n = NA, lociOnCols = FALSE, memLim = NA) {
             if (n != n2) stop('the length of subpops (', n, ') disagreed with the number of individuals in the genotype matrix (', n2, ')')
         }
     }
-    ## actually run code
+    # actually run code
+    # this is the main workhorse, estimating the numerators
     A <- getA(X, n = n, lociOnCols = lociOnCols, memLim = memLim)
+    # the denominator is a simple average, a scalar shared by all individuals
     AEMin <- min_mean_subpops(A, subpops)
-    kinship <- getKinshipFromA(A, AEMin)
+    # the kinship matrix is this simple ratio
+    kinship <- 1 - A / AEMin # return this matrix!
 }

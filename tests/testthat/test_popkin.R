@@ -86,13 +86,6 @@ test_that("function returns precomputed values: min_mean_subpops", {
     expect_equal(min_mean_subpops(A, subpops), Amin)
 })
 
-test_that("function returns precomputed values: getKinshipFromA", {
-    expect_equal(getKinshipFromA(A, Amin0), Phi0)
-    expect_equal(getKinshipFromA(A, Amin), Phi)
-    expect_equal(nrow(Phi0), ncol(Phi0))
-    expect_equal(nrow(Phi), ncol(Phi))
-})
-
 ## higher-level tests now!
 
 test_that("function returns precomputed values: popkin", {

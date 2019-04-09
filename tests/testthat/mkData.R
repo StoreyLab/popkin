@@ -21,16 +21,11 @@ w <- weights_subpops(subpops)
 Phi0 <- popkin(X)
 Phi <- popkin(X, subpops)
 
-## rescale test (actually part of proper tests instead)
-## Phi3 <- rescale_popkin(Phi1, subpops2) # take kinship with no subpops and apply subpops now!
-
 ## make all intermediate data to compare to
 A <- popkin:::getA(X)
 Amin0 <- popkin:::min_mean_subpops(A) # minimum value
 Amin <- popkin:::min_mean_subpops(A, subpops) # should also be minimum value
 phiMin0 <- popkin:::min_mean_subpops(Phi0, subpops) # redo to bad kinship estimate
-
-## NOTE: won't test getKinshipFromA here, will do in testing code though!
 
 ## implied Fst
 fst <- fst(Phi)
