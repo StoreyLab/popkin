@@ -71,11 +71,11 @@ test_that("function returns precomputed values: weights_subpops", {
     expect_true(all(w < 1))
 })
 
-test_that("function returns precomputed values: getA", {
-    expect_equal(getA(X), A)
-    expect_equal(getA(X+0), A) # turns numeric
-    expect_equal(getA(2L-X), A)
-    expect_equal(getA(2-X), A) # numeric version again
+test_that("function returns precomputed values: get_A", {
+    expect_equal(get_A(X), A)
+    expect_equal(get_A(X+0), A) # turns numeric
+    expect_equal(get_A(2L-X), A)
+    expect_equal(get_A(2-X), A) # numeric version again
     expect_equal(nrow(A), ncol(A))
 })
 

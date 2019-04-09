@@ -32,7 +32,7 @@
 #'
 #' @export
 popkin <- function(X, subpops = NULL, n = NA, lociOnCols = FALSE, memLim = NA) {
-    ## wrapper around getA combined with subpopulation-based estimation of A_Emin
+    ## wrapper around get_A combined with subpopulation-based estimation of A_Emin
 
     ## repeat some validations before the hard work... (some are repeated again inside each function, but let's do it sooner)
     ## test coherence between subpops and n...
@@ -59,7 +59,7 @@ popkin <- function(X, subpops = NULL, n = NA, lociOnCols = FALSE, memLim = NA) {
     }
     # actually run code
     # this is the main workhorse, estimating the numerators
-    A <- getA(X, n = n, lociOnCols = lociOnCols, memLim = memLim)
+    A <- get_A(X, n = n, lociOnCols = lociOnCols, memLim = memLim)
     # the denominator is a simple average, a scalar shared by all individuals
     AEMin <- min_mean_subpops(A, subpops)
     # the kinship matrix is this simple ratio

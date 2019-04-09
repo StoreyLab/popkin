@@ -25,7 +25,7 @@
 ## # library(BEDMatrix)
 ## # X <- BEDMatrix(file) # load genotype matrix object
 ##
-## A <- getA(X) # calculate A from genotypes
+## A <- get_A(X) # calculate A from genotypes
 ## 
 ## ## the recommended form using appropriate subpopulation labels
 ## AEMinHat <- min_mean_subpops(A, subpops)
