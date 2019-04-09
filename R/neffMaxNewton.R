@@ -2,15 +2,15 @@
 
 neffMaxNewton <- function(Phi, w=NULL, tol=1e-10, verbose=FALSE) {
     # sanity checks
-    if (missing(Phi)) stop('Fatal: kinship matrix is missing!')
+    if (missing(Phi)) stop('kinship matrix is missing!')
     n <- nrow(Phi)
-    if (ncol(Phi) != n) stop('Fatal: kinship matrix is not square!')
+    if (ncol(Phi) != n) stop('kinship matrix is not square!')
     
     # default: use uniform weights as initial guess (best place to start from spatially)
     if (is.null(w)) {
         w <- rep.int(1/n, n)
     } else {
-        if (any(w<0)) stop('Fatal: initial weights must be non-negative!')
+        if (any(w<0)) stop('initial weights must be non-negative!')
         w <- w/sum(w) # renormalize for good measure
     }
     # underlying variables are square root of w

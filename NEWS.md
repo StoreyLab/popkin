@@ -64,6 +64,7 @@ These names get copied to the rows and columns of the output kinship matrix.
 * Essentially beta version of 2.0.x series
 * Renamed functions to fit tidyverse naming style
   * `inbrDiag` -> `inbr_diag`
+  * `weightsSubpops` -> `weights_subpops`
 * `inbr_diag` now accepts lists of kinship matrices to transform (for easier plotting of multiple matrices)
 * Added more input checks to functions, informative error messages
 * Added functions: `validate_kinship`

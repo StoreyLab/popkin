@@ -4,7 +4,7 @@ getMemLimM <- function(m=NA, n=NA, mem=NA, factor=0.7, verbose=FALSE) {
     ## if there aren't any NAs, M is a scalar and we end up underestimating memory usage (better than the other way around)
 
     ## n must be defined now, or this doesn't work!
-    if (is.na(n)) stop('Fatal: n must be defined!')
+    if (is.na(n)) stop('n must be defined!')
     
     ## try to get total memory from the system if mem wasn't specified, so it works reasonably
     if (is.na(mem)) {

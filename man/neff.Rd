@@ -56,7 +56,7 @@ subpops <- c(1,1,2) # subpopulation assignments for individuals
 
 ## estimate the kinship matrix "Phi" from the genotypes "X"!
 Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
-w <- weightsSubpops(subpops) # can weigh individuals so subpopulations are balanced
+w <- weights_subpops(subpops) # can weigh individuals so subpopulations are balanced
 
 # use kinship matrix to calculate nEff
 # default mode returns maximum nEff possible across all non-negative weights that sum to one

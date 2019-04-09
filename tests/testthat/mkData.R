@@ -14,8 +14,8 @@ subpops0 <- 1:ncol(X) # trivial case
 subpops <- c(1,1,2,2,3,3,4,4,5,5) # group by pairs, still reasonable!
 
 ## generate weights for tests
-w0 <- weightsSubpops(subpops0)
-w <- weightsSubpops(subpops)
+w0 <- weights_subpops(subpops0)
+w <- weights_subpops(subpops)
 
 ## high-level estimation (what we expect most users to run)
 Phi0 <- popkin(X)

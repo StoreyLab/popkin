@@ -35,11 +35,11 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     isFn <- FALSE
     if (class(X) == 'function') {
         isFn <- TRUE
-        if (is.na(n)) stop('Fatal: missing number of individuals "n", which is required when X is a function.')
+        if (is.na(n)) stop('missing number of individuals "n", which is required when X is a function.')
     } else if (class(X) == 'BEDMatrix') { # same as general matrix but transposed
         lociOnCols <- TRUE # this is always imposed for this particular format!
     } else if (class(X) != 'matrix') {
-        stop('Fatal: X has unsupported class: ', class(X))
+        stop('X has unsupported class: ', class(X))
     } 
     
     ## extract dimensions from data (not possible for function version)

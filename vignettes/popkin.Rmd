@@ -198,7 +198,7 @@ This figure also illustrates how subpopulations are used to estimate kinship by 
 Since $\Fst$ is the weighted mean of the inbreeding coefficients, and since some subpopulations are overrepresented in this data (EAS is much larger than the rest), it makes sense to use weights that balance these subpopulations:
 ```{r}
 # get weights
-w <- weightsSubpops(subpops)
+w <- weights_subpops(subpops)
 # compute FST!
 # Note: don't use the output to inbr_diag(Phi) or FST will be wrong!
 fst(Phi, w)

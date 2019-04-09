@@ -56,9 +56,9 @@ test_that("getMemLimM returns positive numbers", {
     expect_true(mc > 0)
 })
 
-test_that("function returns precomputed values: weightsSubpops", {
-    expect_equal(weightsSubpops(subpops0), w0)
-    expect_equal(weightsSubpops(subpops), w)
+test_that("function returns precomputed values: weights_subpops", {
+    expect_equal(weights_subpops(subpops0), w0)
+    expect_equal(weights_subpops(subpops), w)
     ## make sure dimensions match
     expect_equal(length(w0), nrow(Phi0))
     expect_equal(length(w), nrow(Phi))

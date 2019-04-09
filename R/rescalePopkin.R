@@ -47,9 +47,9 @@
 rescalePopkin <- function(Phi, subpops=NULL, phiMin=NA) {
     ## validate inputs
     if (missing(Phi)) {
-        stop('Fatal: you must provide a kinship matrix "Phi" to rescale!')
+        stop('you must provide a kinship matrix "Phi" to rescale!')
     } else if (class(Phi) != 'matrix') {
-        stop('Fatal: input kinship matrix "Phi" must be class "matrix"!')
+        stop('input kinship matrix "Phi" must be class "matrix"!')
     }
     if (is.na(phiMin)) {
         phiMin <- minAvgSubpops(Phi, subpops)

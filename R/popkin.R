@@ -41,7 +41,7 @@ popkin <- function(X, subpops=NULL, n=NA, lociOnCols=FALSE, memLim=NA) {
             n <- length(subpops)
         } else if (n != length(subpops)) {
             ## if both were specified, they better agree
-            stop('Fatal: the length of subpops (', length(subpops), ') disagreed with the input n (', n, ')')
+            stop('the length of subpops (', length(subpops), ') disagreed with the input n (', n, ')')
         }
         ## also compare to X
         if (class(X) != 'function') {
@@ -53,8 +53,8 @@ popkin <- function(X, subpops=NULL, n=NA, lociOnCols=FALSE, memLim=NA) {
                 } else {
                     n2 <- ncol(X)
                 }
-            } else stop('Fatal: X has unsupported class: ', class(X))
-            if (n != n2) stop('Fatal: the length of subpops (', n, ') disagreed with the number of individuals in the genotype matrix (', n2, ')')
+            } else stop('X has unsupported class: ', class(X))
+            if (n != n2) stop('the length of subpops (', n, ') disagreed with the number of individuals in the genotype matrix (', n2, ')')
         }
     }
     ## actually run code

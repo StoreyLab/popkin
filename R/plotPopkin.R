@@ -99,19 +99,19 @@ plotPopkin <- function(x, titles=NULL, col=NULL, colCont=FALSE, coln=100, xMar=N
         if (class(x) == 'matrix') {
             x <- list(x) # turn into list so rest works
         } else {
-            stop('Fatal: main input is neither a matrix or a list! Class is ', class(x))
+            stop('main input is neither a matrix or a list! Class is ', class(x))
         }
     }
     n <- length(x) # number of heatmap panels
     if (!is.null(titles)) {
         if (length(titles) != n)
-            stop('Fatal: titles provided are not the same length as data! Data: ', n, ', titles: ', length(titles))
+            stop('titles provided are not the same length as data! Data: ', n, ', titles: ', length(titles))
     } else {
         titles <- rep.int('', n) # make blank titles of the same length as data
     }
     ## check label lengths
     if (!is.null(labs) && class(labs) == 'list' && length(labs) != n)
-        stop('Fatal: there are ', n, ' panels but ', length(labs), ' label sets!')
+        stop('there are ', n, ' panels but ', length(labs), ' label sets!')
     ## expand other things that may vary per panel
     showNames <- repOrDie(showNames, n)
     namesCex <- repOrDie(namesCex, n)
@@ -138,7 +138,7 @@ plotPopkin <- function(x, titles=NULL, col=NULL, colCont=FALSE, coln=100, xMar=N
 
     ## figure out which data are non-NULL
     isNonNull <- !sapply(x, is.null)
-    if (!any(isNonNull)) stop('Fatal: every element of list "x" is NULL!')
+    if (!any(isNonNull)) stop('every element of list "x" is NULL!')
     
     ## code needs two versions of the range
     ## - rangeReal is the real range, used in the end so the color key doesn't show values that weren't actually used

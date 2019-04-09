@@ -38,7 +38,7 @@ subpops <- c(1,1,2) # subpopulation assignments for individuals
 
 # estimate the kinship matrix "Phi" from the genotypes "X"!
 Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
-w <- weightsSubpops(subpops) # can weigh individuals so subpopulations are balanced
+w <- weights_subpops(subpops) # can weigh individuals so subpopulations are balanced
 Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
 
 Fst <- fst(Phi) # no (or NULL) weights implies uniform weights

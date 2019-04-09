@@ -2,13 +2,13 @@
 
 neffMaxHeuristic <- function(Phi, w) {
     # sanity checks
-    if (missing(Phi)) stop('Fatal: kinship matrix is missing!')
+    if (missing(Phi)) stop('kinship matrix is missing!')
     n <- nrow(Phi)
-    if (ncol(Phi) != n) stop('Fatal: kinship matrix is not square!')
+    if (ncol(Phi) != n) stop('kinship matrix is not square!')
     # in this case we require the weights from the full solution!
-    if (missing(w)) stop('Fatal: weights from full solution are missing!')
+    if (missing(w)) stop('weights from full solution are missing!')
     # usually the input weights have at least one negative value, die if this isn't so!
-    if (min(w) >= 0) stop('Fatal: input weights were supposed to have at least one negative value but were all non-negative!')
+    if (min(w) >= 0) stop('input weights were supposed to have at least one negative value but were all non-negative!')
     
     # isPos is a vector that indicates which weights are positive (non-zero)
     isPos <- rep.int(TRUE, n) # initialize this to include everybody at first

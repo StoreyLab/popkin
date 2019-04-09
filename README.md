@@ -66,7 +66,7 @@ inbr <- inbr(Phi)
 
 Estimate FST
 ```R
-w <- weightsSubpops(subpops) # weigh individuals so subpopulations are balanced
+w <- weights_subpops(subpops) # weigh individuals so subpopulations are balanced
 Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
 Fst <- fst(inbr, w) # estimate more directly from inbreeding vector (same result)
 ```

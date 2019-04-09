@@ -39,7 +39,7 @@
 #'
 #' ## estimate the kinship matrix "Phi" from the genotypes "X"!
 #' Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
-#' w <- weightsSubpops(subpops) # can weigh individuals so subpopulations are balanced
+#' w <- weights_subpops(subpops) # can weigh individuals so subpopulations are balanced
 #'
 #' # use kinship matrix to calculate nEff
 #' # default mode returns maximum nEff possible across all non-negative weights that sum to one
@@ -67,12 +67,12 @@ neff <- function (Phi, max=TRUE, w=NULL, retW=TRUE, nonneg=TRUE, algo=c('Gradien
     algo <- match.arg(algo)
     # sanity checks
     if (missing(Phi)) 
-        stop('Fatal: the input kinship matrix is missing!')
+        stop('the input kinship matrix is missing!')
     if (class(Phi) != 'matrix')
-        stop('Fatal: the input kinship is not an R matrix!')
+        stop('the input kinship is not an R matrix!')
     n <- nrow(Phi)
     if (ncol(Phi) != n)
-        stop('Fatal: the input kinship matrix is not a square matrix!')
+        stop('the input kinship matrix is not a square matrix!')
     
     # main behavior depends on the value of the weights
     # the NULL default is to use optimal weights, yielding the maximum value of neff possible
@@ -90,7 +90,7 @@ neff <- function (Phi, max=TRUE, w=NULL, retW=TRUE, nonneg=TRUE, algo=c('Gradien
                 obj <- neffMaxNewton(Phi, tol=tol)
             } else if (algo == 'Heuristic') {
                 obj <- neffMaxHeuristic(Phi, w)
-            } else stop('Fatal: algorithm "', algo, '" not implemented!')
+            } else stop('algorithm "', algo, '" not implemented!')
         } else {
             # complete calculation of standard case!
             # nEff is the sum of values
@@ -126,7 +126,7 @@ meanKin <- function(Phi, w=NULL) {
         # weights should be defined, let's make sure they're fine...
         n <- nrow(Phi) # Phi was validated earlier inside neff, skip validations here
         if (n != length(w))
-            stop('Fatal: number of individuals in weights and kinship matrix differ!')
+            stop('number of individuals in weights and kinship matrix differ!')
         w <- w/sum(w) # force normalization here, don't check if it was already ok
         phiBar <- drop( w %*% Phi %*% w )
         return (phiBar)
