@@ -46,7 +46,7 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     # also get individual names (IDs)
     namesX <- NULL # default
     if (isFn) {
-        m <- NA # have to define as NA to pass to getMemLimM below
+        m <- NA # have to define as NA to pass to get_mem_lim_m below
     } else {
         if (lociOnCols) {
             if (!is.na(n) && n != nrow(X)) 
@@ -76,7 +76,7 @@ getA <- function(X, n=NA, memLim=NA, lociOnCols=FALSE) {
     }
     
     ## infer the number of SNPs to break data into, since we're limited by memory
-    mc <- getMemLimM(m, n, memLim)
+    mc <- get_mem_lim_m(m, n, memLim)
     
     ## navigate chunks
     mci <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)

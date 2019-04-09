@@ -35,22 +35,22 @@ test_that("validate_kinship works", {
 })
 
 
-test_that("getMemLim returns positive numbers", {
-    mem <- getMemLim()
+test_that("get_mem_lim returns positive numbers", {
+    mem <- get_mem_lim()
     expect_equal(class(mem), 'numeric')
     expect_true(mem > 0)
 })
 
-test_that("getMemLimM returns positive numbers", {
-    mc <- getMemLimM(n=1000, mem=2, m=100000) # chunk size, setting memory manually, set number of SNPs too
+test_that("get_mem_lim_m returns positive numbers", {
+    mc <- get_mem_lim_m(n=1000, mem=2, m=100000) # chunk size, setting memory manually, set number of SNPs too
     expect_equal(length(mc), 1)
     expect_equal(class(mc), 'numeric')
     expect_true(mc > 0)
-    mc <- getMemLimM(n=1000, mem=2) # chunk size, setting memory manually, omit m
+    mc <- get_mem_lim_m(n=1000, mem=2) # chunk size, setting memory manually, omit m
     expect_equal(length(mc), 1)
     expect_equal(class(mc), 'numeric')
     expect_true(mc > 0)
-    mc <- getMemLimM(n=1000) # chunk size, inferring free memory from system, omit m
+    mc <- get_mem_lim_m(n=1000) # chunk size, inferring free memory from system, omit m
     expect_equal(length(mc), 1)
     expect_equal(class(mc), 'numeric')
     expect_true(mc > 0)

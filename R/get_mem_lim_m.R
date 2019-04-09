@@ -1,4 +1,4 @@
-getMemLimM <- function(m=NA, n=NA, mem=NA, factor=0.7, verbose=FALSE) {
+get_mem_lim_m <- function(m=NA, n=NA, mem=NA, factor=0.7, verbose=FALSE) {
     ## NOTE: in estimating the chunk size, we don't know ahead of time if there are NAs or not!
     ## so these calculations assume M in getMAInt is an n*n matrix
     ## if there aren't any NAs, M is a scalar and we end up underestimating memory usage (better than the other way around)
@@ -8,7 +8,7 @@ getMemLimM <- function(m=NA, n=NA, mem=NA, factor=0.7, verbose=FALSE) {
     
     ## try to get total memory from the system if mem wasn't specified, so it works reasonably
     if (is.na(mem)) {
-        mem <- getMemLim(factor=factor, verbose=verbose) # infer a reasonable default from system!
+        mem <- get_mem_lim(factor=factor, verbose=verbose) # infer a reasonable default from system!
     } else {
         ## assuming mem is in GB, let's convert to bytes
         mem <- mem*1024*1024*1024

@@ -1,6 +1,6 @@
 ## uses lots of hacks to try to estimate a reasonable amount of memory to use, in the most common systems!
 ## currently only linux and windows are actually supported
-getMemLim <- function(factor=0.7, verbose=FALSE) {
+get_mem_lim <- function(factor=0.7, verbose=FALSE) {
     mem <- NA # to know if we've succeeded or not...
     
     if ( .Platform$OS.type == 'unix' ) {
