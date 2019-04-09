@@ -11,7 +11,7 @@ inbr_diag(kinship)
 Can pass multiple kinship matrices contained in a list.}
 }
 \value{
-The modified kinship matrix, with inbreeding coefficients along the diagonal.
+The modified kinship matrix, with inbreeding coefficients along the diagonal, preseving column and row names.
 If the input was a list of kinship matrices, the output is the corresponding list of transformed matrices.
 }
 \description{
@@ -50,10 +50,13 @@ subpops <- c(1,1,2) # subpopulation assignments for individuals
 ## library(BEDMatrix)
 ## X <- BEDMatrix(file) # load genotype matrix object
 
-# estimate the kinship matrix "Kinship" from the genotypes "X"!
+# estimate the kinship matrix from the genotypes "X"!
 kinship <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 
 # lastly, replace diagonal of kinship matrix with inbreeding coefficients
 kinship_inbr_diag <- inbr_diag(kinship)
 
+}
+\seealso{
+The inverse function is given by \code{\link[bnpsd]{coanc_to_kinship}}.
 }

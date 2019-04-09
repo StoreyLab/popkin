@@ -7,7 +7,7 @@
 #' @param kinship A kinship matrix with self-kinship values along the diagonal.
 #' Can pass multiple kinship matrices contained in a list.
 #'
-#' @return The modified kinship matrix, with inbreeding coefficients along the diagonal.
+#' @return The modified kinship matrix, with inbreeding coefficients along the diagonal, preseving column and row names.
 #' If the input was a list of kinship matrices, the output is the corresponding list of transformed matrices.
 #'
 #' @examples
@@ -41,12 +41,15 @@
 #' ## library(BEDMatrix)
 #' ## X <- BEDMatrix(file) # load genotype matrix object
 #'
-#' # estimate the kinship matrix "Kinship" from the genotypes "X"!
+#' # estimate the kinship matrix from the genotypes "X"!
 #' kinship <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 #'
 #' # lastly, replace diagonal of kinship matrix with inbreeding coefficients
 #' kinship_inbr_diag <- inbr_diag(kinship)
 #'
+#' @seealso
+#' The inverse function is given by \code{\link[bnpsd]{coanc_to_kinship}}.
+#' 
 #' @export
 inbr_diag <- function(kinship) {
     # die if this is missing
