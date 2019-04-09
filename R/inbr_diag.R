@@ -72,3 +72,27 @@ inbr_diag <- function(kinship) {
     return(kinship)
 }
 
+# stick deprecated function name here
+
+#' @title Replace kinship diagonal with inbreeding coefficients
+#' @description Replace kinship diagonal with inbreeding coefficients
+#' @param kinship A kinship matrix
+#' @return The modified kinship matrix, with inbreeding coefficients along the diagonal.
+#'
+#' @name inbrDiag-deprecated
+#' @usage inbrDiag(kinship)
+#' @seealso \code{\link{popkin-deprecated}}
+#' @keywords internal
+NULL
+
+#' @rdname popkin-deprecated
+#' @section \code{inbrDiag}:
+#' For \code{inbrDiag}, use \code{\link{inbr_diag}}.
+#'
+#' @export
+inbrDiag <- function(kinship) {
+    # mark as deprecated
+    .Deprecated('inbr_diag')
+    # return as usual, to not break things just yet
+    inbr_diag(kinship)
+}

@@ -44,3 +44,28 @@ weights_subpops <- function(subpops) {
     ## construct weights, return!
     1/(K*subpop2c[match(subpops, names(subpop2c))])
 }
+
+# stick deprecated function name here
+
+#' @title Get weights for individuals that balance subpopulations
+#' @description Get weights for individuals that balance subpopulations
+#' @param subpops The length-\eqn{n} vector of subpopulation assignments for each individual.
+#' @return The length-\eqn{n} vector of weights for each individual.
+#'
+#' @name weightsSubpops-deprecated
+#' @usage weightsSubpops(subpops)
+#' @seealso \code{\link{popkin-deprecated}}
+#' @keywords internal
+NULL
+
+#' @rdname popkin-deprecated
+#' @section \code{weightsSubpops}:
+#' For \code{weightsSubpops}, use \code{\link{weights_subpops}}.
+#'
+#' @export
+weightsSubpops <- function(subpops) {
+    # mark as deprecated
+    .Deprecated('weights_subpops')
+    # return as usual, to not break things just yet
+    weights_subpops(subpops)
+}
