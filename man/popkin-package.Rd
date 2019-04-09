@@ -9,7 +9,7 @@
 The heart of this package is the \code{\link{popkin}} function, which estimates the kinship matrix of all individual pairs from their genotype matrix.
 Inbreeding coefficients, the generalized \eqn{F_{ST}}{FST}, and the individual-level pairwise \eqn{F_{ST}}{FST} matrix are extracted from the kinship matrix using \code{\link{inbr}}, \code{\link{fst}}, and \code{\link{pwfst}}, respectively.
 \code{\link{fst}} accepts weights for individuals to balance subpopulations obtained with \code{\link{weights_subpops}}.
-Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using \code{\link{rescalePopkin}}.
+Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using \code{\link{rescale_popkin}}.
 Lastly, kinship and pairwise \eqn{F_{ST}}{FST} matrices can be visualized using \code{\link{plotPopkin}} (with the help of \code{\link{inbr_diag}} for kinship matrices only).
 }
 \examples{
@@ -47,7 +47,7 @@ legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
 plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbr_diag() here!
 
 ## rescale the kinship matrix using different subpopulations (implicitly changes the MRCA)
-Phi2 <- rescalePopkin(Phi, subpops2)
+Phi2 <- rescale_popkin(Phi, subpops2)
 
 }
 \seealso{

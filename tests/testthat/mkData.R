@@ -22,7 +22,7 @@ Phi0 <- popkin(X)
 Phi <- popkin(X, subpops)
 
 ## rescale test (actually part of proper tests instead)
-## Phi3 <- rescalePopkin(Phi1, subpops2) # take kinship with no subpops and apply subpops now!
+## Phi3 <- rescale_popkin(Phi1, subpops2) # take kinship with no subpops and apply subpops now!
 
 ## make all intermediate data to compare to
 A <- popkin:::getA(X)

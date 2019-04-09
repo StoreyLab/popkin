@@ -5,7 +5,7 @@
 ## 
 ## When \eqn{Y=A} is the \eqn{A} matrix, the output is a stable estimate of \eqn{\hat{A}_{Emin}}.
 ## When \eqn{Y=\Phi} is a kinship matrix, the output is a stable estimate of the minimum kinship \eqn{\phi_{min}}.
-## If the kinship values between the most distant pair of subpopulations is truly zero, then the estimated \eqn{\hat{A}_{Emin}} can be used to adjust \eqn{A} into consistent kinship estimates using \code{\link{getKinshipFromA}}, or the estimated \eqn{\phi_{min}} can be used to rescale the pre-existing kinship matrix \eqn{\Phi} used as input using \code{\link{rescalePopkin}}.
+## If the kinship values between the most distant pair of subpopulations is truly zero, then the estimated \eqn{\hat{A}_{Emin}} can be used to adjust \eqn{A} into consistent kinship estimates using \code{\link{getKinshipFromA}}, or the estimated \eqn{\phi_{min}} can be used to rescale the pre-existing kinship matrix \eqn{\Phi} used as input using \code{\link{rescale_popkin}}.
 ##
 ## If no subpopulation partition is provided, the function returns the minimum value of \eqn{Y}.
 ## This default choice may be appropriate in some settings, but is susceptible to bias when there are few SNPs and many pairs of individuals with zero kinship (taking the most extreme estimate is clearly worse than averaging these values would be).

@@ -80,7 +80,7 @@ plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbr_diag() 
 
 Rescale the kinship matrix using different subpopulations (implicitly changes the most recent common ancestor population used as reference)
 ```R
-Phi2 <- rescalePopkin(Phi, subpops2)
+Phi2 <- rescale_popkin(Phi, subpops2)
 ```
 
 

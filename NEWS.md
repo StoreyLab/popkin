@@ -65,6 +65,7 @@ These names get copied to the rows and columns of the output kinship matrix.
 * Renamed functions to fit tidyverse naming style
   * `inbrDiag` -> `inbr_diag`
   * `weightsSubpops` -> `weights_subpops`
+  * `rescalePopkin` -> `rescale_popkin`
   * Functions with old names remain as deprecated functions (to be removed in the future)
 * `inbr_diag` now accepts lists of kinship matrices to transform (for easier plotting of multiple matrices)
 * Added more input checks to functions, informative error messages

@@ -110,11 +110,11 @@ test_that("popkin preserves names of individuals", {
     expect_equal(colnames(X), rownames(Phi))
 })
 
-test_that("function returns precomputed values: rescalePopkin", {
-    expect_equal(rescalePopkin(Phi0, phiMin=phiMin0), Phi)
-    expect_equal(rescalePopkin(Phi0, subpops), Phi)
-    expect_equal(rescalePopkin(Phi, subpops0), Phi0)
-    expect_equal(rescalePopkin(Phi), Phi0)
+test_that("function returns precomputed values: rescale_popkin", {
+    expect_equal(rescale_popkin(Phi0, min_kinship = phiMin0), Phi)
+    expect_equal(rescale_popkin(Phi0, subpops), Phi)
+    expect_equal(rescale_popkin(Phi, subpops0), Phi0)
+    expect_equal(rescale_popkin(Phi), Phi0)
 })
 
 test_that("function returns precomputed values: fst", {

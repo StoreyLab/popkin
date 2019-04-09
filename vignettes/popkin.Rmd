@@ -250,13 +250,13 @@ fst(PhiAfr)
 ```
 
 Removing populations changes the MRCA population $T$, drastically in this case (the reason the minimum kinship is so large and the within-AFR $\Fst$ above is wrong).
-To ensure the minimum kinship is zero, instead of re-estimate the kinship matrix from the subset genotypes, it suffices to rescale the given kinship matrix with `rescalePopkin`!
+To ensure the minimum kinship is zero, instead of re-estimate the kinship matrix from the subset genotypes, it suffices to rescale the given kinship matrix with `rescale_popkin`!
 
 ```{r, fig.width=3, fig.height=2, fig.align='center'}
 # rescale PhiAfr
 # since subpops is missing, minimum Phi value is set to zero
 # (no averaging between subpopulations)
-PhiAfr <- rescalePopkin(PhiAfr)
+PhiAfr <- rescale_popkin(PhiAfr)
 
 # kinship matrix plot
 par(oma=c(0,1.5,0,3))

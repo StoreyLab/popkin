@@ -4,7 +4,7 @@
 #'
 #' The subpopulation assignments are only used to estimate the baseline kinship (the zero value).
 #' If the user wants to re-estimate \eqn{\Phi^T} using different subpopulation labels,
-#' it suffices to rescale the given \eqn{\Phi^T} using \code{\link{rescalePopkin}}
+#' it suffices to rescale the given \eqn{\Phi^T} using \code{\link{rescale_popkin}}
 #' (as opposed to starting from the genotypes again, which gives the same answer less efficiently).
 #' 
 #' The matrix \eqn{X} must have values only in \code{c(0,1,2,NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.
