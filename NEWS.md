@@ -65,7 +65,8 @@ These names get copied to the rows and columns of the output kinship matrix.
   * `inbrDiag` -> `inbr_diag`
   * `weightsSubpops` -> `weights_subpops`
   * `rescalePopkin` -> `rescale_popkin`
-  * Functions with old names remain as deprecated functions (to be removed in the future)
+  * `neff` -> `n_eff`
+  * Functions with old names remain for now as deprecated functions (to be removed in the future)
 * `inbr_diag` now accepts lists of kinship matrices to transform (for easier plotting of multiple matrices)
 * Added more input checks to functions, informative error messages
-* Added functions: `validate_kinship`
+* Added functions: `validate_kinship`, `mean_kinship`
