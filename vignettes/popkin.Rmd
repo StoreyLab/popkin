@@ -88,7 +88,7 @@ The `popkin` function accepts biallelic genotype matrices in three forms:
 It is preferable, though not necessary, for `X` to be an integer matrix (with values in `c(0L,1L,2L,NA)` only, see `?storage.mode`).
 This standard encoding for biallelic SNPs counts reference alleles: 2 is homozygous for the reference allele, 0 is homozygous for the alternative allele, 1 is heterozygous, and NA is missing data.
 Which allele is the reference does not matter: `popkin` estimates the same kinship and $\Fst$ for `X` and `2-X`.
-By default `popkin` expects loci along rows and individuals along columns (an $m \times n$ matrix); a transposed `X` is handled best by also setting `lociOnCols = TRUE`.
+By default `popkin` expects loci along rows and individuals along columns (an $m \times n$ matrix); a transposed `X` is handled best by also setting `loci_on_cols = TRUE`.
 
 1.  BED-formatted data loaded with the `BEDMatrix` package, which `popkin` uses to keep memory usage low.
 For example, load `myData.bed`, `myData.bim`, `myData.fam` using:

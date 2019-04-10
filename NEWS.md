@@ -59,7 +59,7 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 * Minor non-code changes for second CRAN submission.
 
-# 2019-04-09 - popkin 1.2.0.9000
+# 2019-04-10 - popkin 1.2.0.9000
 
 * Renamed functions to fit tidyverse naming style:
   * `inbrDiag` -> `inbr_diag`
@@ -67,8 +67,8 @@ These names get copied to the rows and columns of the output kinship matrix.
   * `plotPopkin` -> `plot_popkin`
   * `rescalePopkin` -> `rescale_popkin`
   * `weightsSubpops` -> `weights_subpops`
-  * Certain argument names have also been updated to be more descriptive.
-  * Functions with old names remain for now as deprecated functions (to be removed in the future), retain older argument names.
+  * Several argument names were also updated to be more descriptive (particularly in `plot_popkin`).
+  * Functions with old names remain for now as deprecated functions (to be removed in the future); only `plotPopkin` retains the older argument names.
 * `inbr_diag` now accepts lists of kinship matrices to transform (for easier plotting of multiple matrices).
 * `plot_popkin` now requires its non-NULL inputs to be proper kinship matrices.
   Previously, the code used to somewhat allow for non-square matrices to be visualized, but this case had no guarantees to work.

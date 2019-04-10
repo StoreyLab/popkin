@@ -9,7 +9,7 @@
 #' If there are locally-inbred individuals, the returned value will overestimate \eqn{F_{ST}}{FST}.
 #' 
 #' @param x The vector of inbreeding coefficients, or the kinship matrix if \code{x} is a matrix.
-#' @param w Weights for individuals (optional, defaults to uniform weights)
+#' @param weights Weights for individuals (optional, defaults to uniform weights)
 #'
 #' @return \eqn{F_{ST}}{FST}
 #'
@@ -17,7 +17,7 @@
 #' # Get FST from a genotype matrix
 #' 
 #' # Construct toy data
-#' X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+#' X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow = 3, byrow = TRUE) # genotype matrix
 #' subpops <- c(1,1,2) # subpopulation assignments for individuals
 #' 
 #' # NOTE: for BED-formatted input, use BEDMatrix!
@@ -25,18 +25,18 @@
 #' ## library(BEDMatrix)
 #' ## X <- BEDMatrix(file) # load genotype matrix object
 #'
-#' # estimate the kinship matrix "Phi" from the genotypes "X"!
-#' Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
-#' w <- weights_subpops(subpops) # can weigh individuals so subpopulations are balanced
-#' Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
+#' # estimate the kinship matrix "kinship" from the genotypes "X"!
+#' kinship <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
+#' weights <- weights_subpops(subpops) # can weigh individuals so subpopulations are balanced
+#' Fst <- fst(kinship, weights) # use kinship matrix and weights to calculate fst
 #' 
-#' Fst <- fst(Phi) # no (or NULL) weights implies uniform weights
+#' Fst <- fst(kinship) # no (or NULL) weights implies uniform weights
 #'
-#' inbr <- inbr(Phi) # if you extracted inbr for some other analysis...
-#' Fst <- fst(inbr, w) # ...use this inbreeding vector as input too!
+#' inbr <- inbr(kinship) # if you extracted inbr for some other analysis...
+#' Fst <- fst(inbr, weights) # ...use this inbreeding vector as input too!
 #'
 #' @export
-fst <- function(x, w=NULL) {
+fst <- function(x, weights = NULL) {
     # validate inputs
     if (missing(x))
         stop('you must provide a kinship matrix or vector of inbreeding coefficients!')
@@ -47,15 +47,15 @@ fst <- function(x, w=NULL) {
         x <- inbr(x)
     
     # now x is a vector of inbreeding coefficients
-    if (is.null(w)) {
+    if (is.null(weights)) {
         return( mean(x) ) # no weights implies uniform weights
     } else {
-        if (length(w) != length(x)) {
+        if (length(weights) != length(x)) {
             # sanity check: make sure these have matching dimensions!
             # note that x is a vector at this point (if it was a matrix earlier, the vector of inbreeding coefficients has been extracted), so this will always work when the data makes sense
-            stop('the number of individuals differs between inbreeding vector (', length(x), ') and weight vector (', length(w), ')')
+            stop('the number of individuals differs between inbreeding vector (', length(x), ') and weight vector (', length(weights), ')')
         } else {
-            return( drop( x %*% w ) ) # weighted mean
+            return( drop( x %*% weights ) ) # weighted mean
         }
     }
 }

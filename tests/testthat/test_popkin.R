@@ -1,16 +1,16 @@
 context('popkin_Rdata')
 
-## message('getwd: ', getwd())
+# message('getwd: ', getwd())
 
-## ## introduce an error on purpose
-## test_that("testing is run at all!", {
-##     expect_equal(1, 2)
-## })
+# # introduce an error on purpose
+# test_that("testing is run at all!", {
+#     expect_equal(1, 2)
+# })
 
-## loads Rdata matrices to test
+# loads Rdata matrices to test
 load('Xs.RData')
 
-## start with lower-level/internal tests, more informative that higher-level function errors
+# start with lower-level/internal tests, more informative that higher-level function errors
 
 test_that("validate_kinship works", {
     # validate positive examples
@@ -59,10 +59,10 @@ test_that("get_mem_lim_m returns positive numbers", {
 test_that("function returns precomputed values: weights_subpops", {
     expect_equal(weights_subpops(subpops0), w0)
     expect_equal(weights_subpops(subpops), w)
-    ## make sure dimensions match
+    # make sure dimensions match
     expect_equal(length(w0), nrow(Phi0))
     expect_equal(length(w), nrow(Phi))
-    ## test the basic qualities of weights
+    # test the basic qualities of weights
     expect_equal(sum(w0), 1)
     expect_equal(sum(w), 1)
     expect_true(all(w0 > 0))
@@ -86,7 +86,7 @@ test_that("function returns precomputed values: min_mean_subpops", {
     expect_equal(min_mean_subpops(A, subpops), Amin)
 })
 
-## higher-level tests now!
+# higher-level tests now!
 
 test_that("function returns precomputed values: popkin", {
     expect_equal(popkin(X), Phi0)
@@ -114,10 +114,10 @@ test_that("function returns precomputed values: fst", {
     expect_equal(fst(Phi), fst)
     expect_equal(fst(Phi, w0), fst)
     expect_equal(fst(Phi, w), fstW)
-    ## type of return value
+    # type of return value
     expect_equal(length(fstW), 1)
     expect_equal(length(fst), 1)
-    ## Fst inequalities
+    # Fst inequalities
     expect_true(fstW >= 0)
     expect_true(fst >= 0)
     expect_true(fstW <= 1)
@@ -133,7 +133,7 @@ test_that("function returns precomputed values: pwfst", {
     expect_equal(pwfst(Phi0), pwF)
     expect_equivalent(diag(pwF), rep.int(0, nrow(pwF))) # test that diagonal is zero ("equivalent" ignores label mismatches)
     expect_true(max(pwF) <= 1)
-    ## note estimates may be slightly negative though
+    # note estimates may be slightly negative though
 })
 
 test_that("inbr_diag works", {

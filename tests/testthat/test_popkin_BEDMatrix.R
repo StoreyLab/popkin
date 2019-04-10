@@ -1,23 +1,23 @@
 context('popkin_BEDMatrix')
 
-## message('getwd: ', getwd())
+# message('getwd: ', getwd())
 
 if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
 
-    ## loads Rdata matrices to test
+    # loads Rdata matrices to test
     load('Xs.RData')
     rm(X) # pretend we don't have X!
 
-    ## load the BED X instead
+    # load the BED X instead
     X <- suppressMessages(suppressWarnings(BEDMatrix('Xs')))
 
-    ## only repeat tests where genotypes X is input!
+    # only repeat tests where genotypes X is input!
     
     test_that("function returns precomputed values: get_A", {
         expect_equal(get_A(X), A)
     })
 
-    ## higher-level tests now!
+    # higher-level tests now!
 
     test_that("function returns precomputed values: popkin", {
         expect_equal(popkin(X), Phi0)

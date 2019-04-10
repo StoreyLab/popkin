@@ -22,8 +22,10 @@ This function allows for weights to be zero or even negative, but they are inter
 \examples{
 # construct a dummy kinship matrix
 kinship <- matrix(c(0.5, 0, 0, 0.6), nrow=2)
+
 # this is the ordinary mean
 mean_kinship(kinship)
+
 # weighted mean with twice as much weight on the second individual
 # (weights are internally normalized to sum to one)
 weights <- c(1, 2)

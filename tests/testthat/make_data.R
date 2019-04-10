@@ -1,41 +1,41 @@
-## to be run when popkin definitely works, to reconstruct test that to compare to when there are changes!
+# to be run when popkin definitely works, to reconstruct test that to compare to when there are changes!
 
 library(popkin)
 library(BEDMatrix)
 
-## NOTE: small BED data came from ~/dbs/popgenSim/psd1Ds2/
-## cp ~/dbs/popgenSim/psd1Ds2/Xs.{bed,bim,fam} .
+# NOTE: small BED data came from ~/dbs/popgenSim/psd1Ds2/
+# cp ~/dbs/popgenSim/psd1Ds2/Xs.{bed,bim,fam} .
 
 X <- BEDMatrix('Xs') # works if script is run from local dir...
 X <- t(X[,]) # immediately convert into a regular R int matrix
-## data has 10 individuals
+# data has 10 individuals
 stopifnot(ncol(X) == 10) # make sure in case it changes
 subpops0 <- 1:ncol(X) # trivial case
 subpops <- c(1,1,2,2,3,3,4,4,5,5) # group by pairs, still reasonable!
 
-## generate weights for tests
+# generate weights for tests
 w0 <- weights_subpops(subpops0)
 w <- weights_subpops(subpops)
 
-## high-level estimation (what we expect most users to run)
+# high-level estimation (what we expect most users to run)
 Phi0 <- popkin(X)
 Phi <- popkin(X, subpops)
 
-## make all intermediate data to compare to
+# make all intermediate data to compare to
 A <- popkin:::get_A(X)
 Amin0 <- popkin:::min_mean_subpops(A) # minimum value
 Amin <- popkin:::min_mean_subpops(A, subpops) # should also be minimum value
 phiMin0 <- popkin:::min_mean_subpops(Phi0, subpops) # redo to bad kinship estimate
 
-## implied Fst
+# implied Fst
 fst <- fst(Phi)
 fstW <- fst(Phi, w)
-## inbreeding vectors
+# inbreeding vectors
 inbr <- inbr(Phi)
-## pairwise Fst
+# pairwise Fst
 pwF <- pwfst(Phi)
-## and kinship matrices with inbreeding along diagonal
+# and kinship matrices with inbreeding along diagonal
 PhiInbr <- inbr_diag(Phi)
 
-## save these values, to use in testing later!
-save(X, subpops, subpops0, Phi, Phi0, A, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, pwF, PhiInbr, file='Xs.RData')
+# save these values, to use in testing later!
+save(X, subpops, subpops0, Phi, Phi0, A, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, pwF, PhiInbr, file = 'Xs.RData')

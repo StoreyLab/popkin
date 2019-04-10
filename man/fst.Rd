@@ -4,12 +4,12 @@
 \alias{fst}
 \title{Calculate FST from a population-level kinship matrix or vector of inbreeding coefficients}
 \usage{
-fst(x, w = NULL)
+fst(x, weights = NULL)
 }
 \arguments{
 \item{x}{The vector of inbreeding coefficients, or the kinship matrix if \code{x} is a matrix.}
 
-\item{w}{Weights for individuals (optional, defaults to uniform weights)}
+\item{weights}{Weights for individuals (optional, defaults to uniform weights)}
 }
 \value{
 \eqn{F_{ST}}{FST}
@@ -28,7 +28,7 @@ If there are locally-inbred individuals, the returned value will overestimate \e
 # Get FST from a genotype matrix
 
 # Construct toy data
-X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow=3, byrow=TRUE) # genotype matrix
+X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow = 3, byrow = TRUE) # genotype matrix
 subpops <- c(1,1,2) # subpopulation assignments for individuals
 
 # NOTE: for BED-formatted input, use BEDMatrix!
@@ -36,14 +36,14 @@ subpops <- c(1,1,2) # subpopulation assignments for individuals
 ## library(BEDMatrix)
 ## X <- BEDMatrix(file) # load genotype matrix object
 
-# estimate the kinship matrix "Phi" from the genotypes "X"!
-Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
-w <- weights_subpops(subpops) # can weigh individuals so subpopulations are balanced
-Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
+# estimate the kinship matrix "kinship" from the genotypes "X"!
+kinship <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
+weights <- weights_subpops(subpops) # can weigh individuals so subpopulations are balanced
+Fst <- fst(kinship, weights) # use kinship matrix and weights to calculate fst
 
-Fst <- fst(Phi) # no (or NULL) weights implies uniform weights
+Fst <- fst(kinship) # no (or NULL) weights implies uniform weights
 
-inbr <- inbr(Phi) # if you extracted inbr for some other analysis...
-Fst <- fst(inbr, w) # ...use this inbreeding vector as input too!
+inbr <- inbr(kinship) # if you extracted inbr for some other analysis...
+Fst <- fst(inbr, weights) # ...use this inbreeding vector as input too!
 
 }

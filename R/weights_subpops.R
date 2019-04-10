@@ -11,21 +11,21 @@
 #' @examples
 #' # if every individual has a different subpopulation, weights are uniform:
 #' subpops <- 1:10
-#' w <- weights_subpops(subpops)
-#' stopifnot(all(w == rep.int(1/10,10)))
+#' weights <- weights_subpops(subpops)
+#' stopifnot(all(weights == rep.int(1/10,10)))
 #'
 #' # subpopulations can be strings too
 #' subpops <- c('a', 'b', 'c')
-#' w <- weights_subpops(subpops)
-#' stopifnot(all(w == rep.int(1/3,3)))
+#' weights <- weights_subpops(subpops)
+#' stopifnot(all(weights == rep.int(1/3,3)))
 #' 
 #' # if there are two subpopulations
 #' # and the first has twice as many individuals as the second
 #' # then the individuals in this first subpopulation weight half as much 
 #' # as the ones in the second subpopulation
 #' subpops <- c(1, 1, 2)
-#' w <- weights_subpops(subpops)
-#' stopifnot(all(w == c(1/4,1/4,1/2)))
+#' weights <- weights_subpops(subpops)
+#' stopifnot(all(weights == c(1/4,1/4,1/2)))
 #' 
 #' @export
 weights_subpops <- function(subpops) {
@@ -37,12 +37,12 @@ weights_subpops <- function(subpops) {
     if (anyNA(subpops))
         stop('subpopulations vector contains NAs!')
     
-    ## count number of individuals in each subpopulation
-    subpop2c <- table(subpops)
-    ## count number of subpopulations
-    K <- length(subpop2c)
-    ## construct weights, return!
-    1/(K*subpop2c[match(subpops, names(subpop2c))])
+    # count number of individuals in each subpopulation
+    subpop_counts <- table(subpops)
+    # count number of subpopulations
+    K <- length(subpop_counts)
+    # construct weights, return!
+    1 / ( K * subpop_counts[match(subpops, names(subpop_counts))] )
 }
 
 # stick deprecated function name here
