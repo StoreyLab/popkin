@@ -16,7 +16,7 @@ The current development version can be installed from the GitHub repository usin
 ```R
 install.packages("devtools") # if needed
 library(devtools)
-devtools::install_github('StoreyLab/popkin', build_opts=c())
+devtools::install_github('StoreyLab/popkin', build_opts = c())
 ```
 
 You can see the package vignette, which has additional documentation, by typing this into your R session:
@@ -46,41 +46,41 @@ Synopsis of commands
 
 This is a quick overview of every `popkin` function, covering estimation and visualization of kinship and FST from a genotype matrix.
 
-First estimate the kinship matrix `Phi` from the genotypes `X`.
-All downstream analysis require `Phi`, none use `X` after this
+First estimate the `kinship` matrix from the genotypes `X`.
+All downstream analysis require `kinship`, none use `X` after this
 ```R
 library(popkin)
-Phi <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
+kinship <- popkin(X, subpops) # calculate kinship from X and optional subpop labels
 ```
 
 Plot the kinship matrix, marking the subpopulations.
-Note `inbr_diag` replaces the diagonal of `Phi` with inbreeding coefficients
+Note `inbr_diag` replaces the diagonal of `kinship` with inbreeding coefficients
 ```R
-plotPopkin( inbr_diag(Phi), labs=subpops )
+plot_popkin( inbr_diag(kinship), labs = subpops )
 ```
 
-Extract inbreeding coefficients from `Phi`
+Extract inbreeding coefficients from `kinship`
 ```R
-inbr <- inbr(Phi)
+inbreeding <- inbr(kinship)
 ```
 
 Estimate FST
 ```R
-w <- weights_subpops(subpops) # weigh individuals so subpopulations are balanced
-Fst <- fst(Phi, w) # use kinship matrix and weights to calculate fst
-Fst <- fst(inbr, w) # estimate more directly from inbreeding vector (same result)
+weights <- weights_subpops(subpops) # weigh individuals so subpopulations are balanced
+Fst <- fst(kinship, weights) # use kinship matrix and weights to calculate fst
+Fst <- fst(inbreeding, weights) # estimate more directly from inbreeding vector (same result)
 ```
 
 Estimate and visualize the pairwise FST matrix
 ```R
-pwF <- pwfst(Phi) # estimated matrix
-legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
-plotPopkin(pwF, labs=subpops, legTitle=legTitle) # NOTE no need for inbr_diag() here!
+pairwise_fst <- pwfst(kinship) # estimated matrix
+leg_title <- expression(paste('Pairwise ', F[ST])) # fancy legend label
+plot_popkin(pairwise_fst, labs = subpops, leg_title = leg_title) # NOTE no need for inbr_diag() here!
 ```
 
 Rescale the kinship matrix using different subpopulations (implicitly changes the most recent common ancestor population used as reference)
 ```R
-Phi2 <- rescale_popkin(Phi, subpops2)
+kinship2 <- rescale_popkin(kinship, subpops2)
 ```
 
 

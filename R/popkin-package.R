@@ -4,7 +4,7 @@
 #' Inbreeding coefficients, the generalized \eqn{F_{ST}}{FST}, and the individual-level pairwise \eqn{F_{ST}}{FST} matrix are extracted from the kinship matrix using \code{\link{inbr}}, \code{\link{fst}}, and \code{\link{pwfst}}, respectively.
 #' \code{\link{fst}} accepts weights for individuals to balance subpopulations obtained with \code{\link{weights_subpops}}.
 #' Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using \code{\link{rescale_popkin}}.
-#' Lastly, kinship and pairwise \eqn{F_{ST}}{FST} matrices can be visualized using \code{\link{plotPopkin}} (with the help of \code{\link{inbr_diag}} for kinship matrices only).
+#' Lastly, kinship and pairwise \eqn{F_{ST}}{FST} matrices can be visualized using \code{\link{plot_popkin}} (with the help of \code{\link{inbr_diag}} for kinship matrices only).
 #' 
 #' @examples
 #' ## estimate and visualize kinship and FST from a genotype matrix
@@ -25,7 +25,7 @@
 #'
 #' ## plot the kinship matrix, marking the subpopulations
 #' ## note inbr_diag replaces the diagonal of kinship with inbreeding coefficients
-#' plotPopkin( inbr_diag(kinship), labs = subpops )
+#' plot_popkin( inbr_diag(kinship), labs = subpops )
 #'
 #' ## extract inbreeding coefficients from kinship
 #' inbr <- inbr(kinship)
@@ -37,8 +37,8 @@
 #'
 #' ## estimate and visualize the pairwise FST matrix
 #' pwF <- pwfst(kinship) # estimated matrix
-#' legTitle <- expression(paste('Pairwise ', F[ST])) # fancy legend label
-#' plotPopkin(pwF, labs = subpops, legTitle = legTitle) # NOTE no need for inbr_diag() here!
+#' leg_title <- expression(paste('Pairwise ', F[ST])) # fancy legend label
+#' plot_popkin(pwF, labs = subpops, leg_title = leg_title) # NOTE no need for inbr_diag() here!
 #'
 #' ## rescale the kinship matrix using different subpopulations (implicitly changes the MRCA)
 #' kinship2 <- rescale_popkin(kinship, subpops2)

@@ -61,12 +61,17 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 # 2019-04-09 - popkin 1.2.0.9000
 
-* Renamed functions to fit tidyverse naming style
+* Renamed functions to fit tidyverse naming style:
   * `inbrDiag` -> `inbr_diag`
-  * `weightsSubpops` -> `weights_subpops`
-  * `rescalePopkin` -> `rescale_popkin`
   * `neff` -> `n_eff`
-  * Functions with old names remain for now as deprecated functions (to be removed in the future)
-* `inbr_diag` now accepts lists of kinship matrices to transform (for easier plotting of multiple matrices)
-* Added more input checks to functions, informative error messages
+  * `plotPopkin` -> `plot_popkin`
+  * `rescalePopkin` -> `rescale_popkin`
+  * `weightsSubpops` -> `weights_subpops`
+  * Certain argument names have also been updated to be more descriptive.
+  * Functions with old names remain for now as deprecated functions (to be removed in the future), retain older argument names.
+* `inbr_diag` now accepts lists of kinship matrices to transform (for easier plotting of multiple matrices).
+* `plot_popkin` now requires its non-NULL inputs to be proper kinship matrices.
+  Previously, the code used to somewhat allow for non-square matrices to be visualized, but this case had no guarantees to work.
+  The code is cleaner under the assumption of symmetric square matrices.
+* Added more input checks to functions, informative error messages.
 * Added functions: `validate_kinship`, `mean_kinship`
