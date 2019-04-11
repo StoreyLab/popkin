@@ -1,11 +1,9 @@
-Estimate Kinship and FST under Arbitrary Population Structure with popkin
-===
+# Estimate Kinship and FST under Arbitrary Population Structure with `popkin`
 
-The `popkin` ("population kinship") R package estimates the kinship matrix of individuals and FST from their biallelic genotypes.
+The `popkin` ("population kinship") R package estimates the kinship matrix of individuals and $F_{ST}$ from their biallelic genotypes.
 Our estimation framework is the first to be practically unbiased under arbitrary population structures.
 
-Installation
-===
+## Installation
 
 The stable version of the package is now on CRAN and can be installed using
 ```R
@@ -16,19 +14,21 @@ The current development version can be installed from the GitHub repository usin
 ```R
 install.packages("devtools") # if needed
 library(devtools)
-devtools::install_github('StoreyLab/popkin', build_opts = c())
+install_github('StoreyLab/popkin', build_opts = c())
 ```
 
-You can see the package vignette, which has additional documentation, by typing this into your R session:
-``` r
+You can see the package vignette, which has more detailed documentation, by typing this into your R session:
+```R
 vignette('popkin')
 ```
 
 
-Input data
-===
+## Examples
+
+### Input data
 
 The examples below assume the following R data variables are present for `n` individuals and `m` loci:
+
 * The `m`-by-`n` genotype matrix `X`, containing only unphased biallelic variants encoded as 0,1,2 counting a given reference allele per locus.
 * The length-`n` vector `subpops` that assigns each individual to a subpopulation.
 
@@ -41,10 +41,9 @@ library(BEDMatrix)
 X <- BEDMatrix(file) # load genotype matrix object
 ```
 
-Synopsis of commands
-===
+### `popkin` functions
 
-This is a quick overview of every `popkin` function, covering estimation and visualization of kinship and FST from a genotype matrix.
+This is a quick overview of every `popkin` function, covering estimation and visualization of kinship and $F_{ST}$ from a genotype matrix.
 
 First estimate the `kinship` matrix from the genotypes `X`.
 All downstream analysis require `kinship`, none use `X` after this
@@ -64,14 +63,14 @@ Extract inbreeding coefficients from `kinship`
 inbreeding <- inbr(kinship)
 ```
 
-Estimate FST
+Estimate $F_{ST}$
 ```R
 weights <- weights_subpops(subpops) # weigh individuals so subpopulations are balanced
 Fst <- fst(kinship, weights) # use kinship matrix and weights to calculate fst
 Fst <- fst(inbreeding, weights) # estimate more directly from inbreeding vector (same result)
 ```
 
-Estimate and visualize the pairwise FST matrix
+Estimate and visualize the pairwise $F_{ST}$ matrix
 ```R
 pairwise_fst <- pwfst(kinship) # estimated matrix
 leg_title <- expression(paste('Pairwise ', F[ST])) # fancy legend label
@@ -83,15 +82,11 @@ Rescale the kinship matrix using different subpopulations (implicitly changes th
 kinship2 <- rescale_popkin(kinship, subpops2)
 ```
 
+Please see the `popkin` R vignette for a description of the key parameters and more detailed examples, including complex plots with multiple kinship matrices and multi-level subpopulation labeling.
 
-More details
-===
 
-Please see the [popkin vignette](https://github.com/StoreyLab/popkin/raw/master/inst/doc/popkin.pdf) for a description of the key parameters and more detailed examples, including complex plots with multiple kinship matrices and multi-level subpopulation labeling.
+## Citations
 
-Citations
-===
+Ochoa, Alejandro, and John D. Storey. 2016a. "$F_{ST}$ And Kinship for Arbitrary Population Structures I: Generalized Definitions." bioRxiv [doi:10.1101/083915](http://doi.org/10.1101/083915).
 
-Ochoa, Alejandro, and John D. Storey. 2016a. "FST And Kinship for Arbitrary Population Structures I: Generalized Definitions." bioRxiv [doi:10.1101/083915](http://doi.org/10.1101/083915).
-
-Ochoa, Alejandro, and John D. Storey. 2016b. "FST And Kinship for Arbitrary Population Structures II: Method of Moments Estimators." bioRxiv [doi:10.1101/083923](http://doi.org/10.1101/083923).
+Ochoa, Alejandro, and John D. Storey. 2016b. "$F_{ST}$ And Kinship for Arbitrary Population Structures II: Method of Moments Estimators." bioRxiv [doi:10.1101/083923](http://doi.org/10.1101/083923).
