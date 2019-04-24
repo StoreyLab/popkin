@@ -9,10 +9,11 @@ plot_popkin(kinship, titles = NULL, col = NULL, col_n = 100,
   panel_letters = toupper(letters), panel_letters_cex = 1.5,
   ylab = "Individuals", ylab_adj = NA, ylab_line = 0,
   layout_add = TRUE, layout_rows = 1, leg_title = "Kinship",
-  leg_mar = NULL, leg_n = 5, names = FALSE, names_cex = 1,
-  names_line = NA, labs = NULL, labs_cex = 1, labs_las = 0,
-  labs_line = 0, labs_sep = TRUE, labs_lwd = 1, labs_col = "black",
-  labs_ticks = FALSE, labs_text = TRUE, labs_even = FALSE, ...)
+  leg_cex = 1, leg_mar = NULL, leg_n = 5, names = FALSE,
+  names_cex = 1, names_line = NA, labs = NULL, labs_cex = 1,
+  labs_las = 0, labs_line = 0, labs_sep = TRUE, labs_lwd = 1,
+  labs_col = "black", labs_ticks = FALSE, labs_text = TRUE,
+  labs_even = FALSE, ...)
 }
 \arguments{
 \item{kinship}{A numeric kinship matrix or a list of matrices.
@@ -38,7 +39,7 @@ Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('ma
 May also be a vector of booleans to set per panel (lengths must agree).}
 
 \item{panel_letters}{Vector of strings for labeling panels (default A-Z).
-No labels are added when there is only one panel, or if \code{panel_letters = NULL}.}
+No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).}
 
 \item{panel_letters_cex}{Scaling factor of panel letters (default 1.5).
 
@@ -65,6 +66,8 @@ If a non-standard layout or additional panels (beyond those provided by \code{pl
 LEGEND (COLOR KEY) OPTIONS}
 
 \item{leg_title}{The name of the variable that the heatmap colors measure (default "Kinship").}
+
+\item{leg_cex}{Scaling factor for \code{leg_title} (default 1).}
 
 \item{leg_mar}{Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only.
 If not provided, the margins used in the last panel are preserved with the exception that the left margin is set to zero (plus the value of \code{mar_pad}, see above).}

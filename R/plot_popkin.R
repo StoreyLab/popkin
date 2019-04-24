@@ -26,7 +26,7 @@
 #' @param diag_line If \code{TRUE} adds a line along the diagonal (default no line).
 #' May also be a vector of booleans to set per panel (lengths must agree).
 #' @param panel_letters Vector of strings for labeling panels (default A-Z).
-#' No labels are added when there is only one panel, or if \code{panel_letters = NULL}.
+#' No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
 #' @param panel_letters_cex Scaling factor of panel letters (default 1.5).
 #'
 #' AXIS LABEL OPTIONS
@@ -49,6 +49,7 @@
 #' LEGEND (COLOR KEY) OPTIONS
 #' 
 #' @param leg_title The name of the variable that the heatmap colors measure (default "Kinship").
+#' @param leg_cex Scaling factor for \code{leg_title} (default 1).
 #' @param leg_mar Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only.
 #' If not provided, the margins used in the last panel are preserved with the exception that the left margin is set to zero (plus the value of \code{mar_pad}, see above).
 #' @param leg_n The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details).
@@ -114,6 +115,7 @@ plot_popkin <- function(
                         layout_add = TRUE,
                         layout_rows = 1, 
                         leg_title = 'Kinship',
+                        leg_cex = 1,
                         leg_mar = NULL,
                         leg_n = 5,
                         names = FALSE,
@@ -235,9 +237,21 @@ plot_popkin <- function(
         # uses inner rather than outer margin (only choice that makes sense)
         if (length(ylab) > 1 && !is.na(ylab[i])) 
             graphics::mtext(ylab[i], side = 2, adj = ylab_adj[i], line = ylab_line[i])
-        # add letters only when there is more than one panel
-        # if panel_letters is null then don't add
-        if (!is.null(panel_letters) && 1 < n && n <= length(panel_letters)) # for humongous N's we run out of letters, just prevent obvious errors...
+        
+        # add letters only when ...
+        if (
+            # panel_letters is non-NULL
+            !is.null(panel_letters) &&
+            # and 
+            (
+                # there is more than one panel
+                1 < n ||
+                # or if there is one panel but we also set one letter only
+                (n == 1 && length(panel_letters) == 1)
+            ) &&
+            # and if we haven't exceeded the available letters (to prevent stupid errors)
+            i <= length(panel_letters)
+        )
             panel_letter(panel_letters[i], cex = panel_letters_cex)
         
     }
@@ -250,7 +264,7 @@ plot_popkin <- function(
         marTmp[2] <- mar_pad # replace left margin with zero plus pad
         graphics::par(mar = marTmp) # update margins for legend only!
     }
-    heatmap_legend(breaks, kinship_range = range_real, label = leg_title, col = col, col_n = col_n, leg_n = leg_n)
+    heatmap_legend(breaks, kinship_range = range_real, label = leg_title, col = col, col_n = col_n, leg_n = leg_n, cex = leg_cex)
 
     # add margin only once if there was only one, place in outer margin (only choice that makes sense)
     if (length(ylab) == 1)
@@ -577,7 +591,7 @@ rep_check_list <- function(vals, n) {
 # mtext('Individuals', side=2, outer=TRUE)
 #
 # @export
-heatmap_legend <- function(breaks, kinship_range = NULL, label = 'Kinship', col = NULL, col_n = 100, leg_n = 5) {
+heatmap_legend <- function(breaks, kinship_range = NULL, label = 'Kinship', col = NULL, col_n = 100, leg_n = 5, cex = NA) {
     # creates a nicer heatmap legend, but it has to be a standalone image (in its own panel, preferably through layout so it's a skinny panel)
     # this function fills panel, so here we don't set margins/etc (it's best left to the end user)
 
@@ -622,7 +636,7 @@ heatmap_legend <- function(breaks, kinship_range = NULL, label = 'Kinship', col 
     graphics::axis(4, at = xv, labels = lv)
     
     # lastly, add axis label
-    graphics::mtext(side = 4, label, line = 2)
+    graphics::mtext(side = 4, label, line = 2, cex = cex)
 }
 
 # spreads data to c(0-delta, 1+delta)

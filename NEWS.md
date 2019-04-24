@@ -78,8 +78,12 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 # 2019-04-24 - popkin 1.2.1.9000
 
+`plot_popkin` bug fixes and enhancements!
+
 * `plot_popkin` now resets graphical parameters when done and after every panel as needed.
   * Fixed a bug where panel margins were not reset per panel.
     In particular, after setting custom margins for one panel, but `NULL` (default) for subsequent panels, the original margins were not reset (instead, the last values were incorrectly propagated).
   * The entire layout (all original `par` values) is now reset after plotting is complete.
   * Updated documentation to reflect new behavior.
+* Can now have letters on single-panel plots as long as a single letter is passed to `plot_popkin` option `panel_letters` (default is A-Z, so the default remains to not show letters for a single panel).
+* Added `leg_cex` option to `plot_popkin`.
