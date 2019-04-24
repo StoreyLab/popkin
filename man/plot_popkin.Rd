@@ -57,7 +57,7 @@ If \code{length(ylab) == 1}, only the first value is used, otherwise \code{lengt
 LAYOUT OPTIONS}
 
 \item{layout_add}{If \code{TRUE} (default) then \code{\link[graphics]{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{layout_rows} below) plus the color key legend.
-The original layout is reset when plotting is complete.
+The original layout is reset when plotting is complete and if \code{layout_add = TRUE}.
 If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to FALSE and call \code{\link[graphics]{layout}} yourself beforehand.}
 
 \item{layout_rows}{Number of rows in layout, used only if \code{layout_add = TRUE}.

@@ -42,7 +42,7 @@
 #' LAYOUT OPTIONS
 #' 
 #' @param layout_add If \code{TRUE} (default) then \code{\link[graphics]{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{layout_rows} below) plus the color key legend.
-#' The original layout is reset when plotting is complete.
+#' The original layout is reset when plotting is complete and if \code{layout_add = TRUE}.
 #' If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to FALSE and call \code{\link[graphics]{layout}} yourself beforehand.
 #' @param layout_rows Number of rows in layout, used only if \code{layout_add = TRUE}.
 #'
@@ -256,9 +256,13 @@ plot_popkin <- function(
     if (length(ylab) == 1)
         graphics::mtext(ylab, side = 2, adj = ylab_adj, outer = TRUE, line = ylab_line)
 
-    # always restore original setup when done!
-    # this should reset "layout" too
-    graphics::par( par_orig )
+    # restore original margins otherwise!
+    graphics::par(mar = mar_orig)
+    
+    # restore original setup when done, but only if we created the default layout
+    # otherwise the external layout gets reset, which is bad if we were not done adding panels
+    if (layout_add)
+        graphics::par( par_orig )
 }
 
 # stick deprecated function name here
