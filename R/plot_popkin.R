@@ -18,7 +18,8 @@
 #' @param mar Margins for each panel (if a list) or for all panels (if a vector).
 #' Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.
 #' Note the padding \code{mar_pad} below is also added to every margin if set.
-#' By default the existing margin values are used without change.
+#' If \code{NULL}, the original margin values are used without change, and are reset for every panel that has a \code{NULL} value.
+#' The original margins are also reset after plotting is complete.
 #' @param mar_pad Margin padding added to all panels (\code{mar} above and \code{leg_mar} below).
 #' Default 0.2.
 #' Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
@@ -41,6 +42,7 @@
 #' LAYOUT OPTIONS
 #' 
 #' @param layout_add If \code{TRUE} (default) then \code{\link[graphics]{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{layout_rows} below) plus the color key legend.
+#' The original layout is reset when plotting is complete.
 #' If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to FALSE and call \code{\link[graphics]{layout}} yourself beforehand.
 #' @param layout_rows Number of rows in layout, used only if \code{layout_add = TRUE}.
 #'
@@ -184,18 +186,27 @@ plot_popkin <- function(
     max_sym <- max(abs(range_real))
     range_sym <- c(-max_sym, max_sym)
 
+    # save entire original setup, to reset in the end
+    # no.readonly is since some parameters cannot be changed (trying to set them results in ugly warnings)
+    par_orig <- graphics::par( no.readonly = TRUE )
+    # save original margins, which may get reset per panel (separately of final reset)
+    mar_orig <- graphics::par('mar')
+    
     # figure out layout given a requested number of rows
     if (layout_add)
         plot_popkin_layout(n, layout_rows)
-    
-    marPre <- graphics::par('mar') # save original margins, in case there are changes
-    
+
     # breaks of all following plots should match!
     breaks <- NULL
     for (i in 1:n) {
-        if (!is.null(mar[[i]]))
-            graphics::par(mar = mar[[i]] + mar_pad) # change margins if necessary!
-        
+        if (!is.null(mar[[i]])) {
+            # change margins if necessary!
+            graphics::par(mar = mar[[i]] + mar_pad)
+        } else {
+            # restore original margins otherwise!
+            graphics::par(mar = mar_orig)
+        }
+
         breaks_i <- plot_popkin_single(
             kinship[[i]],
             kinship_range = range_sym,
@@ -244,8 +255,10 @@ plot_popkin <- function(
     # add margin only once if there was only one, place in outer margin (only choice that makes sense)
     if (length(ylab) == 1)
         graphics::mtext(ylab, side = 2, adj = ylab_adj, outer = TRUE, line = ylab_line)
-    
-    graphics::par(mar = marPre) # restore margins!
+
+    # always restore original setup when done!
+    # this should reset "layout" too
+    graphics::par( par_orig )
 }
 
 # stick deprecated function name here

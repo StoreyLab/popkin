@@ -27,7 +27,8 @@ Note \code{kinship} may contain \code{NULL} elements (makes blank plots with tit
 \item{mar}{Margins for each panel (if a list) or for all panels (if a vector).
 Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.
 Note the padding \code{mar_pad} below is also added to every margin if set.
-By default the existing margin values are used without change.}
+If \code{NULL}, the original margin values are used without change, and are reset for every panel that has a \code{NULL} value.
+The original margins are also reset after plotting is complete.}
 
 \item{mar_pad}{Margin padding added to all panels (\code{mar} above and \code{leg_mar} below).
 Default 0.2.
@@ -56,6 +57,7 @@ If \code{length(ylab) == 1}, only the first value is used, otherwise \code{lengt
 LAYOUT OPTIONS}
 
 \item{layout_add}{If \code{TRUE} (default) then \code{\link[graphics]{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{layout_rows} below) plus the color key legend.
+The original layout is reset when plotting is complete.
 If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to FALSE and call \code{\link[graphics]{layout}} yourself beforehand.}
 
 \item{layout_rows}{Number of rows in layout, used only if \code{layout_add = TRUE}.

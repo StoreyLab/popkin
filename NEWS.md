@@ -75,3 +75,11 @@ These names get copied to the rows and columns of the output kinship matrix.
   The code is cleaner under the assumption of symmetric square matrices.
 * Added more input checks to functions, informative error messages.
 * Added functions: `validate_kinship`, `mean_kinship`
+
+# 2019-04-24 - popkin 1.2.1.9000
+
+* `plot_popkin` now resets graphical parameters when done and after every panel as needed.
+  * Fixed a bug where panel margins were not reset per panel.
+    In particular, after setting custom margins for one panel, but `NULL` (default) for subsequent panels, the original margins were not reset (instead, the last values were incorrectly propagated).
+  * The entire layout (all original `par` values) is now reset after plotting is complete.
+  * Updated documentation to reflect new behavior.
