@@ -21,6 +21,12 @@
 #' Note memory usage is somewhat underestimated and is not controlled strictly.
 #' Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 1GB (OSX and other systems).
 #'
+#' DEPRECATED PARAMETER NAMES.
+#' These generate a warning that they are deprecated, and will be removed in a future release.
+#'
+#' @param lociOnCols Same as \code{loci_on_cols}.
+#' @param memLim Same as \code{mem_lim}.
+#'
 #' @return The estimated \eqn{n \times n}{n-by-n} kinship matrix.
 #' If \eqn{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
 #'
@@ -37,9 +43,22 @@
 #' kinship <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
 #'
 #' @export
-popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_lim = NA) {
+popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_lim = NA, lociOnCols = FALSE, memLim = NA) {
     # wrapper around get_A combined with subpopulation-based estimation of A_Emin
 
+    # take care of deprecated forms
+    # new forms take precedence, so test for non-default values there too
+    if (lociOnCols && !loci_on_cols) {
+        # produce warning
+        warning('`lociOnCols` is deprecated, please use `loci_on_cols` instead!')
+        # set new var
+        loci_on_cols <- lociOnCols
+    }
+    if (!is.na(memLim) && is.na(mem_lim)) {
+        warning('`memLim` is deprecated, please use `mem_lim` instead!')
+        mem_lim <- memLim
+    }
+    
     # repeat some validations before the hard work... (some are repeated again inside each function, but let's do it sooner)
     # test coherence between subpops and n...
     if (!is.null(subpops)) {

@@ -1,10 +1,18 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbitrary Population Structure
-Version: 1.2.1.9000
+Version: 1.2.2
 Authors@R: c(
-	   person("Alejandro", "Ochoa", email = "alejandro.ochoa@duke.edu", role = c("aut", "cre")),
-	   person("John D.", "Storey", email = "jstorey@princeton.edu", role = c("aut"))
-	   )
+    person(given = "Alejandro",
+	   family = "Ochoa",
+	   role = c("aut", "cre"),
+	   email = "alejandro.ochoa@duke.edu",
+           comment = c(ORCID = "0000-0003-4928-3403")),
+    person(given = "John D.",
+           family = "Storey",
+	   role = c("aut"),
+	   email = "jstorey@princeton.edu",
+           comment = c(ORCID = "0000-0001-5992-402X"))
+    )
 Description: Provides functions to estimate the kinship matrix of individuals from a large set of biallelic SNPs, and extract inbreeding coefficients and the generalized FST (Wright's fixation index).  Method described in Ochoa and Storey (2016) <doi:10.1101/083923>.
 Depends: 
 Imports: Rcpp (>= 0.12.10), RColorBrewer, graphics, grDevices

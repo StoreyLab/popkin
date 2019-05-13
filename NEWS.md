@@ -87,3 +87,10 @@ These names get copied to the rows and columns of the output kinship matrix.
   * Updated documentation to reflect new behavior.
 * Can now have letters on single-panel plots as long as a single letter is passed to `plot_popkin` option `panel_letters` (default is A-Z, so the default remains to not show letters for a single panel).
 * Added `leg_cex` option to `plot_popkin`.
+
+# 2019-05-13 - popkin 1.2.2
+
+* Third CRAN submission.
+* Added ORCIDs to authors.
+* Added back to `popkin` function the deprecated parameter names `lociOnCols` and `memLim` alongside the new names, to prevent breaking existing code (generate warnings).
+
