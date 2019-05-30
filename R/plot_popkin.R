@@ -236,6 +236,8 @@ plot_popkin <- function(
                 # Let's just make the blank panel and move on
                 # Important: do not add panel letters or titles!
                 graphics::plot.new()
+                # force advance to next i_all, not executing any of the rest
+                next
             } else {
                 # now we can increment this one, for all non-kinship data
                 i <- i + 1
