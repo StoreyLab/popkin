@@ -94,3 +94,6 @@ These names get copied to the rows and columns of the output kinship matrix.
 * Added ORCIDs to authors.
 * Added back to `popkin` function the deprecated parameter names `lociOnCols` and `memLim` alongside the new names, to prevent breaking existing code (generate warnings).
 
+# 2019-05-30 - popkin 1.2.3
+
+* `inbr_diag` now handles `NULL` inputs correctly (preserves them as `NULL` without throwing errors).

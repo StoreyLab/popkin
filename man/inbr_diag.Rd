@@ -8,11 +8,13 @@ inbr_diag(kinship)
 }
 \arguments{
 \item{kinship}{A kinship matrix with self-kinship values along the diagonal.
-Can pass multiple kinship matrices contained in a list.}
+Can pass multiple kinship matrices contained in a list.
+If \code{NULL}, it is returned as-is.}
 }
 \value{
 The modified kinship matrix, with inbreeding coefficients along the diagonal, preseving column and row names.
 If the input was a list of kinship matrices, the output is the corresponding list of transformed matrices.
+\code{NULL} inputs are preserved without causing errors.
 }
 \description{
 The usual kinship matrix contains self-kinship values \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} where \eqn{f_j^T} are inbreeding coefficients.
@@ -39,6 +41,9 @@ stopifnot( all( abs(kinship_inbr_diag_obs - kinship_inbr_diag_exp) < .Machine$do
 
 # for a list of matrices, returns list of transformed matrices:
 inbr_diag( list(kinship, kinship) )
+
+# a list with NULL values also works
+inbr_diag( list(kinship, NULL, kinship) )
 
 #########
 # Construct toy data (to more closely resemble real data analysis)

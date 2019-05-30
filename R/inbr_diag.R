@@ -6,9 +6,11 @@
 #'
 #' @param kinship A kinship matrix with self-kinship values along the diagonal.
 #' Can pass multiple kinship matrices contained in a list.
+#' If \code{NULL}, it is returned as-is.
 #'
 #' @return The modified kinship matrix, with inbreeding coefficients along the diagonal, preseving column and row names.
 #' If the input was a list of kinship matrices, the output is the corresponding list of transformed matrices.
+#' \code{NULL} inputs are preserved without causing errors.
 #'
 #' @examples
 #' #########
@@ -30,6 +32,9 @@
 #'
 #' # for a list of matrices, returns list of transformed matrices:
 #' inbr_diag( list(kinship, kinship) )
+#' 
+#' # a list with NULL values also works
+#' inbr_diag( list(kinship, NULL, kinship) )
 #' 
 #' #########
 #' # Construct toy data (to more closely resemble real data analysis)
@@ -61,7 +66,12 @@ inbr_diag <- function(kinship) {
     if (class(kinship) == 'list')
         return ( lapply( kinship, inbr_diag ) )
 
-    # assuming we're in the singleton case now, run additional validations
+    # we now assume we're in the singleton case now
+    # handle NULL case
+    if ( is.null(kinship) )
+        return(NULL)
+    
+    # additional validations
     validate_kinship(kinship)
 
     # ready to actually process!
