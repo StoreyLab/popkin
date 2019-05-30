@@ -251,3 +251,65 @@ test_that("n_eff works", {
     expect_true(min(obj$weights) < 0) # this example must have negative weights, or it's useless!
 })
 
+test_that("plot_popkin works", {
+    # set up a temporary path to write to
+    fo <- tempfile('test-plot-popkin', fileext = '.pdf')
+    
+    # singleton works
+    pdf( fo )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_popkin( inbr_diag(Phi) ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+    
+    # list works
+    pdf( fo, width = 14 ) # make wider
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_popkin( inbr_diag( list(Phi, Phi0) ) ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+
+    # list with NULL works
+    pdf( fo, width = 14 )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_popkin( inbr_diag( list(Phi, NULL) ) ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+    
+    # test mismatch cases with NULLs and titles
+    
+    # this should work in old version
+    pdf( fo, width = 14 )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_popkin( inbr_diag( list(Phi, NULL) ), titles = c('a', 'b'), null_panel_data = TRUE ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+    
+    # this should fail in old version
+    pdf( fo, width = 14 )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_error( plot_popkin( inbr_diag( list(Phi, NULL) ), titles = 'a', null_panel_data = TRUE ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+    
+    # this should fail in new version
+    pdf( fo, width = 14 )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_error( plot_popkin( inbr_diag( list(Phi, NULL) ), titles = c('a', 'b'), null_panel_data = FALSE ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+    
+    # this should work in new version
+    pdf( fo, width = 14 )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_popkin( inbr_diag( list(Phi, NULL) ), titles = 'a', null_panel_data = FALSE ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+})

@@ -97,3 +97,5 @@ These names get copied to the rows and columns of the output kinship matrix.
 # 2019-05-30 - popkin 1.2.3
 
 * `inbr_diag` now handles `NULL` inputs correctly (preserves them as `NULL` without throwing errors).
+* `plot_popkin` has a new logical option `null_panel_data`, to change behavior in the presence of `NULL` kinship matrices (whether they must or must not have titles and other parameters).
+  * The new default is to not specify any data for `NULL` panels

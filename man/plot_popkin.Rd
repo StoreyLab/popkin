@@ -13,7 +13,7 @@ plot_popkin(kinship, titles = NULL, col = NULL, col_n = 100,
   names_cex = 1, names_line = NA, labs = NULL, labs_cex = 1,
   labs_las = 0, labs_line = 0, labs_sep = TRUE, labs_lwd = 1,
   labs_col = "black", labs_ticks = FALSE, labs_text = TRUE,
-  labs_even = FALSE, ...)
+  labs_even = FALSE, null_panel_data = FALSE, ...)
 }
 \arguments{
 \item{kinship}{A numeric kinship matrix or a list of matrices.
@@ -41,9 +41,7 @@ May also be a vector of booleans to set per panel (lengths must agree).}
 \item{panel_letters}{Vector of strings for labeling panels (default A-Z).
 No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).}
 
-\item{panel_letters_cex}{Scaling factor of panel letters (default 1.5).
-
-AXIS LABEL OPTIONS}
+\item{panel_letters_cex}{Scaling factor of panel letters (default 1.5).}
 
 \item{ylab}{The y-axis label (default "Individuals").
 If \code{length(ylab) == 1}, the label is placed in the outer margin (shared across panels);
@@ -107,6 +105,13 @@ Useful for including separating lines or ticks without text.}
 
 \item{labs_even}{A vector of booleans that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
 When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.}
+
+\item{null_panel_data}{If \code{FALSE} (default), panels with \code{NULL} kinship matrices must not have titles or other parameters set, and no panel letters are used in these cases.
+If \code{TRUE}, panels with \code{NULL} kinship matrices must have titles and other parameters set.
+In the latter case, these \code{NULL} panels also get panel letters.
+The difference is important when checking that lengths of non-singleton parameters agree.
+
+AXIS LABEL OPTIONS}
 
 \item{...}{Additional options passed to \code{\link[graphics]{image}}.
 These are shared across panels}

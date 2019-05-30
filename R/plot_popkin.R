@@ -28,6 +28,11 @@
 #' @param panel_letters Vector of strings for labeling panels (default A-Z).
 #' No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
 #' @param panel_letters_cex Scaling factor of panel letters (default 1.5).
+#' @param null_panel_data
+#' If \code{FALSE} (default), panels with \code{NULL} kinship matrices must not have titles or other parameters set, and no panel letters are used in these cases.
+#' If \code{TRUE}, panels with \code{NULL} kinship matrices must have titles and other parameters set.
+#' In the latter case, these \code{NULL} panels also get panel letters.
+#' The difference is important when checking that lengths of non-singleton parameters agree.
 #'
 #' AXIS LABEL OPTIONS
 #' 
@@ -131,7 +136,9 @@ plot_popkin <- function(
                         labs_ticks = FALSE,
                         labs_text = TRUE,
                         labs_even = FALSE,
-                       ...) {
+                        null_panel_data = FALSE,
+                        ...
+                        ) {
     # wrapper around individual panels and color key
     # does not set PDF output, margins, layout, etc
     # assumes kinship is a list of matrices, if not it is internally turned into one
@@ -140,16 +147,36 @@ plot_popkin <- function(
     if (!is.list(kinship))
         kinship <- list(kinship) # turn into list so rest works
     
-    n <- length(kinship) # number of heatmap panels
+    # number of heatmap panels, including NULL cases
+    # this should only be used for layout
+    n_all <- length(kinship)
+    
+    # figure out which data are non-NULL
+    indexes_not_null <- !sapply(kinship, is.null)
+    if ( !any( indexes_not_null ) )
+        stop('Every element of list "kinship" is NULL!')
+
+    # decide which length to use for validations
+    if (null_panel_data) {
+        # NULL kinship panels require titles and other parameters set
+        # (this is original behavior)
+        n <- n_all
+    } else {
+        # NULL kinship panels must NOT have titles and other parameters set
+        # most of the parameters have to agree with this value (n rather than n_all)
+        n <- sum(indexes_not_null)
+    }
+    
+    # start checking lengths, etc
     if (!is.null(titles)) {
         if (length(titles) != n)
-            stop('titles provided are not the same length as data! Data: ', n, ', titles: ', length(titles))
+            stop('`titles` provided are not the same length as data! Data: ', n, ', titles: ', length(titles))
     } else {
         titles <- rep.int('', n) # make blank titles of the same length as data
     }
     # check label lengths
     if (!is.null(labs) && class(labs) == 'list' && length(labs) != n)
-        stop('there are ', n, ' panels but ', length(labs), ' label sets!')
+        stop('there are ', n, ' non-NULL panels but ', length(labs), ' label sets!')
     # expand other things that may vary per panel
     names <- rep_check(names, n)
     names_cex <- rep_check(names_cex, n)
@@ -174,11 +201,6 @@ plot_popkin <- function(
         ylab_line <- rep_check(ylab_line, n)
     }
 
-    # figure out which data are non-NULL
-    indexes_not_null <- !sapply(kinship, is.null)
-    if (!any(indexes_not_null))
-        stop('every element of list "kinship" is NULL!')
-    
     # code needs two versions of the range
     # - range_real is the real range, used in the end so the color key doesn't show values that weren't actually used
     # - range_sym is a symmetric range, used internally to ensure zero is in the exact middle (set to white in the default)
@@ -196,11 +218,30 @@ plot_popkin <- function(
     
     # figure out layout given a requested number of rows
     if (layout_add)
-        plot_popkin_layout(n, layout_rows)
+        plot_popkin_layout(n_all, layout_rows)
 
     # breaks of all following plots should match!
     breaks <- NULL
-    for (i in 1:n) {
+    # index of non-null data
+    i <- 0 # start here to update in the beginning
+    # navigate *_all version (includes NULL cases)
+    for (i_all in 1:n_all) {
+        if (null_panel_data) {
+            # these two are the same in this original version
+            i <- i_all
+            # panel will be created as it used to, even for NULL cases...
+        } else {
+            if ( !indexes_not_null[i_all] ) {
+                # This is a null case
+                # Let's just make the blank panel and move on
+                # Important: do not add panel letters or titles!
+                graphics::plot.new()
+            } else {
+                # now we can increment this one, for all non-kinship data
+                i <- i + 1
+            }
+        }
+        
         if (!is.null(mar[[i]])) {
             # change margins if necessary!
             graphics::par(mar = mar[[i]] + mar_pad)
@@ -210,7 +251,7 @@ plot_popkin <- function(
         }
 
         breaks_i <- plot_popkin_single(
-            kinship[[i]],
+            kinship[[i_all]],
             kinship_range = range_sym,
             col = col,
             col_n = col_n,
