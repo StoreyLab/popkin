@@ -1,11 +1,6 @@
-^CRAN-RELEASE$
-^Meta$
+^LICENSE\.md$
+scripts/
 ^doc$
-^.*\.Rproj$
-^\.Rproj\.user$
-\.git
-\.gitignore
-^README\.md$
-^Makefile$
+^Meta$
 ^cran-comments\.md$
-scripts/*
+^CRAN-RELEASE$
