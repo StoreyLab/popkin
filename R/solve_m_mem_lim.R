@@ -39,14 +39,23 @@ solve_m_mem_lim <- function(
     if (mat_m_n == 0 && vec_m == 0)
         stop('At least one of `mat_m_n` or `vec_m` must be non-zero!  (there is no `m` to solve for otherwise)')
 
+    # memory overheads per type
+    # library(pryr)
+    # object_size( matrix( nrow = 0, ncol = 0 ) )
+    # mo <- 216 # matrix overhead
+    # object_size( numeric() )
+    # ao <- 48  # array overhead
+    mo8 <- 27 # mo/8 shortcut
+    ao8 <- 6 # ao/8 shortcut
+    
     # the forward formula is
     # (all double matrices/vectors)
     ## mem <- (
-    ##     + mat_m_n * (m * n * 8 + 40)
-    ##     + mat_n_n * (n * n * 8 + 40)
-    ##     + vec_m * (m * 8 + 40)
-    ##     + vec_n * (n * 8 + 40)
-    ## )
+    ##     + mat_m_n * (m * n + mo8)
+    ##     + mat_n_n * (n * n + mo8)
+    ##     + vec_m * (m + ao8)
+    ##     + vec_n * (n + ao8)
+    ## ) * 8
     # ignoring overheads for extra clarity (easier to think about int cases)
     ## mem <- (
     ##     + mat_m_n * m * n
@@ -58,10 +67,10 @@ solve_m_mem_lim <- function(
     # reversed we get (with overheads)
     m_chunk <- (
         + mem / 8
-        - mat_m_n * 5
-        - vec_m * 5
-        - mat_n_n * (n * n + 5)
-        - vec_n * (n + 5)
+        - mat_m_n * mo8
+        - vec_m * ao8
+        - mat_n_n * (n * n + mo8)
+        - vec_n * (n + ao8)
     ) / (
         + mat_m_n * n
         + vec_m
@@ -94,10 +103,10 @@ solve_m_mem_lim <- function(
 
     # actual memory in use per chunk, in bytes
     mem_chunk <- (
-        + mat_m_n * (m_chunk * n + 5)
-        + mat_n_n * (n * n + 5)
-        + vec_m * (m_chunk + 5)
-        + vec_n * (n + 5)
+        + mat_m_n * (m_chunk * n + mo8)
+        + mat_n_n * (n * n + mo8)
+        + vec_m * (m_chunk + ao8)
+        + vec_n * (n + ao8)
     ) * 8
     # ignoring overheads
     ## mem_chunk <- (
