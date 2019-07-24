@@ -72,7 +72,7 @@ popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_lim = NA
         if (class(X) != 'function') {
             if (class(X) == 'BEDMatrix') {
                 n2 <- nrow(X)
-            } else if (class(X) == 'matrix') {
+            } else if (is.matrix(X)) {
                 if (loci_on_cols) {
                     n2 <- nrow(X)
                 } else {

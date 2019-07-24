@@ -76,7 +76,7 @@ get_A <- function(X, n = NA, mem_lim = NA, loci_on_cols = FALSE) {
     }
     
     # infer the number of SNPs to break data into, since we're limited by memory
-    mc <- get_mem_lim_m(m, n, mem_lim)
+    mc <- get_mem_lim_m(n, m, mem_lim)
     
     # navigate chunks
     mci <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)

@@ -105,3 +105,8 @@ These names get copied to the rows and columns of the output kinship matrix.
 * Non-code changes:
   * Edited .Rbuildignore to stop ignoring README; also removed non-existent files from list
   * Removed unused popkin.Rproj file
+
+# 2019-07-24 - popkin 1.2.4.9000
+
+* Added internal function `solve_m_mem_lim`, which generalizes previous behavior to estimate chunk sizes (in number of loci) given a limited memory and number of individuals for various numbers of matrices (of dimensions (m,n) or (n,n)) and vectors (lengths m or n).
+  This function is shared with related projects (such as `popkinsuppl` on GitHub).

@@ -41,7 +41,58 @@ test_that("get_mem_lim returns positive numbers", {
     expect_true(mem > 0)
 })
 
+test_that("solve_m_mem_lim works", {
+    # mem is in bytes here, must not be missing
+    n <- 1000
+    m <- 100000
+    # create failures on purpose
+    expect_error( solve_m_mem_lim() ) # mandatory values missing
+    expect_error( solve_m_mem_lim( mem = GB, n = n ) ) # counts of m matrices are zero
+    expect_error( solve_m_mem_lim( mem = 1, n = n, vec_m = 1, mat_n_n = 1 ) ) # memory is too low for the n given
+    # now reasonable success cases
+    solve_m_mem_lim_TESTER <- function(
+                                       mat_m_n = 0,
+                                       mat_n_n = 0,
+                                       vec_m = 0,
+                                       vec_n = 0
+                                       ) {
+        data <- solve_m_mem_lim(
+            mem = GB,
+            n = n,
+            m = m,
+            mat_m_n = mat_m_n,
+            mat_n_n = mat_n_n,
+            vec_m = vec_m,
+            vec_n = vec_n
+        )
+        expect_equal(class(data), 'list')
+        expect_equal(length(data), 2)
+        expect_equal(names(data), paste0(c('m', 'mem'), '_chunk'))
+        # data sets bounds too!
+        expect_true( data$m_chunk > 0 )
+        expect_true( data$m_chunk <= m )
+        expect_true( data$mem_chunk > 0 )
+        expect_true( data$mem_chunk < GB ) # strict ineq because of factor = 0.7
+    }
+    
+    # repeat with various settings
+    # we can't have both mat_m_n and vec_m be zero, but all other cases are tested (12 cases)
+    solve_m_mem_lim_TESTER(mat_m_n = 1)
+    solve_m_mem_lim_TESTER(mat_m_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mat_m_n = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mat_m_n = 1, vec_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(vec_m = 1)
+    solve_m_mem_lim_TESTER(vec_m = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(vec_m = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(vec_m = 1, vec_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1)
+    solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, vec_n = 1, mat_n_n = 1)
+})
+
 test_that("get_mem_lim_m returns positive numbers", {
+    # mem is in GB here
     mc <- get_mem_lim_m(n=1000, mem=2, m=100000) # chunk size, setting memory manually, set number of SNPs too
     expect_equal(length(mc), 1)
     expect_equal(class(mc), 'numeric')
