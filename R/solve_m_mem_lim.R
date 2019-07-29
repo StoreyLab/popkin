@@ -93,12 +93,16 @@ solve_m_mem_lim <- function(
     # NOTE m may be missing if X is a function, so we can't make these simplifying decisions (to balance load) without m in that case...
     # but m is not missing for BEDMatrix and regular R matrices (most common cases by far)
     if (!is.na(m)) {
+        # note both cases here return integers
         if (m < m_chunk) {
             m_chunk <- m # use the smaller one
         } else {
             # should "redistribute" based on number of chunks, to lower memory even more per iteration
             m_chunk <- ceiling( m / ceiling( m / m_chunk ) ) # this lowers m_chunk even more, balances load better
         }
+    } else {
+        # just round down here, to have integers in all cases
+        m_chunk <- floor( m_chunk )
     }
 
     # actual memory in use per chunk, in bytes

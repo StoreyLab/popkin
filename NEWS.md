@@ -110,3 +110,8 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 * Added internal function `solve_m_mem_lim`, which generalizes previous behavior to estimate chunk sizes (in number of loci) given a limited memory and number of individuals for various numbers of matrices (of dimensions (m,n) or (n,n)) and vectors (lengths m or n).
   This function is shared with related projects (such as `popkinsuppl` on GitHub).
+
+# 2019-07-29 - popkin 1.2.5.9000
+
+* Now `solve_m_mem_lim` always returns integer chunk sizes (number of loci).
+  Previously the function returned non-integers only if the total matrix size `m` was not provided.
