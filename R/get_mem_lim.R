@@ -1,6 +1,12 @@
 # uses lots of hacks to try to estimate a reasonable amount of memory to use, in the most common systems!
 # currently only linux and windows are actually supported
 get_mem_lim <- function(factor = 0.7, verbose = FALSE) {
+    # make sure the factor makes sense
+    if (factor <= 0)
+        stop('memory `factor` must be strictly positive!  Passed: ', factor)
+    if (factor > 1)
+        stop('memory `factor` must be <= 1!  Passed: ', factor)
+    
     mem <- NA # to know if we've succeeded or not...
     
     if ( .Platform$OS.type == 'unix' ) {

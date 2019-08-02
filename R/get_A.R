@@ -29,7 +29,7 @@ NULL
 #
 # A <- get_A(X) # calculate A from genotypes
 # 
-get_A <- function(X, n = NA, mem_lim = NA, loci_on_cols = FALSE) {
+get_A <- function(X, n = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim = NA) {
     # determine some behaviors depending on data type
     # first validate class and set key booleans
     isFn <- FALSE
@@ -76,8 +76,18 @@ get_A <- function(X, n = NA, mem_lim = NA, loci_on_cols = FALSE) {
     }
     
     # infer the number of SNPs to break data into, since we're limited by memory
-    mc <- get_mem_lim_m(n = n, m = m, mem = mem_lim)
-    
+    # given fixed n, solve for m:
+    # get maximum m (number of SNPs) given n and the memory requested
+    data <- solve_m_mem_lim(
+        n = n,
+        m = m,
+        mat_m_n = 1, # X (0.5) + ?
+        mat_n_n = 1, # A + M (0.5 + 0.5)
+        mem = mem_lim,
+        mem_factor = mem_factor
+    )
+    mc <- data$mem_chunk
+
     # navigate chunks
     mci <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)
     while (TRUE) { # start an infinite loop, break inside as needed

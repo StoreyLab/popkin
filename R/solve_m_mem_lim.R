@@ -1,26 +1,26 @@
+# an internal constant shared by this function and get_mem_lim
+GB <- 1024 * 1024 * 1024
+
 # general function shared with other, related projects/packages
 # (popkin, popkinsuppl, fit to kinship, rgls)
-# mem is in bytes
+# mem is in GB, if passed
 # matrix counts should be integers for double numerical data, or halves for integer data (this is not tested)
 solve_m_mem_lim <- function(
-                            mem,
                             n,
                             m = NA,
                             mat_m_n = 0,
                             mat_n_n = 0,
                             vec_m = 0,
-                            vec_n = 0
+                            vec_n = 0,
+                            mem = NA,
+                            mem_factor = 0.7
                             ) {
     # mandatory arguments
     if (missing(n))
         stop('`n` is required!')
-    if (missing(mem))
-        stop('`mem` is required!')
 
     # check that data makes sense
     # everything has to be non-negative (a few things strictly positive)
-    if (mem <= 0)
-        stop('`mem` must be positive!  Passed ', mem)
     if (n <= 0)
         stop('`n` must be positive!  Passed ', n)
     if (!is.na(m) && m <= 0) # don't test if NA
@@ -34,6 +34,17 @@ solve_m_mem_lim <- function(
     if (vec_n < 0)
         stop('`vec_n` must be non-negative!  Passed ', vec_n)
 
+    if (is.na(mem)) {
+        # get available memory if it's missing, times the factor as usual
+        mem <- get_mem_lim(factor = mem_factor)
+    } else {
+        # sanity checks
+        if (mem <= 0)
+            stop('`mem` must be positive!  Passed ', mem)
+        # assuming mem is in GB, let's convert to bytes
+        mem <- mem * GB
+    }
+    
     # another sanity check
     # there is no problem if there are no `m`s, (below the denominator becomes zero)
     if (mat_m_n == 0 && vec_m == 0)

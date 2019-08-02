@@ -5,7 +5,7 @@
 \title{Estimate kinship from a genotype matrix and subpopulation assignments}
 \usage{
 popkin(X, subpops = NULL, n = NA, loci_on_cols = FALSE,
-  mem_lim = NA, lociOnCols = FALSE, memLim = NA)
+  mem_factor = 0.7, mem_lim = NA, lociOnCols = FALSE, memLim = NA)
 }
 \arguments{
 \item{X}{Genotype matrix, BEDMatrix object, or a function \eqn{X(m)} that returns the genotypes of all individuals at \eqn{m} successive locus blocks each time it is called, and NULL when no loci are left.}
@@ -20,9 +20,12 @@ If \eqn{n} is missing but \code{subpops} is not, \eqn{n} is taken to be the leng
 Has no effect if \eqn{X} is a function.
 If \eqn{X} is a BEDMatrix object, \code{loci_on_cols = TRUE} is set automatically.}
 
+\item{mem_factor}{Proportion of available memory to use loading and processing genotypes.
+Ignored if `mem_lim` is not `NA`.}
+
 \item{mem_lim}{Memory limit in GB, used to break up genotype data into chunks for very large datasets.
 Note memory usage is somewhat underestimated and is not controlled strictly.
-Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 1GB (OSX and other systems).
+Default in Linux and Windows is `mem_factor` times the free system memory, otherwise it is 1GB (OSX and other systems).
 
 DEPRECATED PARAMETER NAMES.
 These generate a warning that they are deprecated, and will be removed in a future release.}

@@ -42,22 +42,23 @@ test_that("get_mem_lim returns positive numbers", {
 })
 
 test_that("solve_m_mem_lim works", {
-    # mem is in bytes here, must not be missing
+    # mem is in GB here, inferred from system if missing
     n <- 1000
     m <- 100000
     # create failures on purpose
     expect_error( solve_m_mem_lim() ) # mandatory values missing
-    expect_error( solve_m_mem_lim( mem = GB, n = n ) ) # counts of m matrices are zero
-    expect_error( solve_m_mem_lim( mem = 1, n = n, vec_m = 1, mat_n_n = 1 ) ) # memory is too low for the n given
+    expect_error( solve_m_mem_lim( mem = 1, n = n ) ) # counts of m matrices are zero
+    expect_error( solve_m_mem_lim( mem = 1/GB, n = n, vec_m = 1, mat_n_n = 1 ) ) # memory is too low for the n given
     # now reasonable success cases
     solve_m_mem_lim_TESTER <- function(
                                        mat_m_n = 0,
                                        mat_n_n = 0,
                                        vec_m = 0,
-                                       vec_n = 0
+                                       vec_n = 0,
+                                       mem = NA
                                        ) {
         data <- solve_m_mem_lim(
-            mem = GB,
+            mem = mem,
             n = n,
             m = m,
             mat_m_n = mat_m_n,
@@ -72,11 +73,27 @@ test_that("solve_m_mem_lim works", {
         expect_true( data$m_chunk > 0 )
         expect_true( data$m_chunk <= m )
         expect_true( data$mem_chunk > 0 )
-        expect_true( data$mem_chunk < GB ) # strict ineq because of factor = 0.7
+        # don't test this if no memory was specified
+        if ( !is.na(mem) )
+            expect_true( data$mem_chunk/GB < mem ) # strict ineq because of factor = 0.7
     }
     
     # repeat with various settings
     # we can't have both mat_m_n and vec_m be zero, but all other cases are tested (12 cases)
+    # here we set memory manually to 1GB
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1, vec_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, vec_m = 1)
+    solve_m_mem_lim_TESTER(mem = 1, vec_m = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, vec_m = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, vec_m = 1, vec_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1, vec_m = 1)
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1, vec_m = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1, vec_m = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mem = 1, mat_m_n = 1, vec_m = 1, vec_n = 1, mat_n_n = 1)
+    # repeat inferring memory from system
     solve_m_mem_lim_TESTER(mat_m_n = 1)
     solve_m_mem_lim_TESTER(mat_m_n = 1, mat_n_n = 1)
     solve_m_mem_lim_TESTER(mat_m_n = 1, vec_n = 1)
@@ -89,22 +106,6 @@ test_that("solve_m_mem_lim works", {
     solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, mat_n_n = 1)
     solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, vec_n = 1)
     solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, vec_n = 1, mat_n_n = 1)
-})
-
-test_that("get_mem_lim_m returns positive numbers", {
-    # mem is in GB here
-    mc <- get_mem_lim_m(n=1000, mem=2, m=100000) # chunk size, setting memory manually, set number of SNPs too
-    expect_equal(length(mc), 1)
-    expect_equal(class(mc), 'numeric')
-    expect_true(mc > 0)
-    mc <- get_mem_lim_m(n=1000, mem=2) # chunk size, setting memory manually, omit m
-    expect_equal(length(mc), 1)
-    expect_equal(class(mc), 'numeric')
-    expect_true(mc > 0)
-    mc <- get_mem_lim_m(n=1000) # chunk size, inferring free memory from system, omit m
-    expect_equal(length(mc), 1)
-    expect_equal(class(mc), 'numeric')
-    expect_true(mc > 0)
 })
 
 test_that("function returns precomputed values: weights_subpops", {

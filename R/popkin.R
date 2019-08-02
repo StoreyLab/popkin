@@ -17,9 +17,11 @@
 #' @param loci_on_cols If \code{TRUE}, \eqn{X} has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns.
 #' Has no effect if \eqn{X} is a function.
 #' If \eqn{X} is a BEDMatrix object, \code{loci_on_cols = TRUE} is set automatically.
+#' @param mem_factor Proportion of available memory to use loading and processing genotypes.
+#' Ignored if `mem_lim` is not `NA`.
 #' @param mem_lim Memory limit in GB, used to break up genotype data into chunks for very large datasets.
 #' Note memory usage is somewhat underestimated and is not controlled strictly.
-#' Default in Linux and Windows is 70 \% of the free system memory, otherwise it is 1GB (OSX and other systems).
+#' Default in Linux and Windows is `mem_factor` times the free system memory, otherwise it is 1GB (OSX and other systems).
 #'
 #' DEPRECATED PARAMETER NAMES.
 #' These generate a warning that they are deprecated, and will be removed in a future release.
@@ -43,7 +45,7 @@
 #' kinship <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
 #'
 #' @export
-popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_lim = NA, lociOnCols = FALSE, memLim = NA) {
+popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim = NA, lociOnCols = FALSE, memLim = NA) {
     # wrapper around get_A combined with subpopulation-based estimation of A_Emin
 
     # take care of deprecated forms
@@ -86,7 +88,7 @@ popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_lim = NA
     }
     # actually run code
     # this is the main workhorse, estimating the numerators
-    A <- get_A(X, n = n, loci_on_cols = loci_on_cols, mem_lim = mem_lim)
+    A <- get_A(X, n = n, loci_on_cols = loci_on_cols, mem_factor = mem_factor, mem_lim = mem_lim)
     # the denominator is a simple average, a scalar shared by all individuals
     A_min <- min_mean_subpops(A, subpops)
     # the kinship matrix is this simple ratio

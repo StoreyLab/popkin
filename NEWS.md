@@ -115,3 +115,9 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 * Now `solve_m_mem_lim` always returns integer chunk sizes (number of loci).
   Previously the function returned non-integers only if the total matrix size `m` was not provided.
+
+# 2019-08-02 - popkin 1.2.6.9000
+
+* Reorganized internal code, mostly to facilitate use of the internal function `solve_m_mem_lim` in other dependent packages.
+  In particular, the internal function `get_mem_lim_m` was removed.
+* The `popkin` function accepts the new parameter `mem_factor`.
