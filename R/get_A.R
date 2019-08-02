@@ -29,83 +29,87 @@ NULL
 #
 # A <- get_A(X) # calculate A from genotypes
 # 
-get_A <- function(X, n = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim = NA) {
+get_A <- function(X, n_ind = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim = NA) {
     # determine some behaviors depending on data type
     # first validate class and set key booleans
     isFn <- FALSE
     if (class(X) == 'function') {
         isFn <- TRUE
-        if (is.na(n)) stop('missing number of individuals "n", which is required when X is a function.')
+        if (is.na(n_ind))
+            stop('missing number of individuals "n", which is required when X is a function.')
     } else if (class(X) == 'BEDMatrix') { # same as general matrix but transposed
         loci_on_cols <- TRUE # this is always imposed for this particular format!
-    } else if (class(X) != 'matrix') {
+    } else if (!is.matrix(X)) {
         stop('X has unsupported class: ', class(X))
     } 
     
     # extract dimensions from data (not possible for function version)
     # also get individual names (IDs)
-    namesX <- NULL # default
+    names_X <- NULL # default
     if (isFn) {
-        m <- NA # have to define as NA to pass to get_mem_lim_m below
+        m_loci <- NA # have to define as NA to pass to get_mem_lim_m below
     } else {
         if (loci_on_cols) {
-            if (!is.na(n) && n != nrow(X)) 
-                warning('User set number of samples that does not match X dimensions (will go with latter): ', n, ' != ', nrow(X))
-            n <- nrow(X)
-            m <- ncol(X)
-            namesX <- rownames(X)
+            if (!is.na(n_ind) && n_ind != nrow(X)) 
+                warning('User set number of samples that does not match X dimensions (will go with latter): ', n_ind, ' != ', nrow(X))
+            n_ind <- nrow(X)
+            m_loci <- ncol(X)
+            names_X <- rownames(X)
         } else {
-            if (!is.na(n) && n != ncol(X)) 
-                warning('User set number of samples that does not match X dimensions (will go with latter): ', n, ' != ', ncol(X))
-            n <- ncol(X)
-            m <- nrow(X)
-            namesX <- colnames(X)
+            if (!is.na(n_ind) && n_ind != ncol(X)) 
+                warning('User set number of samples that does not match X dimensions (will go with latter): ', n_ind, ' != ', ncol(X))
+            n_ind <- ncol(X)
+            m_loci <- nrow(X)
+            names_X <- colnames(X)
         }
     } 
     
     # initialize desired matrix
-    A <- matrix(0, nrow = n, ncol = n)
-    M <- matrix(0, nrow = n, ncol = n) # normalization now varies per individual pair (this tracks NAs, so subtract from overall m below)
+    A <- matrix(0, nrow = n_ind, ncol = n_ind)
+    M <- matrix(0, nrow = n_ind, ncol = n_ind) # normalization now varies per individual pair (this tracks NAs, so subtract from overall m below)
     
     # transfer names from X to A if present
     # this will carry over all the way to the final kinship matrix!
     # (M need not have names at all)
-    if (!is.null(namesX)) {
-        colnames(A) <- namesX
-        rownames(A) <- namesX
+    if (!is.null(names_X)) {
+        colnames(A) <- names_X
+        rownames(A) <- names_X
     }
     
     # infer the number of SNPs to break data into, since we're limited by memory
     # given fixed n, solve for m:
     # get maximum m (number of SNPs) given n and the memory requested
     data <- solve_m_mem_lim(
-        n = n,
-        m = m,
+        n = n_ind,
+        m = m_loci,
         mat_m_n = 1, # X (0.5) + ?
         mat_n_n = 1, # A + M (0.5 + 0.5)
         mem = mem_lim,
         mem_factor = mem_factor
     )
-    mc <- data$mem_chunk
+    m_chunk <- data$mem_chunk
 
     # navigate chunks
-    mci <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)
+    i_chunk <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)
     while (TRUE) { # start an infinite loop, break inside as needed
         if (isFn) {
-            Xi <- X( mc ) # get next "mc" SNPs
+            Xi <- X( m_chunk ) # get next "m_chunk" SNPs
             if (is.null(Xi)) break # stop when SNPs run out (only happens for functions X, not matrices)
         } else {
             # here m is known...
-            if (mci > m) break # this means all SNPs have been covered!
+            # this means all SNPs have been covered!
+            if (i_chunk > m_loci)
+                break
             
-            is <- mci:min(mci+mc-1, m) # range of SNPs to extract in this chunk
+            # range of SNPs to extract in this chunk
+            indexes_loci_chunk <- i_chunk : min(i_chunk + m_chunk - 1, m_loci)
             
             if (loci_on_cols) {
-                Xi <- t(X[, is, drop = FALSE]) # transpose for our usual setup
+                Xi <- t(X[, indexes_loci_chunk, drop = FALSE]) # transpose for our usual setup
             } else  {
-                Xi <- X[is, , drop = FALSE]
+                Xi <- X[indexes_loci_chunk, , drop = FALSE]
             }
-            mci <- mci + mc # update starting point for next chunk! (overshoots at the end, that's ok)
+            i_chunk <- i_chunk + m_chunk # update starting point for next chunk! (overshoots at the end, that's ok)
         }
 
         # before passing along to my RcppEigen code, I need to make sure the genotypes are treated by R as integers or RcppEigen dies on me
@@ -122,5 +126,5 @@ get_A <- function(X, n = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim = N
     }
 
     # return final estimate!
-    A/M - 1
+    A / M - 1
 }

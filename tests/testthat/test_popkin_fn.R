@@ -28,7 +28,7 @@ dimnames(Phi) <- NULL
 # only repeat tests where genotypes X is input!
 
 test_that("function returns precomputed values: get_A", {
-    expect_equal(get_A(Xf, n=n), A)
+    expect_equal(get_A(Xf, n_ind = n), A)
     ml <<- 1 # reset function after we're done!
 })
 

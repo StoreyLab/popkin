@@ -88,7 +88,7 @@ popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_factor =
     }
     # actually run code
     # this is the main workhorse, estimating the numerators
-    A <- get_A(X, n = n, loci_on_cols = loci_on_cols, mem_factor = mem_factor, mem_lim = mem_lim)
+    A <- get_A(X, n_ind = n, loci_on_cols = loci_on_cols, mem_factor = mem_factor, mem_lim = mem_lim)
     # the denominator is a simple average, a scalar shared by all individuals
     A_min <- min_mean_subpops(A, subpops)
     # the kinship matrix is this simple ratio
