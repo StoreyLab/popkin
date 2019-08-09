@@ -24,7 +24,7 @@
 #' Default 0.2.
 #' Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
 #' @param diag_line If \code{TRUE} adds a line along the diagonal (default no line).
-#' May also be a vector of booleans to set per panel (lengths must agree).
+#' May also be a vector of logicals to set per panel (lengths must agree).
 #' @param panel_letters Vector of strings for labeling panels (default A-Z).
 #' No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
 #' @param panel_letters_cex Scaling factor of panel letters (default 1.5).
@@ -33,6 +33,13 @@
 #' If \code{TRUE}, panels with \code{NULL} kinship matrices must have titles and other parameters set.
 #' In the latter case, these \code{NULL} panels also get panel letters.
 #' The difference is important when checking that lengths of non-singleton parameters agree.
+#' @param weights A vector with weights for every individual, or a list of such vectors if they vary per panel.
+#' The width of every individual becomes proportional to their weight.
+#' Individuals with zero or negative weights are omitted.
+#' @param raster A logical equivalent to `useRaster` option in the `image` function used internally, or a vector of such logicals if the choice varies per panel.
+#' If `weights` are non-`NULL` in a given panel, `raster = FALSE` is forced (this is necessary to plot images where columns and rows have variable width).
+#' If `weights` are `NULL`, the default is `raster = TRUE`, but in this case the user may override (for example, so panels are visually coherent when some use weights while others do not, as there are small differences in rendering implementation for each value of `raster`).
+#' Note that a multipanel figure with a list of `weights` sets `raster = FALSE` to all panels by default, even if the weights were only applied to a subset of panels.
 #'
 #' AXIS LABEL OPTIONS
 #' 
@@ -61,9 +68,9 @@
 #'
 #' INDIVIDUAL LABEL OPTIONS
 #' 
-#' @param names If \code{TRUE}, the column and row names are plotted in the heatmap.
-#' @param names_cex Scaling factor for the column and row names.
-#' @param names_line Line where column and row names are placed.
+#' @param names If \code{TRUE}, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.
+#' @param names_cex Scaling factor for the column and row names, or a vector of such values if they vary per panel.
+#' @param names_line Line where column and row names are placed, or a vector of such values if they vary per panel.
 #'
 #' SUBPOPULATION LABEL OPTIONS
 #' 
@@ -73,13 +80,13 @@
 #' @param labs_cex A vector of label scaling factors for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_las A vector of label orientations (in format that \code{\link[graphics]{mtext}} expects) for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_line A vector of lines where labels are placed (in format that \code{\link[graphics]{mtext}} expects) for each level of labs, or a list of such vectors if labels vary per panel.
-#' @param labs_sep A vector of booleans that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_sep A vector of logicals that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_lwd A vector of line widths for the lines that divide subpopulations (if \code{labs_sep = TRUE}) for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_col A vector of colors for the lines that divide subpopulations (if \code{labs_sep = TRUE}) for each level of labs, or a list of such vectors if labels vary per panel.
-#' @param labs_ticks A vector of booleans that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.
-#' @param labs_text A vector of booleans that specify whether the subpopulation labels are shown for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_ticks A vector of logicals that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_text A vector of logicals that specify whether the subpopulation labels are shown for each level of labs, or a list of such vectors if labels vary per panel.
 #' Useful for including separating lines or ticks without text.
-#' @param labs_even A vector of booleans that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_even A vector of logicals that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
 #' When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.
 #' 
 #' @param ... Additional options passed to \code{\link[graphics]{image}}.
@@ -137,6 +144,8 @@ plot_popkin <- function(
                         labs_text = TRUE,
                         labs_even = FALSE,
                         null_panel_data = FALSE,
+                        weights = NULL,
+                        raster = is.null(weights),
                         ...
                         ) {
     # wrapper around individual panels and color key
@@ -182,6 +191,7 @@ plot_popkin <- function(
     names_cex <- rep_check(names_cex, n)
     names_line <- rep_check(names_line, n)
     diag_line <- rep_check(diag_line, n)
+    raster <- rep_check(raster, n)
     # this is for non-scalars per panel, get turned into lists instead
     mar <- rep_check_list(mar, n)
     labs <- rep_check_list(labs, n)
@@ -194,6 +204,7 @@ plot_popkin <- function(
     labs_ticks <- rep_check_list(labs_ticks, n)
     labs_text <- rep_check_list(labs_text, n)
     labs_even <- rep_check_list(labs_even, n)
+    weights <- rep_check_list(weights, n)
     # ylab behavior is more dynamic!
     if (length(ylab) > 1) {
         ylab <- rep_check(ylab, n) # just makes sure length is n
@@ -272,6 +283,8 @@ plot_popkin <- function(
             labs_even = labs_even[[i]],
             diag_line = diag_line[i],
             main = titles[i],
+            weights = weights[[i]],
+            raster = raster[i],
             ...
         )
         if (!is.null(breaks_i))
@@ -458,6 +471,8 @@ plot_popkin_single <- function (
                                 labs_col = 'black',
                                 labs_even = FALSE,
                                 diag_line = FALSE,
+                                weights = NULL,
+                                raster = is.null(weights),
                                 ...
                                 ) {
     # this "raw" version does not plot legend or set margins, best for optimized scenarios...
@@ -478,6 +493,43 @@ plot_popkin_single <- function (
         col <- plot_popkin_palette(n = col_n) # default coloring
     if (length(col) == 1 && is.character(col)) 
         col <- get(col, mode = "function")
+
+    # weight validation and processing
+    n <- ncol(kinship)
+    if (!is.null(weights)) {
+        raster <- FALSE # force overwrite, don't let the user change this (it won't work so meh).
+        if (n != length(weights))
+            stop('length of `weights` (', length(weights), ') and `kinship` dimension (', n, ') must match!')
+        # check for zero or negative weights
+        indexes_ind_keep <- weights > 0
+        if ( !all( indexes_ind_keep ) ) {
+            # filter the data!
+            # individuals with zero or negative weights will be excluded
+            weights <- weights[ indexes_ind_keep ]
+            kinship <- kinship[ indexes_ind_keep, indexes_ind_keep ]
+            # renormalize weights (not strictly necessary, but nice to have a range of (0, 1)
+            weights <- weights / sum( weights )
+            # recompute number of individuals!
+            n <- ncol(kinship)
+        } else {
+            # set to null so downstream code knows not to do anything
+            indexes_ind_keep <- NULL
+        }
+        # this sets the boundaries of the data
+        # start at zero
+        xb <- cumsum( c(0, weights) )
+        # y axis has to be reversed in order and in value, this does both
+        yb <- 1 - rev(xb)
+    } else {
+        # NOTE: in this configuration these are bin centers, not boundaries
+        ## x <- 1:n
+        ## y <- x
+        # version for uniform boundaries, c(0, 1) range!
+        xb <- ( 0 : n ) / n
+        yb <- xb
+        # set to null so downstream code knows not to do anything
+        indexes_ind_keep <- NULL
+    }
     
     # figure out breaks for colors
     breaks <- seq(kinship_range[1], kinship_range[2], length = length(col) + 1)
@@ -493,45 +545,83 @@ plot_popkin_single <- function (
         breaks[numcols+1] <- rangeRaw[2]
     
     # main plot!
-    n <- ncol(kinship)
     # need to reverse the rows of the kinship for plotting!
     # (keep it this way for names below)
-    kinship <- kinship[n:1,]
+    kinship <- kinship[ n:1, ]
     graphics::image(
-                  1:n,
-                  1:n,
+                  xb,
+                  yb,
                   t(kinship),
-                  xlim = 0.5 + c(0, n),
-                  ylim = 0.5 + c(0, n),
+                  xlim = c(0, 1), # 0.5 + c(0, n),
+                  ylim = c(0, 1), # 0.5 + c(0, n),
                   axes = FALSE,
                   xlab = xlab,
                   ylab = ylab,
                   col = col,
                   breaks = breaks,
-                  useRaster = TRUE,
+                  useRaster = raster,
                   ...
               )
     if (names) {
         # if we want to show labels, use the row/col names to add to picture
+        # compute bin centers from boundaries (whether they were weighted or not)
+        xc <- centers_from_boundaries(xb)
+        yc <- centers_from_boundaries(yb)
         # labels will be perpendicular to axis (las=2)
-        graphics::axis(1, 1:n, colnames(kinship), las = 2, cex.axis = names_cex, tick = FALSE, line = names_line)
-        graphics::axis(2, 1:n, rownames(kinship), las = 2, cex.axis = names_cex, tick = FALSE, line = names_line)
+        graphics::axis(1, xc, colnames(kinship), las = 2, cex.axis = names_cex, tick = FALSE, line = names_line)
+        graphics::axis(2, yc, rownames(kinship), las = 2, cex.axis = names_cex, tick = FALSE, line = names_line)
     }
     if (diag_line)
-        graphics::lines(c(1,n),c(n,1)) # diagonal line
+        # diagonal line, version for c(1, n) range
+        # (was wrong as (1,n) were centerpoints, not boundaries)
+        ## graphics::lines(c(1,n),c(n,1))
+        # diagonal line, version for c(0, 1) range
+        graphics::lines( c(0, 1), c(1, 0) )
 
     # add subpop labels if present
     if (!is.null(labs))
-        print_labels_multi(labs, labs_cex, labs_las, labs_line, labs_lwd, labs_sep, labs_even, labs_ticks, labs_text, labs_col)
+        print_labels_multi(
+            labs = labs,
+            labs_cex = labs_cex,
+            labs_las = labs_las,
+            labs_line = labs_line,
+            labs_lwd = labs_lwd,
+            labs_sep = labs_sep,
+            labs_even = labs_even,
+            labs_ticks = labs_ticks,
+            labs_text = labs_text,
+            labs_col = labs_col,
+            xb_ind = xb,
+            indexes_ind_keep = indexes_ind_keep
+        )
     
     breaks # return breaks, since legends need it!
 }
 
-print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, labs_sep, labs_even, labs_ticks, labs_text, labs_col) {
+centers_from_boundaries <- function(xb) {
+    # number of centers equals number of boundaries minus one
+    n <- length(xb) - 1
+    # indexes facilitate this
+    indexes <- 1 : n
+    # this is the value we want
+    xc <- ( xb[ indexes ] + xb[ indexes + 1 ] ) / 2
+    return( xc )
+}
+
+print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, labs_sep, labs_even, labs_ticks, labs_text, labs_col, xb_ind, indexes_ind_keep) {
     # normalize so we can loop over cases (assume arbitrary label levels)
     if (!is.matrix(labs))
         labs <- cbind(labs) # a col vector
-    
+
+    # now filter labs by individuals, as needed
+    if ( !is.null( indexes_ind_keep ) )
+        labs <- labs[ indexes_ind_keep, , drop = FALSE ]
+
+    # it's good to check numbers of individuals now
+    if (nrow(labs) != length(xb_ind) - 1)
+        stop('Number of individuals disagrees between `labs` (', nrow(labs), ') and `xb_ind` (', length(xb_ind) - 1, ')!')
+
+    # NOTE: here n is the number of label levels (not number of individuals, as usual)
     n <- ncol(labs)
     if (n > 1) {
         # expand scalar options as needed
@@ -548,7 +638,7 @@ print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, la
     # loop through now
     for (i in 1:n) {
         print_labels(
-            labs[,i],
+            labs[, i],
             cex = labs_cex[i],
             las = labs_las[i],
             line = labs_line[i],
@@ -557,7 +647,9 @@ print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, la
             even = labs_even[i],
             ticks = labs_ticks[i],
             text = labs_text[i],
-            col = labs_col[i]
+            col = labs_col[i],
+            # same for all levels (no [i])
+            xb_ind = xb_ind
         )
     }
 }
@@ -768,7 +860,8 @@ panel_letter <- function(letter, cex = 1.5, line = 0.5, adj = 0) {
 
 print_labels <- function(
                          labs,
-                         x = NULL,
+                         x = NULL, # midpoints of individuals (in practice, given for barplots only)
+                         xb_ind = NULL, # boundaries between individuals (NEW)
                          doMat = TRUE,
                          cex = 1,
                          las = 0,
@@ -782,78 +875,112 @@ print_labels <- function(
                          side1 = 1,
                          side2 = 2
                          ) {
+    # check only required input
+    if (missing(labs))
+        stop('`labs` is required!')
+
+    # numbers of individuals, official version is from `labs`
+    n_ind <- length(labs)
+    
     labsObj <- label_boundaries(labs)
     # extract the data (smaller var names)
+    # n_grp labels
     l <- labsObj$labels
-    b <- labsObj$boundaries
-    n <- length(l) # number of labels (or number of boundaries minus one)
-    m <- max(b) # number of individuals plus 1 (usually n+1, but here I messed up notation above, meh)
-    # for non-barplots, the sensible default is to use the indexes as coordinates (or do they have to be normalized?)
-    if (is.null(x)) {
-        x <- 1:m
+    # n_grp + 1 boundary indexes, marking the first index of each group
+    indexes_boundaries <- labsObj$boundaries
+    # number of groups / labels
+    n_grp <- length(l)
+
+    if ( !is.null(x) ) {
+        if ( length(x) != n_ind )
+            stop('Length of individual centers `x` (', length(x), ') disagrees with `labs` length (', n_ind, ')!')
+        # only old barplots trigger this
+        # what is passed is centers only, regularly spaced
+        xc_ind <- x # copy this
+        # get regular spacing interval
+        x_delta <- x[ 2L ] - x[ 1L ]
+        # infer boundaries...
+        # start by copying this again
+        xb_ind <- xc_ind
+        # then add the middle of the next entry after the current last one
+        xb_ind[ n_ind + 1L ] <- xb_ind[ n_ind ] + x_delta
+        # lastly, shift everything so that they're boundaries, not centers
+        xb_ind <- xb_ind - x_delta / 2
     } else {
-        # a hack necessary for barplots at least
-        # in this case x is missing the x[m] element, fill it in!
-        x[m] <- x[m-1] + (x[2]-x[1]) # extend by usual gap (assuming it's regular)
+        # passing boundary coordinates is most ideal, but if missing we'll have to choose uniform boundaries
+        if ( is.null( xb_ind ) ) {
+            # (n_ind + 1) boundaries in c(0, 1)
+            xb_ind <- ( 0L : n_ind ) / n_ind
+        } else {
+            # check xb_ind if it was passed
+            if ( length(xb_ind) - 1L != n_ind )
+                stop('Length of individual boundaries `xb_ind` (', length(xb_ind), ') disagrees with `labs` length (', n_ind, ')!  Expected `n+1` boundaries.')
+        }
+        # always infer centers for individuals from this
+        xc_ind <- centers_from_boundaries(xb_ind)
     }
-    x_min <- min(x)
-    x_max <- max(x) # used mostly to reflect coordinates, equals at[n+1]
-
-    # positions of irregular boundaries
-    gapX <- (x[2]-x[1])/2 # shared by ticks and lines
-    at <- x[b] - gapX # otherwise things are placed in the middle, shift by one half of a pixel
-
-    # add ticks using axis()
+    
+    # group boundary positions
+    xb_grp <- xb_ind[ indexes_boundaries ]
+    # get extrema, to space things out in `even` case
+    xb_min <- xb_grp[ 1L ]
+    # ... and this one also used to reflect boundaries
+    xb_max <- xb_grp[ n_grp + 1 ]
+    if (doMat) {
+        # an assumption of our "boundary reflection" is that the first boundary is at zero, let's be sure of that
+        if ( xb_min != 0 )
+            stop('`xb_min == 0` is required for `doMat` trick to work.  Got xb_min: ', xb_min)
+    }
+    
+    # add ticks to boundaries between groups using axis()
     if (ticks) {
-        graphics::axis(1, at = at, labels = FALSE, lwd = lwd)
+        graphics::axis(1, at = xb_grp, labels = FALSE, lwd = lwd)
         if (doMat)
-            graphics::axis(2, at = x_max-at, labels = FALSE, lwd = lwd)
+            graphics::axis(2, at = xb_max - xb_grp, labels = FALSE, lwd = lwd)
     }
     
     if (sep) {
-        # draw black horizontal lines at every boundary (including ends, looks weird otherwise)
+        # draw black horizontal lines at every boundary between groups (including ends, looks weird otherwise)
         # assume regular spacing
-        graphics::abline(v = at, lwd = lwd, col = col)
+        graphics::abline(v = xb_grp, lwd = lwd, col = col)
         if (doMat)
-            graphics::abline(h = x_max-at, lwd = lwd, col = col)
+            graphics::abline(h = xb_max - xb_grp, lwd = lwd, col = col)
     }
 
     # label placement, ticky connector line calcs for "even" case
     if (even) {
         # hard case
 
-        # place labels equally spaced on x's range...
-        # positions (length of labels)
-        gapY <- (x_max - x_min)/n # first divide range into even segments
-        y <- x_min + gapY*((1:n) - 0.5) # sequence of middles: length n
-        y2 <- x_min + gapY*(0:n) - gapX # sequence of boundaries: length n+1
-        # NOTE: y[1] == x_min + gapY/2 # so it starts in middle of first bin
-        # NOTE: y[n] == x_max - gapY/2 # so it ends in the middle of last bin
-        # NOTE: y2[1] == x_min - gapX and y2[n+1] == x_max - gapX match boundaries with half pixel shift
-        
+        # even sequence of boundaries: length n+1
+        xb_grp2 <- xb_min + ( 0 : n_grp ) / n_grp * xb_max
+        # even centers calculated from the even boundaries
+        # this is where the labels will be placed at the end
+        xc_grp <- centers_from_boundaries( xb_grp2 )
+            
         # connect label boundaries to irregular boundaries in plot
-        ysLines <- line_to_user(c(0,line), 1) # shared by every label boundary on x-axis
-        xsLines <- line_to_user(c(0,line), 2) # shared by every label boundary on y-axis
-        for (i in 1:(n+1)) {
+        ysLines <- line_to_user( c(0, line), 1 ) # shared by every label boundary on x-axis
+        xsLines <- line_to_user( c(0, line), 2 ) # shared by every label boundary on y-axis
+        for (i in 1 : ( n_grp + 1 ) ) {
             # middle coordinate is a bit messy: first get ith and ith+1 boundaries, then turn them to coordinates, then average
             # don't forget that end is first element of next group, so we always need to reduce it by one
-            xi <- at[i] # coincides with tick positions
-            yi <- y2[i] # boundary of words
+            xi <- xb_grp[i] # coincides with tick positions
+            yi <- xb_grp2[i] # boundary of words
             graphics::lines(c(xi, yi), ysLines, lwd = lwd, xpd = NA) # draw line for x-axis
             if (doMat)
-                graphics::lines(xsLines, x_max - c(xi, yi), lwd = lwd, xpd = NA)
+                graphics::lines(xsLines, xb_max - c(xi, yi), lwd = lwd, xpd = NA)
         }
         
     } else {
-        # put labels in middle of each range
-        y <- (at[1:n] + at[2:(n+1)])/2 # sequence of label positions
+        # put labels in middle of each group
+        # calculate group center positions from their boundaries
+        xc_grp <- centers_from_boundaries( xb_grp )
     }
     
     if (text) {
-        # place labels at "y" (set according to "even = TRUE" or otherwise)
-        graphics::mtext(l, side = side1, at = y, cex = cex, las = las, line = line)
+        # place labels at "xc_grp" (group centers, or set according to "even = TRUE")
+        graphics::mtext(l, side = side1, at = xc_grp, cex = cex, las = las, line = line)
         # for matrices, do both ways!
         if (doMat)
-            graphics::mtext(l, side = side2, at = x_max-y, cex = cex, las = las, line = line)
+            graphics::mtext(l, side = side2, at = xb_max - xc_grp, cex = cex, las = las, line = line)
     }
 }

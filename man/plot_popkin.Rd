@@ -13,7 +13,8 @@ plot_popkin(kinship, titles = NULL, col = NULL, col_n = 100,
   names_cex = 1, names_line = NA, labs = NULL, labs_cex = 1,
   labs_las = 0, labs_line = 0, labs_sep = TRUE, labs_lwd = 1,
   labs_col = "black", labs_ticks = FALSE, labs_text = TRUE,
-  labs_even = FALSE, null_panel_data = FALSE, ...)
+  labs_even = FALSE, null_panel_data = FALSE, weights = NULL,
+  raster = is.null(weights), ...)
 }
 \arguments{
 \item{kinship}{A numeric kinship matrix or a list of matrices.
@@ -36,7 +37,7 @@ Default 0.2.
 Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.}
 
 \item{diag_line}{If \code{TRUE} adds a line along the diagonal (default no line).
-May also be a vector of booleans to set per panel (lengths must agree).}
+May also be a vector of logicals to set per panel (lengths must agree).}
 
 \item{panel_letters}{Vector of strings for labeling panels (default A-Z).
 No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).}
@@ -74,11 +75,11 @@ If not provided, the margins used in the last panel are preserved with the excep
 
 INDIVIDUAL LABEL OPTIONS}
 
-\item{names}{If \code{TRUE}, the column and row names are plotted in the heatmap.}
+\item{names}{If \code{TRUE}, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.}
 
-\item{names_cex}{Scaling factor for the column and row names.}
+\item{names_cex}{Scaling factor for the column and row names, or a vector of such values if they vary per panel.}
 
-\item{names_line}{Line where column and row names are placed.
+\item{names_line}{Line where column and row names are placed, or a vector of such values if they vary per panel.
 
 SUBPOPULATION LABEL OPTIONS}
 
@@ -92,24 +93,33 @@ If input is a vector or a matrix, the same subpopulation labels are shown for ev
 
 \item{labs_line}{A vector of lines where labels are placed (in format that \code{\link[graphics]{mtext}} expects) for each level of labs, or a list of such vectors if labels vary per panel.}
 
-\item{labs_sep}{A vector of booleans that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.}
+\item{labs_sep}{A vector of logicals that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.}
 
 \item{labs_lwd}{A vector of line widths for the lines that divide subpopulations (if \code{labs_sep = TRUE}) for each level of labs, or a list of such vectors if labels vary per panel.}
 
 \item{labs_col}{A vector of colors for the lines that divide subpopulations (if \code{labs_sep = TRUE}) for each level of labs, or a list of such vectors if labels vary per panel.}
 
-\item{labs_ticks}{A vector of booleans that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.}
+\item{labs_ticks}{A vector of logicals that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.}
 
-\item{labs_text}{A vector of booleans that specify whether the subpopulation labels are shown for each level of labs, or a list of such vectors if labels vary per panel.
+\item{labs_text}{A vector of logicals that specify whether the subpopulation labels are shown for each level of labs, or a list of such vectors if labels vary per panel.
 Useful for including separating lines or ticks without text.}
 
-\item{labs_even}{A vector of booleans that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
+\item{labs_even}{A vector of logicals that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
 When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.}
 
 \item{null_panel_data}{If \code{FALSE} (default), panels with \code{NULL} kinship matrices must not have titles or other parameters set, and no panel letters are used in these cases.
 If \code{TRUE}, panels with \code{NULL} kinship matrices must have titles and other parameters set.
 In the latter case, these \code{NULL} panels also get panel letters.
-The difference is important when checking that lengths of non-singleton parameters agree.
+The difference is important when checking that lengths of non-singleton parameters agree.}
+
+\item{weights}{A vector with weights for every individual, or a list of such vectors if they vary per panel.
+The width of every individual becomes proportional to their weight.
+Individuals with zero or negative weights are omitted.}
+
+\item{raster}{A logical equivalent to \code{useRaster} option in the \code{image} function used internally, or a vector of such logicals if the choice varies per panel.
+If \code{weights} are non-\code{NULL} in a given panel, \code{raster = FALSE} is forced (this is necessary to plot images where columns and rows have variable width).
+If \code{weights} are \code{NULL}, the default is \code{raster = TRUE}, but in this case the user may override (for example, so panels are visually coherent when some use weights while others do not, as there are small differences in rendering implementation for each value of \code{raster}).
+Note that a multipanel figure with a list of \code{weights} sets \code{raster = FALSE} to all panels by default, even if the weights were only applied to a subset of panels.
 
 AXIS LABEL OPTIONS}
 

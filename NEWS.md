@@ -121,3 +121,22 @@ These names get copied to the rows and columns of the output kinship matrix.
 * Reorganized internal code, mostly to facilitate use of the internal function `solve_m_mem_lim` in other dependent packages.
   In particular, the internal function `get_mem_lim_m` was removed.
 * The `popkin` function accepts the new parameter `mem_factor`.
+
+# 2019-08-08 - popkin 1.2.7.9000
+
+`plot_popkin` updates:
+
+* Bug fixes
+  * Fixed a minor bug in which labels under `labs_even = TRUE` were not placed correctly.
+    The error was most evident for very small samples (i.e. `n = 3` individuals), and was imperceptible otherwise (i.e. `n = 100` or more).
+  * Fixed a minor bug in which the diagonal line under `diag_line = TRUE` did not extend fully to extremes.
+    This error was again most evident for very small samples, and was imperceptible otherwise.
+* New features
+  * Added `weights` option, to change width of every individual to highlight individuals with more weight.
+  * Added `raster` option, equivalent to `useRaster` option in the `image` function used internally.
+    If `weights` are not `NULL`, `raster` is forced to `FALSE` (required for `image` to work in this setting).
+    So its only use is to set it when `weights` are null, as needed.
+* Other changes
+  * Changed default plot range to (0, 1), in terms of boundaries.
+    It used to be (1, n) for bin centers, but this setup was too awkward for weighted data.
+  * Minor documentation clarifications to some of this function's unchanged arguments.

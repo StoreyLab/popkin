@@ -311,7 +311,7 @@ test_that("plot_popkin works", {
     pdf( fo )
     par(oma = c(0, 1.5, 0, 3))
     par(mar = c(0, 0, 2, 0) + 0.2)
-    expect_silent( plot_popkin( inbr_diag(Phi) ) )
+    expect_silent( plot_popkin( inbr_diag(Phi), labs = subpops ) )
     invisible( dev.off() )
     invisible( file.remove(fo) )
     
