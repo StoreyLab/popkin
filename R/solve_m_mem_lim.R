@@ -135,7 +135,8 @@ solve_m_mem_lim <- function(
     return(
         list(
             m_chunk = m_chunk,
-            mem_chunk = mem_chunk
+            mem_chunk = mem_chunk,
+            mem_lim = mem # report the reading from get_mem_lim, or whatever was set by user but in bytes (rarer)
         )
     )
 }

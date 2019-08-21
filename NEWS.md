@@ -140,3 +140,13 @@ These names get copied to the rows and columns of the output kinship matrix.
   * Changed default plot range to (0, 1), in terms of boundaries.
     It used to be (1, n) for bin centers, but this setup was too awkward for weighted data.
   * Minor documentation clarifications to some of this function's unchanged arguments.
+
+# 2019-08-21 - popkin 1.2.8.9000
+
+* Fixed a serious bug that could let memory usage explode when analyzing large datasets.
+  * The bug prevented memory usage from being controlled correctly when the genotype matrix did not fit entirely in memory.
+  * The bug had no effect if the entire genotype matrix of interest was small enough to fit in memory.
+  * The bug was introduced in 2019-08-02, popkin 1.2.6.9000, commit 643a276974171d86ea621df3d25e1937a100d09a
+* Tweaked popkin-specific memory formula to better control memory when a BEDMatrix object is analyzed
+  * This improvement is relative to popkin's formula prior to the aforementioned bug (version 1.2.5.9000 and earlier)
+* Internal function `solve_m_mem_lim` now returns memory limit from `get_mem_lim` or user, in addition to the chunk size in both number of loci and in expected memory usage.

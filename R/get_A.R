@@ -30,6 +30,9 @@ NULL
 # A <- get_A(X) # calculate A from genotypes
 # 
 get_A <- function(X, n_ind = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim = NA) {
+    # for some more recent memory tests (internal hack)
+    mem_debugging <- FALSE
+    
     # determine some behaviors depending on data type
     # first validate class and set key booleans
     isFn <- FALSE
@@ -82,13 +85,19 @@ get_A <- function(X, n_ind = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim
     data <- solve_m_mem_lim(
         n = n_ind,
         m = m_loci,
-        mat_m_n = 1, # X (0.5) + ?
+        mat_m_n = 1.5, # X (0.5) + ? + (BEDMatrix seems to consume too much additional memory, so be extra conservative overall)
         mat_n_n = 1, # A + M (0.5 + 0.5)
         mem = mem_lim,
         mem_factor = mem_factor
     )
-    m_chunk <- data$mem_chunk
-
+    m_chunk <- data$m_chunk
+    if (mem_debugging) {
+        # hack: report things to troubleshoot
+        message('mem_lim: ', round(data$mem_lim / GB, 1), ' GB')
+        message('mem_chunk: ', round(data$mem_chunk / GB, 1), ' GB')
+        message('m_chunk: ', m_chunk)
+    }
+    
     # navigate chunks
     i_chunk <- 1 # start of first chunk (needed for matrix inputs only; as opposed to function inputs)
     while (TRUE) { # start an infinite loop, break inside as needed
@@ -96,6 +105,9 @@ get_A <- function(X, n_ind = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim
             Xi <- X( m_chunk ) # get next "m_chunk" SNPs
             if (is.null(Xi)) break # stop when SNPs run out (only happens for functions X, not matrices)
         } else {
+            # hacky message
+            if (mem_debugging)
+                message('chunk started!')
             # here m is known...
             # this means all SNPs have been covered!
             if (i_chunk > m_loci)

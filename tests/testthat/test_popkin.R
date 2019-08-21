@@ -67,8 +67,8 @@ test_that("solve_m_mem_lim works", {
             vec_n = vec_n
         )
         expect_equal(class(data), 'list')
-        expect_equal(length(data), 2)
-        expect_equal(names(data), paste0(c('m', 'mem'), '_chunk'))
+        expect_equal(length(data), 3)
+        expect_equal(names(data), c('m_chunk', 'mem_chunk', 'mem_lim'))
         # data sets bounds too!
         expect_true( data$m_chunk > 0 )
         expect_true( data$m_chunk <= m )
