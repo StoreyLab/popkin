@@ -11,6 +11,9 @@
 #' The minimum \eqn{n_{eff}}{n_eff} possible is 1, which is attained in an extremely structured population with \eqn{F_{ST}}{FST} of 1, where every individual has exactly the same haplotype at every locus (no heterozygotes).
 #' Moreover, for \eqn{K} extremely-differentiated subpopulations (\eqn{F_{ST}}{FST}=1 per subpopulation) \eqn{n_{eff}}{n_eff} equals \eqn{K}.
 #' In this way, \eqn{n_{eff}}{n_eff} is smaller than the ideal value of \eqn{2n} depending on the amount of kinship (covariance) in the data.
+#' 
+#' Occasionally, depending on the quality of the input kinship matrix, the estimated \eqn{n_{eff}}{n_eff} may be outside the theoretical \[1, 2n\] range, in which case the return value is set to the closest boundary value.
+#' The quality of the results depends on the success of matrix inversion (which for numerical reasons may incorrectly contain negative eigenvalues, for example) or of the gradient optimization.
 #'
 #' @param kinship An \eqn{n \times n}{n-by-n} kinship matrix.
 #' @param max If \code{TRUE}, returns the maximum \eqn{n_{eff}}{n_eff} value among those computed using all possible vectors of weights that sum to one (and which are additionally non-negative if \code{nonneg=TRUE}).  If \code{FALSE}, \eqn{n_{eff}}{n_eff} is computed using the specific weight vector provided.
@@ -70,6 +73,9 @@ n_eff <- function (kinship, max = TRUE, weights = NULL, nonneg = TRUE, algo = c(
     # run additional validations
     validate_kinship(kinship)
 
+    # data dimensions (used for a validation below)
+    n_ind <- ncol( kinship )
+
     # main behavior depends on the value of the weights
     # the NULL default is to use optimal weights, yielding the maximum value of n_eff possible
     if (max) {
@@ -107,6 +113,14 @@ n_eff <- function (kinship, max = TRUE, weights = NULL, nonneg = TRUE, algo = c(
         # complete main object to return
         obj <- list(n_eff = n_eff, weights = weights)
     }
+    
+    # check and fix range of n_eff, if needed
+    if ( obj$n_eff < 1 ) {
+        obj$n_eff <- 1
+    } else if ( obj$n_eff > 2 * n_ind ) {
+        obj$n_eff <- 2 * n_ind
+    }
+
     # return!
     return(obj)
 }

@@ -143,6 +143,8 @@ These names get copied to the rows and columns of the output kinship matrix.
 
 # 2019-08-21 - popkin 1.2.8.9000
 
+Memory control bugfixes
+
 * Fixed a serious bug that could let memory usage explode when analyzing large datasets.
   * The bug prevented memory usage from being controlled correctly when the genotype matrix did not fit entirely in memory.
   * The bug had no effect if the entire genotype matrix of interest was small enough to fit in memory.
@@ -150,3 +152,8 @@ These names get copied to the rows and columns of the output kinship matrix.
 * Tweaked popkin-specific memory formula to better control memory when a BEDMatrix object is analyzed
   * This improvement is relative to popkin's formula prior to the aforementioned bug (version 1.2.5.9000 and earlier)
 * Internal function `solve_m_mem_lim` now returns memory limit from `get_mem_lim` or user, in addition to the chunk size in both number of loci and in expected memory usage.
+
+Other enhancements
+
+* `n_eff` function now ensures output `n_eff` estimates are in the theoretically valid range of [ 1, 2*n ].
+  Numerical issues in small and noisy kinship matrix estimates could lead to out-of-bounds estimates, which are now replaced with their closest boundary values.
