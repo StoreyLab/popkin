@@ -157,3 +157,11 @@ Other enhancements
 
 * `n_eff` function now ensures output `n_eff` estimates are in the theoretically valid range of [ 1, 2*n ].
   Numerical issues in small and noisy kinship matrix estimates could lead to out-of-bounds estimates, which are now replaced with their closest boundary values.
+
+# 2019-09-16 - popkin 1.2.9.9000
+
+* In function `plot_popkin`, added option `names_las`
+* In internal function `plot_popkin_single`:
+  * Changed the default value of `kinship_range` to agree with the default of `plot_popkin` when a single kinship matrix is plotted (as a result, default colors now agree in that case too).
+  * Its return value `breaks` is now invisible.
+  * No changes through `plot_popkin` are visible, differences are only noticeable calling this internal function `plot_popkin_single` directly.

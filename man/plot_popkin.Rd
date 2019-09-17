@@ -10,11 +10,11 @@ plot_popkin(kinship, titles = NULL, col = NULL, col_n = 100,
   ylab = "Individuals", ylab_adj = NA, ylab_line = 0,
   layout_add = TRUE, layout_rows = 1, leg_title = "Kinship",
   leg_cex = 1, leg_mar = NULL, leg_n = 5, names = FALSE,
-  names_cex = 1, names_line = NA, labs = NULL, labs_cex = 1,
-  labs_las = 0, labs_line = 0, labs_sep = TRUE, labs_lwd = 1,
-  labs_col = "black", labs_ticks = FALSE, labs_text = TRUE,
-  labs_even = FALSE, null_panel_data = FALSE, weights = NULL,
-  raster = is.null(weights), ...)
+  names_cex = 1, names_line = NA, names_las = 2, labs = NULL,
+  labs_cex = 1, labs_las = 0, labs_line = 0, labs_sep = TRUE,
+  labs_lwd = 1, labs_col = "black", labs_ticks = FALSE,
+  labs_text = TRUE, labs_even = FALSE, null_panel_data = FALSE,
+  weights = NULL, raster = is.null(weights), ...)
 }
 \arguments{
 \item{kinship}{A numeric kinship matrix or a list of matrices.
@@ -79,7 +79,10 @@ INDIVIDUAL LABEL OPTIONS}
 
 \item{names_cex}{Scaling factor for the column and row names, or a vector of such values if they vary per panel.}
 
-\item{names_line}{Line where column and row names are placed, or a vector of such values if they vary per panel.
+\item{names_line}{Line where column and row names are placed, or a vector of such values if they vary per panel.}
+
+\item{names_las}{Orientation of labels relative to axis.
+Default (2) makes labels perpendicular to axis.
 
 SUBPOPULATION LABEL OPTIONS}
 

@@ -71,6 +71,8 @@
 #' @param names If \code{TRUE}, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.
 #' @param names_cex Scaling factor for the column and row names, or a vector of such values if they vary per panel.
 #' @param names_line Line where column and row names are placed, or a vector of such values if they vary per panel.
+#' @param names_las Orientation of labels relative to axis.
+#' Default (2) makes labels perpendicular to axis.
 #'
 #' SUBPOPULATION LABEL OPTIONS
 #' 
@@ -133,6 +135,7 @@ plot_popkin <- function(
                         names = FALSE,
                         names_cex = 1,
                         names_line = NA,
+                        names_las = 2,
                         labs = NULL,
                         labs_cex = 1,
                         labs_las = 0,
@@ -190,6 +193,7 @@ plot_popkin <- function(
     names <- rep_check(names, n)
     names_cex <- rep_check(names_cex, n)
     names_line <- rep_check(names_line, n)
+    names_las <- rep_check(names_las, n)
     diag_line <- rep_check(diag_line, n)
     raster <- rep_check(raster, n)
     # this is for non-scalars per panel, get turned into lists instead
@@ -271,6 +275,7 @@ plot_popkin <- function(
             names = names[i],
             names_cex = names_cex[i],
             names_line = names_line[i],
+            names_las = names_las[i],
             labs = labs[[i]],
             labs_cex = labs_cex[[i]],
             labs_las = labs_las[[i]],
@@ -452,12 +457,13 @@ plotPopkin <- function(
 
 plot_popkin_single <- function (
                                 kinship = NULL,
-                                kinship_range = range(kinship, na.rm = TRUE),
+                                kinship_range = NULL,
                                 col = NULL,
                                 col_n = 100,
                                 names = FALSE,
                                 names_cex = 1,
                                 names_line = NA,
+                                names_las = 2,
                                 xlab = "",
                                 ylab = "",
                                 labs = NULL,
@@ -531,6 +537,12 @@ plot_popkin_single <- function (
         indexes_ind_keep <- NULL
     }
     
+    # get default range if needed
+    if ( is.null( kinship_range) ) {
+        # the version we need is symmetric about zero
+        max_sym <- max( abs( kinship ), na.rm = TRUE )
+        kinship_range <- c( - max_sym, max_sym )
+    }
     # figure out breaks for colors
     breaks <- seq(kinship_range[1], kinship_range[2], length = length(col) + 1)
     numcols <- length(breaks) - 1
@@ -567,9 +579,8 @@ plot_popkin_single <- function (
         # compute bin centers from boundaries (whether they were weighted or not)
         xc <- centers_from_boundaries(xb)
         yc <- centers_from_boundaries(yb)
-        # labels will be perpendicular to axis (las=2)
-        graphics::axis(1, xc, colnames(kinship), las = 2, cex.axis = names_cex, tick = FALSE, line = names_line)
-        graphics::axis(2, yc, rownames(kinship), las = 2, cex.axis = names_cex, tick = FALSE, line = names_line)
+        graphics::axis(1, xc, colnames(kinship), las = names_las, cex.axis = names_cex, tick = FALSE, line = names_line)
+        graphics::axis(2, yc, rownames(kinship), las = names_las, cex.axis = names_cex, tick = FALSE, line = names_line)
     }
     if (diag_line)
         # diagonal line, version for c(1, n) range
@@ -594,8 +605,10 @@ plot_popkin_single <- function (
             xb_ind = xb,
             indexes_ind_keep = indexes_ind_keep
         )
-    
-    breaks # return breaks, since legends need it!
+
+    # return breaks, since legends need it!
+    # return invisibly so we can run this one standalone and it doesn't print `breaks` awkwardly
+    invisible( breaks )
 }
 
 centers_from_boundaries <- function(xb) {
