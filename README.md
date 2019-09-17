@@ -1,3 +1,5 @@
+<img src="logo.png" alt="popkin" align="right" />
+
 # Estimate Kinship and FST under Arbitrary Population Structure with `popkin`
 
 The `popkin` ("population kinship") R package estimates the kinship matrix of individuals and F_ST from their biallelic genotypes.
