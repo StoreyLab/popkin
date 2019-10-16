@@ -8,13 +8,14 @@ plot_popkin(kinship, titles = NULL, col = NULL, col_n = 100,
   mar = NULL, mar_pad = 0.2, diag_line = FALSE,
   panel_letters = toupper(letters), panel_letters_cex = 1.5,
   ylab = "Individuals", ylab_adj = NA, ylab_line = 0,
-  layout_add = TRUE, layout_rows = 1, leg_title = "Kinship",
-  leg_cex = 1, leg_mar = NULL, leg_n = 5, names = FALSE,
-  names_cex = 1, names_line = NA, names_las = 2, labs = NULL,
-  labs_cex = 1, labs_las = 0, labs_line = 0, labs_sep = TRUE,
-  labs_lwd = 1, labs_col = "black", labs_ticks = FALSE,
-  labs_text = TRUE, labs_even = FALSE, null_panel_data = FALSE,
-  weights = NULL, raster = is.null(weights), ...)
+  layout_add = TRUE, layout_rows = 1, leg_per_panel = FALSE,
+  leg_title = "Kinship", leg_cex = 1, leg_n = 5, leg_mar = 3,
+  leg_width = 0.3, names = FALSE, names_cex = 1, names_line = NA,
+  names_las = 2, labs = NULL, labs_cex = 1, labs_las = 0,
+  labs_line = 0, labs_sep = TRUE, labs_lwd = 1, labs_col = "black",
+  labs_ticks = FALSE, labs_text = TRUE, labs_even = FALSE,
+  null_panel_data = FALSE, weights = NULL, raster = is.null(weights),
+  ...)
 }
 \arguments{
 \item{kinship}{A numeric kinship matrix or a list of matrices.
@@ -64,16 +65,23 @@ If a non-standard layout or additional panels (beyond those provided by \code{pl
 
 LEGEND (COLOR KEY) OPTIONS}
 
-\item{leg_title}{The name of the variable that the heatmap colors measure (default "Kinship").}
+\item{leg_per_panel}{If \code{TRUE}, every kinship matrix get its own legend/color key (best for matrices with very different scales).
+If \code{FALSE} (default), a single legend/color key is shared by all kinship matrix panels.}
 
-\item{leg_cex}{Scaling factor for \code{leg_title} (default 1).}
+\item{leg_title}{The name of the variable that the heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.}
 
-\item{leg_mar}{Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only.
-If not provided, the margins used in the last panel are preserved with the exception that the left margin is set to zero (plus the value of \code{mar_pad}, see above).}
+\item{leg_cex}{Scaling factor for \code{leg_title} (default 1), or a vector of such values if they vary per panel.}
 
-\item{leg_n}{The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details).
+\item{leg_n}{The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details), or a vector of such values if they vary per panel.}
+
+\item{leg_mar}{Margin values for the legend panel only, or a list of such values if they vary per panel.
+A length-4 vector (in \code{c( bottom, left, top, right )} format that \code{\link[graphics]{par}('mar')} expects) specifies the full margins, to which \code{mar_pad} is added.
+Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if \code{leg_mar} is length-1, it is used to specify the right margin (plus the value of \code{mar_pad}, see above).
 
 INDIVIDUAL LABEL OPTIONS}
+
+\item{leg_width}{The width of the legend panel, relative to the width of the kinship panel.
+This value is passed to \code{\link[graphics]{layout}} (ignored if \code{layout_add = FALSE}).}
 
 \item{names}{If \code{TRUE}, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.}
 

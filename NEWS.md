@@ -165,3 +165,17 @@ Other enhancements
   * Changed the default value of `kinship_range` to agree with the default of `plot_popkin` when a single kinship matrix is plotted (as a result, default colors now agree in that case too).
   * Its return value `breaks` is now invisible.
   * No changes through `plot_popkin` are visible, differences are only noticeable calling this internal function `plot_popkin_single` directly.
+
+# 2019-10-15 - popkin 1.2.10.9000
+
+Improvements to function `plot_popkin`:
+
+* Added option `leg_per_panel`, which if true allows each kinship panel to have a different scale (each gets its own legend/color key).
+* Extended various `leg_*` options to be able to take on different values per panel.
+* Added option `leg_width` to control the width of the legend panels.
+  Increased the default width of this legend/color key (from 0.1 to 0.3, as a fraction of the width of the kinship panels), which changes the behavior in the original case when this legend is shared across kinship panels.
+  Now the full legend fits in the panel, without needing an outer margin to the right.
+* Option `leg_mar` behavior changed.
+  Now `leg_mar` can be a scalar, which sets the right margin of the legend panel.
+  New default is `leg_mar = 3`, again necessary so the label of the legend fits in the panel.
+  Previous behaviors of `leg_mar = NULL` and a full margin specification are retained.

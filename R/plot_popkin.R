@@ -60,11 +60,16 @@
 #'
 #' LEGEND (COLOR KEY) OPTIONS
 #' 
-#' @param leg_title The name of the variable that the heatmap colors measure (default "Kinship").
-#' @param leg_cex Scaling factor for \code{leg_title} (default 1).
-#' @param leg_mar Margin vector (in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects) for the legend panel only.
-#' If not provided, the margins used in the last panel are preserved with the exception that the left margin is set to zero (plus the value of \code{mar_pad}, see above).
-#' @param leg_n The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details).
+#' @param leg_per_panel If `TRUE`, every kinship matrix get its own legend/color key (best for matrices with very different scales).
+#' If `FALSE` (default), a single legend/color key is shared by all kinship matrix panels.
+#' @param leg_title The name of the variable that the heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.
+#' @param leg_cex Scaling factor for \code{leg_title} (default 1), or a vector of such values if they vary per panel.
+#' @param leg_n The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details), or a vector of such values if they vary per panel.
+#' @param leg_width The width of the legend panel, relative to the width of the kinship panel.
+#' This value is passed to \code{\link[graphics]{layout}} (ignored if `layout_add = FALSE`).
+#' @param leg_mar Margin values for the legend panel only, or a list of such values if they vary per panel.
+#' A length-4 vector (in \code{c( bottom, left, top, right )} format that \code{\link[graphics]{par}('mar')} expects) specifies the full margins, to which \code{mar_pad} is added.
+#' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if `leg_mar` is length-1, it is used to specify the right margin (plus the value of \code{mar_pad}, see above).
 #'
 #' INDIVIDUAL LABEL OPTIONS
 #' 
@@ -128,10 +133,12 @@ plot_popkin <- function(
                         ylab_line = 0,
                         layout_add = TRUE,
                         layout_rows = 1, 
+                        leg_per_panel = FALSE,
                         leg_title = 'Kinship',
                         leg_cex = 1,
-                        leg_mar = NULL,
                         leg_n = 5,
+                        leg_mar = 3,
+                        leg_width = 0.3,
                         names = FALSE,
                         names_cex = 1,
                         names_line = NA,
@@ -215,15 +222,28 @@ plot_popkin <- function(
         ylab_adj <- rep_check(ylab_adj, n)
         ylab_line <- rep_check(ylab_line, n)
     }
-
-    # code needs two versions of the range
-    # - range_real is the real range, used in the end so the color key doesn't show values that weren't actually used
-    # - range_sym is a symmetric range, used internally to ensure zero is in the exact middle (set to white in the default)
-    # get range and construct symmetric range that helps with plotting nice colors with white at zero
-    range_real <- range( unlist(lapply(kinship[indexes_not_null], range, na.rm = TRUE)) )  # range of all non-NULL data plotted
-    # these next few lines force symmetry for colors (might look better, not sure)
-    max_sym <- max(abs(range_real))
-    range_sym <- c(-max_sym, max_sym)
+    # all of these can vary when legend is panel-specific!
+    if ( leg_per_panel ) {
+        leg_title <- rep_check( leg_title, n )
+        leg_cex <- rep_check( leg_cex, n )
+        leg_n <- rep_check( leg_n, n )
+        leg_mar <- rep_check_list( leg_mar, n )
+    }
+    
+    if ( !leg_per_panel ) {
+        # this shared range is for a shared scale
+        # if leg_per_panel is TRUE, leave these values NULL so we can catch bugs if they are used improperly 
+        
+        # code needs two versions of the range
+        # - range_real is the real range, used in the end so the color key doesn't show values that weren't actually used
+        # - range_sym is a symmetric range, used internally to ensure zero is in the exact middle (set to white in the default)
+        # get range and construct symmetric range that helps with plotting nice colors with white at zero
+        # range of all non-NULL data plotted
+        range_real <- range( unlist( lapply( kinship[ indexes_not_null ], range, na.rm = TRUE ) ) )
+        # these next few lines force symmetry for colors (looks better)
+        max_sym <- max( abs( range_real ) )
+        range_sym <- c( -max_sym, max_sym )
+    }
 
     # save entire original setup, to reset in the end
     # no.readonly is since some parameters cannot be changed (trying to set them results in ugly warnings)
@@ -233,7 +253,12 @@ plot_popkin <- function(
     
     # figure out layout given a requested number of rows
     if (layout_add)
-        plot_popkin_layout(n_all, layout_rows)
+        plot_popkin_layout(
+            n = n_all,
+            nr = layout_rows,
+            leg_per_panel = leg_per_panel,
+            leg_width = leg_width
+        )
 
     # breaks of all following plots should match!
     breaks <- NULL
@@ -246,11 +271,14 @@ plot_popkin <- function(
             i <- i_all
             # panel will be created as it used to, even for NULL cases...
         } else {
-            if ( !indexes_not_null[i_all] ) {
+            if ( !indexes_not_null[ i_all ] ) {
                 # This is a null case
                 # Let's just make the blank panel and move on
                 # Important: do not add panel letters or titles!
                 graphics::plot.new()
+                # if every panel has a legend, then we need to skip one more space
+                if ( leg_per_panel )
+                    graphics::plot.new()
                 # force advance to next i_all, not executing any of the rest
                 next
             } else {
@@ -258,17 +286,24 @@ plot_popkin <- function(
                 i <- i + 1
             }
         }
+
+        if ( leg_per_panel ) {
+            # same issues as before, but applied to the single given matrix
+            range_real <- range( kinship[[ i_all ]], na.rm = TRUE )
+            max_sym <- max( abs( range_real ) )
+            range_sym <- c( -max_sym, max_sym )
+        }
         
-        if (!is.null(mar[[i]])) {
+        if ( !is.null( mar[[ i ]] ) ) {
             # change margins if necessary!
-            graphics::par(mar = mar[[i]] + mar_pad)
+            graphics::par( mar = mar[[ i ]] + mar_pad )
         } else {
             # restore original margins otherwise!
-            graphics::par(mar = mar_orig)
+            graphics::par( mar = mar_orig )
         }
 
         breaks_i <- plot_popkin_single(
-            kinship[[i_all]],
+            kinship[[ i_all ]],
             kinship_range = range_sym,
             col = col,
             col_n = col_n,
@@ -292,12 +327,14 @@ plot_popkin <- function(
             raster = raster[i],
             ...
         )
+        # don't overwrite for non-data kinship[[i]] cases
         if (!is.null(breaks_i))
-            breaks <- breaks_i # don't overwrite for non-data kinship[[i]] cases
+            breaks <- breaks_i
+        
         # add ylab for every panel when there is more than one choice, and provided it was non-NA
         # uses inner rather than outer margin (only choice that makes sense)
-        if (length(ylab) > 1 && !is.na(ylab[i])) 
-            graphics::mtext(ylab[i], side = 2, adj = ylab_adj[i], line = ylab_line[i])
+        if ( length(ylab) > 1 && !is.na( ylab[i] ) ) 
+            graphics::mtext( ylab[i], side = 2, adj = ylab_adj[i], line = ylab_line[i] )
         
         # add letters only when ...
         if (
@@ -314,30 +351,50 @@ plot_popkin <- function(
             i <= length(panel_letters)
         )
             panel_letter(panel_letters[i], cex = panel_letters_cex)
-        
+
+        if ( leg_per_panel ) {
+            # add panel-specific legend/color key
+            heatmap_legend(
+                breaks,
+                kinship_range = range_real,
+                label = leg_title[ i ],
+                col = col,
+                col_n = col_n,
+                leg_n = leg_n[ i ],
+                cex = leg_cex[ i ],
+                leg_mar = leg_mar[[ i ]],
+                mar_pad = mar_pad
+            )
+        }
     }
 
-    if (!is.null(leg_mar)) {
-        graphics::par(mar = leg_mar + mar_pad) # change margins if necessary!
-    } else {
-        # change the current left margin to the padding value
-        marTmp <- graphics::par('mar') # last margins
-        marTmp[2] <- mar_pad # replace left margin with zero plus pad
-        graphics::par(mar = marTmp) # update margins for legend only!
+    if (! leg_per_panel ) {
+        # add shared legend/color key
+        heatmap_legend(
+            breaks,
+            kinship_range = range_real,
+            label = leg_title,
+            col = col,
+            col_n = col_n,
+            leg_n = leg_n,
+            cex = leg_cex,
+            leg_mar = leg_mar,
+            mar_pad = mar_pad
+        )
     }
-    heatmap_legend(breaks, kinship_range = range_real, label = leg_title, col = col, col_n = col_n, leg_n = leg_n, cex = leg_cex)
 
     # add margin only once if there was only one, place in outer margin (only choice that makes sense)
-    if (length(ylab) == 1)
-        graphics::mtext(ylab, side = 2, adj = ylab_adj, outer = TRUE, line = ylab_line)
+    if ( length(ylab) == 1 )
+        graphics::mtext( ylab, side = 2, adj = ylab_adj, outer = TRUE, line = ylab_line )
 
-    # restore original margins otherwise!
-    graphics::par(mar = mar_orig)
-    
     # restore original setup when done, but only if we created the default layout
     # otherwise the external layout gets reset, which is bad if we were not done adding panels
-    if (layout_add)
+    if ( layout_add ) {
         graphics::par( par_orig )
+    } else {
+        # restore original margins only!
+        graphics::par( mar = mar_orig )
+    }
 }
 
 # stick deprecated function name here
@@ -538,7 +595,7 @@ plot_popkin_single <- function (
     }
     
     # get default range if needed
-    if ( is.null( kinship_range) ) {
+    if ( is.null( kinship_range ) ) {
         # the version we need is symmetric about zero
         max_sym <- max( abs( kinship ), na.rm = TRUE )
         kinship_range <- c( - max_sym, max_sym )
@@ -730,7 +787,7 @@ rep_check_list <- function(vals, n) {
 # max_sym <- max(abs(range_real))
 # range_sym <- c(-max_sym, max_sym)
 # # start layout
-# layout(1:2, widths=c(1,0.1))
+# layout(1:2, widths=c(1, 0.3))
 # # plot the heatmap in first panel
 # breaks <- plot_popkin_single(kinship, kinship_range=range_sym) # pass symmetric range here
 # # add color key to second panel
@@ -739,33 +796,64 @@ rep_check_list <- function(vals, n) {
 # mtext('Individuals', side=2, outer=TRUE)
 #
 # @export
-heatmap_legend <- function(breaks, kinship_range = NULL, label = 'Kinship', col = NULL, col_n = 100, leg_n = 5, cex = NA) {
+heatmap_legend <- function(
+                           breaks,
+                           kinship_range = NULL,
+                           label = 'Kinship',
+                           col = NULL,
+                           col_n = 100,
+                           leg_n = 5,
+                           cex = NA,
+                           leg_mar = 3,
+                           mar_pad = 0.2
+                           ) {
     # creates a nicer heatmap legend, but it has to be a standalone image (in its own panel, preferably through layout so it's a skinny panel)
     # this function fills panel, so here we don't set margins/etc (it's best left to the end user)
 
-    if (is.null(col))
+    if ( is.null( col ) )
         col <- plot_popkin_palette(n = col_n) # default coloring
     
-    if (!is.null(kinship_range)) {
+    if ( !is.null( kinship_range ) ) {
         # here's a case where we only want to plot things within an altered range than that of breaks/col
         # expected application is kinship_range is real data range, while breaks/col are rigged to be wider (particularly because we forced them to be symmetric, and have a white color at zero)
         # so we'll proceed by assuming kinship_range is contained in breaks, but we might want to remove breaks and colors with them
 
         # find the bins where our desired range falls
-        is <- cut(kinship_range, breaks, labels = FALSE, include.lowest = TRUE)
+        indexes <- cut( kinship_range, breaks, labels = FALSE, include.lowest = TRUE )
         # toss breaks that we didn't use
-        breaks <- breaks[is[1]:(is[2]+1)] # we need to go one over for top
-        col <- col[is[1]:is[2]] # colors don't need one over
+        breaks <- breaks[ indexes[1] : ( indexes[2] + 1 ) ] # we need to go one over for top
+        col <- col[ indexes[1] : indexes[2] ] # colors don't need one over
     }
     # old processing follows...
     nb <- length(breaks) # length of breaks
+
+    # change margins as necessary!
+    if ( is.null(leg_mar) || length( leg_mar ) == 1 ) {
+        # change the current left margin to the padding value
+        # last margins
+        mar_tmp <- graphics::par('mar')
+        # replace left margin with zero plus pad
+        mar_tmp[2] <- mar_pad
+        # this value sets the right margin
+        if ( length( leg_mar ) == 1 )
+            mar_tmp[4] <- leg_mar + mar_pad
+        # otherwise the right margin is preserved
+        
+        # update margins
+        graphics::par( mar = mar_tmp )
+        
+    } else if ( length( leg_mar ) == 4 ) {
+        # full specification
+        graphics::par( mar = leg_mar + mar_pad )
+    } else 
+        stop('Invalid length for `leg_mar` (expected NULL, 1, or 4): ', length( leg_mar ) )
     
     # first plot sequence of colors
     # NOTE: breaks[2:length(breaks)] plots the sequence of colors because (from ?image):
     # > intervals are closed on the right and open on the left except for the lowest interval which is closed at both ends.
     # so plotting all top values of breaks works!
     graphics::image(
-                  z = matrix(breaks[2:nb], nrow = 1),
+                  z = matrix( breaks[ 2 : nb ], nrow = 1 ),
                   col = col,
                   breaks = breaks,
                   xaxt = "n",
@@ -777,14 +865,14 @@ heatmap_legend <- function(breaks, kinship_range = NULL, label = 'Kinship', col 
     # this is a real pain, because 0 and 1 are in the middle of the first and last boxes
     # old code (originally from heatmap.2) assumed 0 and 1 were at the end of the boxes, not their middles!
     # given this "delta"
-    delta <- 1/(2*(nb-2))
+    delta <- 1 / ( 2 * ( nb - 2 ) )
     # we actually want ends to be at c(-delta, 1+delta)
-    lv <- pretty(breaks, n = leg_n)
-    xv <- scale_delta(as.numeric(lv), breaks[1], breaks[nb], delta)
-    graphics::axis(4, at = xv, labels = lv)
+    lv <- pretty( breaks, n = leg_n )
+    xv <- scale_delta( as.numeric(lv), breaks[1], breaks[nb], delta )
+    graphics::axis( 4, at = xv, labels = lv )
     
     # lastly, add axis label
-    graphics::mtext(side = 4, label, line = 2, cex = cex)
+    graphics::mtext( side = 4, label, line = 2, cex = cex )
 }
 
 # spreads data to c(0-delta, 1+delta)
@@ -797,22 +885,75 @@ scale_delta <- function(x, x_min = min(x), x_max = max(x), delta) {
     yMin + (yMax - yMin) * (x - x_min) / (x_max - x_min)
 }
 
-plot_popkin_layout <- function(n, nr) {
+plot_popkin_layout <- function(n, nr = 1, leg_per_panel = FALSE, leg_width = 0.3) {
     # figure out layout given a requested number of rows
+    
     # step 1: dimensions
-    nr <- as.integer(nr) # in case it's not an integer...
-    if (nr < 1) nr <- 1 # just treat as 1 (no complaining)
-    if (nr > n) nr <- n # if we asked for more rows than data, set to data (again no complaining)
-    nc <- ceiling(n/nr) # this is the correct number of columns (might have blank cells)
-    nr <- ceiling(n/nc) # reset backwards in case the nr provided was too large (this will reduce empty space)
-    # step 2: fill layout matrix to just work
-    layout <- c(1:n, rep.int(0, nr*nc - n)) # first fill in all nr*nc values, including zeroes as needed
-    layout <- matrix(layout, nrow = nr, ncol = nc, byrow = TRUE) # turn into matrix
-    layout <- cbind(layout, c(n+1, rep.int(0, nr-1))) # add final column for color key and nothing else
-    # step 3: set up widths vector too
-    widths <- c(rep.int(1, nc), 0.1) # last column for color key is 10% the width of the rest
+    # in case it's not an integer...
+    nr <- as.integer(nr)
+    # just treat as 1 (no complaining)
+    if (nr < 1)
+        nr <- 1
+    # if we asked for more rows than data, set to data (again no complaining)
+    if (nr > n)
+        nr <- n
+    # this is the correct number of columns (might have blank cells)
+    nc <- ceiling( n / nr )
+    # reset backwards in case the nr provided was too large (this will reduce empty space)
+    nr <- ceiling( n / nc )
+    # number of blank panels
+    nb <- nr * nc - n
+
+    if ( !leg_per_panel ) {
+        # this is the default version
+        
+        # step 2: fill layout matrix to just work
+        # first fill in all nr*nc values, including zeroes as needed
+        layout <- c(
+            1 : n,
+            rep.int( 0, nb )
+        )
+        # turn into matrix
+        layout <- matrix(
+            layout,
+            nrow = nr,
+            ncol = nc,
+            byrow = TRUE
+        )
+        # add final column for color key and nothing else
+        layout <- cbind(
+            layout,
+            c( n + 1 , rep.int( 0, nr - 1 ) )
+        )
+        
+        # step 3: set up widths vector too
+        # last column for color key is `leg_width` fraction of the width of the rest
+        widths <- c( rep.int(1, nc), leg_width )
+    } else {
+        # every panel has a legend, so there's 2*n panels actually
+        # still need zeroes (twice as many as default too)
+        layout <- c(
+            1 : ( 2 * n ),
+            rep.int( 0, 2 * nb )
+        )
+        # turn into matrix
+        # again note number of columns is double the default
+        layout <- matrix(
+            layout,
+            nrow = nr,
+            ncol = 2 * nc,
+            byrow = TRUE
+        )
+        # but we don't add the final column for the color key (all those columns have been added)
+        
+        # step 3: set up widths vector too
+        # every kinship matrix has a full panel followed by leg_width legend/color key panel
+        widths <- rep.int( c(1, leg_width), nc)
+    }
+    
     # make layout now!
-    graphics::layout(layout, widths = widths) # note rows are all equal height
+    # note rows are all equal height
+    graphics::layout( layout, widths = widths )
 }
 
 plot_popkin_palette <- function(n = 100) {
