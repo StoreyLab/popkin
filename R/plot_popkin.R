@@ -4,34 +4,43 @@
 #' Many options allow for fine control of individual or subpopulation labeling.
 #' This code assumes input matrices are symmetric.
 #'
-#' \code{plot_popkin} plots the input kinship matrices as-is.
-#' For best results, a standard kinship matrix (such as the output of \code{\link{popkin}}) should have its diagonal rescaled to contain inbreeding coefficients (\code{\link{inbr_diag}} does this) before \code{plot_popkin} is used.
+#' `plot_popkin` plots the input kinship matrices as-is.
+#' For best results, a standard kinship matrix (such as the output of `\link{popkin}`) should have its diagonal rescaled to contain inbreeding coefficients (`\link{inbr_diag}` does this) before `plot_popkin` is used.
 #'
-#' This function permits the labeling of individuals (from row and column names when \code{names = TRUE}) and of subpopulations (passed through \code{labs}).
-#' The difference is that the labels passed through \code{labs} are assumed to be shared by many individuals, and lines (or other optional visual aids) are added to demarcate these subgroups.
+#' This function permits the labeling of individuals (from row and column names when `names = TRUE`) and of subpopulations (passed through `labs`).
+#' The difference is that the labels passed through `labs` are assumed to be shared by many individuals, and lines (or other optional visual aids) are added to demarcate these subgroups.
 #'
 #' @param kinship A numeric kinship matrix or a list of matrices.
-#' Note \code{kinship} may contain \code{NULL} elements (makes blank plots with titles; good for placeholders or non-existent data)
+#' Note `kinship` may contain `NULL` elements (makes blank plots with titles; good for placeholders or non-existent data)
 #' @param titles Titles to add to each matrix panel (default is no titles)
 #' @param col Colors for heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).
-#' @param col_n The number of colors to use in the heatmap (applies if \code{col = NULL}).
-#' @param mar Margins for each panel (if a list) or for all panels (if a vector).
-#' Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.
-#' Note the padding \code{mar_pad} below is also added to every margin if set.
-#' If \code{NULL}, the original margin values are used without change, and are reset for every panel that has a \code{NULL} value.
+#' @param col_n The number of colors to use in the heatmap (applies if `col = NULL`).
+#' @param mar Margins shared by all panels (if a vector) or for each panel (if a list of such vectors).
+#' If the vector has length 1, `mar` corresponds to the shared lower and left margins, while the top and right margins are set to zero.
+#' If this length is 2, `mar[1]` is the same as above, while `mar[2]` is the top margin.
+#' If this length is 4, then `mar` is a fully-specified margin vector in the standard format `c(bottom, left, top, right)` that `\link[graphics]{par}('mar')` expects.
+#' Vectors of invalid lengths produce a warning.
+#' Note the padding `mar_pad` below is added to every margin if set.
+#' If `NULL`, the original margin values are used without change, and are reset for every panel that has a `NULL` value.
 #' The original margins are also reset after plotting is complete.
-#' @param mar_pad Margin padding added to all panels (\code{mar} above and \code{leg_mar} below).
+#' @param mar_pad Margin padding added to all panels (`mar` above and `leg_mar` below).
 #' Default 0.2.
-#' Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.
-#' @param diag_line If \code{TRUE} adds a line along the diagonal (default no line).
+#' Must be a scalar or a vector of length 4 to match `\link[graphics]{par}('mar')`.
+#' @param oma Outer margin vector.
+#' If length 1, the value of `oma` is applied to the left outer margin only (so `ylab` below displays correctly) and zero outer margins elsewhere.
+#' If length 4, all outer margins are expected in standard format `\link[graphics]{par}('mar')` expects (see `mar` above).
+#' `mar_pad` above is never added to outer margins.
+#' If `NULL`, no outer margins are set (previous settings are preserved).
+#' Vectors of invalid lengths produce a warning.
+#' @param diag_line If `TRUE` adds a line along the diagonal (default no line).
 #' May also be a vector of logicals to set per panel (lengths must agree).
 #' @param panel_letters Vector of strings for labeling panels (default A-Z).
-#' No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
+#' No labels are added if `NULL`, or when there is only one panel except if its set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
 #' @param panel_letters_cex Scaling factor of panel letters (default 1.5).
 #' @param null_panel_data
-#' If \code{FALSE} (default), panels with \code{NULL} kinship matrices must not have titles or other parameters set, and no panel letters are used in these cases.
-#' If \code{TRUE}, panels with \code{NULL} kinship matrices must have titles and other parameters set.
-#' In the latter case, these \code{NULL} panels also get panel letters.
+#' If `FALSE` (default), panels with `NULL` kinship matrices must not have titles or other parameters set, and no panel letters are used in these cases.
+#' If `TRUE`, panels with `NULL` kinship matrices must have titles and other parameters set.
+#' In the latter case, these `NULL` panels also get panel letters.
 #' The difference is important when checking that lengths of non-singleton parameters agree.
 #' @param weights A vector with weights for every individual, or a list of such vectors if they vary per panel.
 #' The width of every individual becomes proportional to their weight.
@@ -44,36 +53,36 @@
 #' AXIS LABEL OPTIONS
 #' 
 #' @param ylab The y-axis label (default "Individuals").
-#' If \code{length(ylab) == 1}, the label is placed in the outer margin (shared across panels);
-#' otherwise \code{length(ylab)} must equal the number of panels and each label is placed in the inner margin of the respective panel.
-#' @param ylab_adj The value of "adj" passed to \code{\link[graphics]{mtext}}.
-#' If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_adj)} must equal the number of panels.
-#' @param ylab_line The value of "line" passed to \code{\link[graphics]{mtext}}.
-#' If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_line)} must equal the number of panels.
+#' If `length(ylab) == 1`, the label is placed in the outer margin (shared across panels);
+#' otherwise `length(ylab)` must equal the number of panels and each label is placed in the inner margin of the respective panel.
+#' @param ylab_adj The value of "adj" passed to `\link[graphics]{mtext}`.
+#' If `length(ylab) == 1`, only the first value is used, otherwise `length(ylab_adj)` must equal the number of panels.
+#' @param ylab_line The value of "line" passed to `\link[graphics]{mtext}`.
+#' If `length(ylab) == 1`, only the first value is used, otherwise `length(ylab_line)` must equal the number of panels.
 #' 
 #' LAYOUT OPTIONS
 #' 
-#' @param layout_add If \code{TRUE} (default) then \code{\link[graphics]{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{layout_rows} below) plus the color key legend.
-#' The original layout is reset when plotting is complete and if \code{layout_add = TRUE}.
-#' If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to FALSE and call \code{\link[graphics]{layout}} yourself beforehand.
-#' @param layout_rows Number of rows in layout, used only if \code{layout_add = TRUE}.
+#' @param layout_add If `TRUE` (default) then `\link[graphics]{layout}` is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see `layout_rows` below) plus the color key legend.
+#' The original layout is reset when plotting is complete and if `layout_add = TRUE`.
+#' If a non-standard layout or additional panels (beyond those provided by `plot_popkin`) are desired, set to `FALSE` and call `\link[graphics]{layout}` yourself beforehand.
+#' @param layout_rows Number of rows in layout, used only if `layout_add = TRUE`.
 #'
 #' LEGEND (COLOR KEY) OPTIONS
 #' 
 #' @param leg_per_panel If `TRUE`, every kinship matrix get its own legend/color key (best for matrices with very different scales).
 #' If `FALSE` (default), a single legend/color key is shared by all kinship matrix panels.
 #' @param leg_title The name of the variable that the heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.
-#' @param leg_cex Scaling factor for \code{leg_title} (default 1), or a vector of such values if they vary per panel.
-#' @param leg_n The desired number of ticks in the legend y-axis (input to \code{\link{pretty}}, see that for more details), or a vector of such values if they vary per panel.
+#' @param leg_cex Scaling factor for `leg_title` (default 1), or a vector of such values if they vary per panel.
+#' @param leg_n The desired number of ticks in the legend y-axis (input to `\link{pretty}`, see that for more details), or a vector of such values if they vary per panel.
 #' @param leg_width The width of the legend panel, relative to the width of the kinship panel.
-#' This value is passed to \code{\link[graphics]{layout}} (ignored if `layout_add = FALSE`).
+#' This value is passed to `\link[graphics]{layout}` (ignored if `layout_add = FALSE`).
 #' @param leg_mar Margin values for the legend panel only, or a list of such values if they vary per panel.
-#' A length-4 vector (in \code{c( bottom, left, top, right )} format that \code{\link[graphics]{par}('mar')} expects) specifies the full margins, to which \code{mar_pad} is added.
-#' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if `leg_mar` is length-1, it is used to specify the right margin (plus the value of \code{mar_pad}, see above).
+#' A length-4 vector (in `c( bottom, left, top, right )` format that `\link[graphics]{par}('mar')` expects) specifies the full margins, to which `mar_pad` is added.
+#' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if `leg_mar` is length-1, it is used to specify the right margin (plus the value of `mar_pad`, see above).
 #'
 #' INDIVIDUAL LABEL OPTIONS
 #' 
-#' @param names If \code{TRUE}, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.
+#' @param names If `TRUE`, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.
 #' @param names_cex Scaling factor for the column and row names, or a vector of such values if they vary per panel.
 #' @param names_line Line where column and row names are placed, or a vector of such values if they vary per panel.
 #' @param names_las Orientation of labels relative to axis.
@@ -85,18 +94,18 @@
 #' Use a matrix of labels to show groupings at more than one level (for a hierarchy or otherwise).
 #' If input is a vector or a matrix, the same subpopulation labels are shown for every heatmap panel; the input must be a list of such vectors or matrices if the labels vary per panel.
 #' @param labs_cex A vector of label scaling factors for each level of labs, or a list of such vectors if labels vary per panel.
-#' @param labs_las A vector of label orientations (in format that \code{\link[graphics]{mtext}} expects) for each level of labs, or a list of such vectors if labels vary per panel.
-#' @param labs_line A vector of lines where labels are placed (in format that \code{\link[graphics]{mtext}} expects) for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_las A vector of label orientations (in format that `\link[graphics]{mtext}` expects) for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_line A vector of lines where labels are placed (in format that `\link[graphics]{mtext}` expects) for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_sep A vector of logicals that specify whether lines separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.
-#' @param labs_lwd A vector of line widths for the lines that divide subpopulations (if \code{labs_sep = TRUE}) for each level of labs, or a list of such vectors if labels vary per panel.
-#' @param labs_col A vector of colors for the lines that divide subpopulations (if \code{labs_sep = TRUE}) for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_lwd A vector of line widths for the lines that divide subpopulations (if `labs_sep = TRUE`) for each level of labs, or a list of such vectors if labels vary per panel.
+#' @param labs_col A vector of colors for the lines that divide subpopulations (if `labs_sep = TRUE`) for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_ticks A vector of logicals that specify whether ticks separating the subpopulations are drawn for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_text A vector of logicals that specify whether the subpopulation labels are shown for each level of labs, or a list of such vectors if labels vary per panel.
 #' Useful for including separating lines or ticks without text.
 #' @param labs_even A vector of logicals that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
-#' When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.
+#' When `TRUE`, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.
 #' 
-#' @param ... Additional options passed to \code{\link[graphics]{image}}.
+#' @param ... Additional options passed to `\link[graphics]{image}`.
 #' These are shared across panels
 #'
 #' @examples
@@ -125,6 +134,7 @@ plot_popkin <- function(
                         col_n = 100,
                         mar = NULL,
                         mar_pad = 0.2,
+                        oma = 1.5,
                         diag_line = FALSE,
                         panel_letters = toupper(letters),
                         panel_letters_cex = 1.5,
@@ -250,6 +260,19 @@ plot_popkin <- function(
     par_orig <- graphics::par( no.readonly = TRUE )
     # save original margins, which may get reset per panel (separately of final reset)
     mar_orig <- graphics::par('mar')
+
+    # set outer margins as desired
+    if ( !is.null( oma ) ) {
+        if ( length( oma ) == 1 ) {
+            # when a single value, it is the left outer margin (all other values are zero)
+            graphics::par( oma = c(0, oma, 0, 0) )
+        } else if ( length( oma ) == 4 ) {
+            # here the whole vector was specified, set that
+            graphics::par( oma = oma )
+        } else {
+            warning("`oma` has an invalid length (was not 1 or 4): ", length( oma ), "\nOuter margins were unchanged!")
+        }
+    }
     
     # figure out layout given a requested number of rows
     if (layout_add)
@@ -294,9 +317,25 @@ plot_popkin <- function(
             range_sym <- c( -max_sym, max_sym )
         }
         
-        if ( !is.null( mar[[ i ]] ) ) {
+        mar_i <- mar[[ i ]]
+        if ( !is.null( mar_i ) ) {
             # change margins if necessary!
-            graphics::par( mar = mar[[ i ]] + mar_pad )
+            if ( length( mar_i ) == 1 ) {
+                # this value is bottom and left margins (others are zero)
+                graphics::par( mar = c(mar_i, mar_i, 0, 0) + mar_pad )
+            } else if ( length( mar_i ) == 2 ) {
+                # first value is same as above
+                # second value is for top margin (to make room for optional titles)
+                # right margin remains zero
+                graphics::par( mar = c(mar_i[1], mar_i[1], mar_i[2], 0) + mar_pad )
+            } else if ( length( mar_i ) == 4 ) {
+                # full margin vector has been specified
+                graphics::par( mar = mar_i + mar_pad )
+            } else {
+                warning("`mar` at panel ", i, " has an invalid length (was not 1, 2 or 4): ", length( mar_i ), "\nPrevious margins were reset!")
+                # restore original margins otherwise!
+                graphics::par( mar = mar_orig )
+            }
         } else {
             # restore original margins otherwise!
             graphics::par( mar = mar_orig )
@@ -435,13 +474,13 @@ plot_popkin <- function(
 #'                       labsEven = FALSE,
 #'                       ...
 #' )
-#' @seealso \code{\link{popkin-deprecated}}
+#' @seealso `\link{popkin-deprecated}`
 #' @keywords internal
 NULL
 
 #' @rdname popkin-deprecated
-#' @section \code{plotPopkin}:
-#' For \code{plotPopkin}, use \code{\link{plot_popkin}}.
+#' @section `plotPopkin`:
+#' For `plotPopkin`, use `\link{plot_popkin}`.
 #' Several argument names have also changed!
 #'
 #' @export
@@ -745,19 +784,19 @@ rep_check_list <- function(vals, n) {
 # Plot color key for heatmap
 #
 # This plots an image with a single column, showing the relationship between colors and values in the heatmap.
-# The image fills the entire panel; use \code{\link[graphics]{layout}} to make sure this panel is scaled correctly, usually so it is taller rather than wider.
+# The image fills the entire panel; use `\link[graphics]{layout}` to make sure this panel is scaled correctly, usually so it is taller rather than wider.
 #
 # This function is provided for users that want greater flexibility in creating plot layouts.
-# However, \code{\link{plot_popkin}} will be easier to use and should suffice in most cases, please consider using that before calling this function directly.
+# However, `\link{plot_popkin}` will be easier to use and should suffice in most cases, please consider using that before calling this function directly.
 # 
-# Note \code{\link{plot_popkin_single}} construct breaks that are symmetric about zero, which ensures that the middle color (white) corresponds to the zero kinship.
+# Note `\link{plot_popkin_single}` construct breaks that are symmetric about zero, which ensures that the middle color (white) corresponds to the zero kinship.
 # In contrast, kinship_range need not be symmetric and it is preferably the true range of the data.
 #
-# @param breaks The vector of \eqn{n+1} values at which colors switch, as returned by \code{\link{plot_popkin_single}}
+# @param breaks The vector of \eqn{n+1} values at which colors switch, as returned by `\link{plot_popkin_single}`
 # @param label The name of the variable that the colors measure (i.e. "Kinship")
 # @param col Color vector of length \eqn{n}.  Default colors are a progression from blue to white to red obtained from RColorBrewer.
 # @param kinship_range Range of the color key, preferably the range of the data (default is infered from the breaks, but they need not agree)
-# @param leg_n The desired number of ticks in the y-axis (input to \code{\link{pretty}}, see that for more details)
+# @param leg_n The desired number of ticks in the y-axis (input to `\link{pretty}`, see that for more details)
 #
 # @return Nothing
 #

@@ -179,3 +179,14 @@ Improvements to function `plot_popkin`:
   Now `leg_mar` can be a scalar, which sets the right margin of the legend panel.
   New default is `leg_mar = 3`, again necessary so the label of the legend fits in the panel.
   Previous behaviors of `leg_mar = NULL` and a full margin specification are retained.
+
+# 2019-10-17 - popkin 1.2.11.9000
+
+More improvements to function `plot_popkin`:
+
+* Added option `oma`, which sets outer margins via `par(oma)` but provides additional useful shortcuts and defaults.
+  This changes the default behavior of `plot_popkin` by setting the left outer margin to 1.5 (all other values are zero), whereas before `plot_popkin` did not set any outer margins.
+  This new default behavior makes the "Individuals" outer label appear automatically in plots (whereas before, simply calling `plot_popkin` without setting outer margins resulted in this outer-margin y-axis label being hidden from view).
+* Extended the behavior of `mar` to accept various shortcuts (scalar values set only bottom and left margin, whereas the second value of a vector of length 2 sets the top margin, which is otherwise zero; in these two cases the right margin is zero).
+  Default behavior remains to not change existing margins.
+* Vignette was simplified given the new handy defaults and shortcuts.

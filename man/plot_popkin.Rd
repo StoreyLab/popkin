@@ -5,7 +5,7 @@
 \title{Visualize one or more kinship matrices}
 \usage{
 plot_popkin(kinship, titles = NULL, col = NULL, col_n = 100,
-  mar = NULL, mar_pad = 0.2, diag_line = FALSE,
+  mar = NULL, mar_pad = 0.2, oma = 1.5, diag_line = FALSE,
   panel_letters = toupper(letters), panel_letters_cex = 1.5,
   ylab = "Individuals", ylab_adj = NA, ylab_line = 0,
   layout_add = TRUE, layout_rows = 1, leg_per_panel = FALSE,
@@ -27,9 +27,12 @@ Note \code{kinship} may contain \code{NULL} elements (makes blank plots with tit
 
 \item{col_n}{The number of colors to use in the heatmap (applies if \code{col = NULL}).}
 
-\item{mar}{Margins for each panel (if a list) or for all panels (if a vector).
-Margins are in \code{c(bottom,left,top,right)} format that \code{\link[graphics]{par}('mar')} expects.
-Note the padding \code{mar_pad} below is also added to every margin if set.
+\item{mar}{Margins shared by all panels (if a vector) or for each panel (if a list of such vectors).
+If the vector has length 1, \code{mar} corresponds to the shared lower and left margins, while the top and right margins are set to zero.
+If this length is 2, \code{mar[1]} is the same as above, while \code{mar[2]} is the top margin.
+If this length is 4, then \code{mar} is a fully-specified margin vector in the standard format \code{c(bottom, left, top, right)} that \code{\link[graphics]{par}('mar')} expects.
+Vectors of invalid lengths produce a warning.
+Note the padding \code{mar_pad} below is added to every margin if set.
 If \code{NULL}, the original margin values are used without change, and are reset for every panel that has a \code{NULL} value.
 The original margins are also reset after plotting is complete.}
 
@@ -37,11 +40,18 @@ The original margins are also reset after plotting is complete.}
 Default 0.2.
 Must be a scalar or a vector of length 4 to match \code{\link[graphics]{par}('mar')}.}
 
+\item{oma}{Outer margin vector.
+If length 1, the value of \code{oma} is applied to the left outer margin only (so \code{ylab} below displays correctly) and zero outer margins elsewhere.
+If length 4, all outer margins are expected in standard format \code{\link[graphics]{par}('mar')} expects (see \code{mar} above).
+\code{mar_pad} above is never added to outer margins.
+If \code{NULL}, no outer margins are set (previous settings are preserved).
+Vectors of invalid lengths produce a warning.}
+
 \item{diag_line}{If \code{TRUE} adds a line along the diagonal (default no line).
 May also be a vector of logicals to set per panel (lengths must agree).}
 
 \item{panel_letters}{Vector of strings for labeling panels (default A-Z).
-No labels are added if \code{panel_letters = NULL}, or when there is only one panel except if \code{panel_letters} is set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).}
+No labels are added if \code{NULL}, or when there is only one panel except if its set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).}
 
 \item{panel_letters_cex}{Scaling factor of panel letters (default 1.5).}
 
@@ -59,7 +69,7 @@ LAYOUT OPTIONS}
 
 \item{layout_add}{If \code{TRUE} (default) then \code{\link[graphics]{layout}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{layout_rows} below) plus the color key legend.
 The original layout is reset when plotting is complete and if \code{layout_add = TRUE}.
-If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to FALSE and call \code{\link[graphics]{layout}} yourself beforehand.}
+If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to \code{FALSE} and call \code{\link[graphics]{layout}} yourself beforehand.}
 
 \item{layout_rows}{Number of rows in layout, used only if \code{layout_add = TRUE}.
 
