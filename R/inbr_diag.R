@@ -63,7 +63,7 @@ inbr_diag <- function(kinship) {
     
     # if input is a list, process each element (recursively calling self)
     # returns a list of the same length in this case
-    if (class(kinship) == 'list')
+    if ( is.list(kinship) )
         return ( lapply( kinship, inbr_diag ) )
 
     # we now assume we're in the singleton case now

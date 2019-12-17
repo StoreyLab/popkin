@@ -35,15 +35,16 @@ get_A <- function(X, n_ind = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim
     
     # determine some behaviors depending on data type
     # first validate class and set key booleans
+    # NOTE BEDMatrix is also class 'matrix', so have to test in this order
     isFn <- FALSE
-    if (class(X) == 'function') {
+    if (is.function(X)) {
         isFn <- TRUE
         if (is.na(n_ind))
             stop('missing number of individuals "n", which is required when X is a function.')
-    } else if (class(X) == 'BEDMatrix') { # same as general matrix but transposed
+    } else if ('BEDMatrix' %in% class(X)) { # same as general matrix but transposed
         loci_on_cols <- TRUE # this is always imposed for this particular format!
     } else if (!is.matrix(X)) {
-        stop('X has unsupported class: ', class(X))
+        stop('X has unsupported class: ', toString( class(X) ) )
     } 
     
     # extract dimensions from data (not possible for function version)

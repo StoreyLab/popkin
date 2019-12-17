@@ -71,8 +71,9 @@ popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_factor =
             stop('the length of `subpops` (', length(subpops), ') disagreed with the input `n` (', n, ')')
         }
         # also compare to X
-        if (class(X) != 'function') {
-            if (class(X) == 'BEDMatrix') {
+        if ( !is.function(X) ) {
+            # NOTE BEDMatrix is also class 'matrix', so have to test in this order
+            if ('BEDMatrix' %in% class(X)) {
                 n2 <- nrow(X)
             } else if (is.matrix(X)) {
                 if (loci_on_cols) {
@@ -81,7 +82,7 @@ popkin <- function(X, subpops = NULL, n = NA, loci_on_cols = FALSE, mem_factor =
                     n2 <- ncol(X)
                 }
             } else
-                stop('genotype matrix `X` has unsupported class: ', class(X))
+                stop('genotype matrix `X` has unsupported class: ', toString( class(X) ) )
             if (n != n2)
                 stop('the length of `subpops` (', n, ') disagrees with the number of individuals in the genotype matrix (', n2, ')')
         }

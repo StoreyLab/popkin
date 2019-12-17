@@ -645,7 +645,7 @@ plot_popkin_single <- function (
     # figure out breaks for colors
     breaks <- seq(kinship_range[1], kinship_range[2], length = length(col) + 1)
     numcols <- length(breaks) - 1
-    if (class(col) == "function") 
+    if ( is.function(col) ) 
         col <- col(numcols)
     # here replace potentially forced kinship_range with the true range of the data...
     # but only if data is more extended, don't change anything otherwise!
@@ -939,9 +939,9 @@ calc_leg_width_min <- function
     # in particular, we'll assume that the plot area for the legend should be at minimum one "line"
     
     # inner width, equals total width minus outer margins, in inches
-    width_inner <- par('pin')[1]
+    width_inner <- graphics::par('pin')[1]
     # number of lines that each inch has (default 5, is supposed to be read only but meh)
-    lines_per_inch <- 1 / par('csi')
+    lines_per_inch <- 1 / graphics::par('csi')
     # only part missing is default margins for legend
 
     # when margins vary per panel, this won't work... maybe we should disallow this earlier (TODO DOCS)
