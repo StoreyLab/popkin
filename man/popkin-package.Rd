@@ -60,11 +60,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Alejandro Ochoa \email{alejandro.ochoa@duke.edu} (0000-0003-4928-3403)
+\strong{Maintainer}: Alejandro Ochoa \email{alejandro.ochoa@duke.edu} (\href{https://orcid.org/0000-0003-4928-3403}{ORCID})
 
 Authors:
 \itemize{
-  \item John D. Storey \email{jstorey@princeton.edu} (0000-0001-5992-402X)
+  \item John D. Storey \email{jstorey@princeton.edu} (\href{https://orcid.org/0000-0001-5992-402X}{ORCID})
 }
 
 }

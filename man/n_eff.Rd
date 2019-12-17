@@ -4,8 +4,14 @@
 \alias{n_eff}
 \title{Calculates the effective sample size of the data}
 \usage{
-n_eff(kinship, max = TRUE, weights = NULL, nonneg = TRUE,
-  algo = c("gradient", "newton", "heuristic"), tol = 1e-10)
+n_eff(
+  kinship,
+  max = TRUE,
+  weights = NULL,
+  nonneg = TRUE,
+  algo = c("gradient", "newton", "heuristic"),
+  tol = 1e-10
+)
 }
 \arguments{
 \item{kinship}{An \eqn{n \times n}{n-by-n} kinship matrix.}

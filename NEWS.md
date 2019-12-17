@@ -190,3 +190,11 @@ More improvements to function `plot_popkin`:
 * Extended the behavior of `mar` to accept various shortcuts (scalar values set only bottom and left margin, whereas the second value of a vector of length 2 sets the top margin, which is otherwise zero; in these two cases the right margin is zero).
   Default behavior remains to not change existing margins.
 * Vignette was simplified given the new handy defaults and shortcuts.
+
+# 2019-12-17 - popkin 1.3.0
+
+* Removed deprecated function names: `inbrDiag`, `neff`, `plotPopkin`, `rescalePopkin`, `weightsSubpops`.
+  * Removed deprecated parameter names on `popkin` function: `lociOnCols`, `memLim`.
+* Updated `class` usage now that matrices return a two-element array in R-devel (required by CRAN).
+* Added `calc_leg_width_min` internal function, though it is unfinished and unused.
+* Minor Roxygen-related updates.

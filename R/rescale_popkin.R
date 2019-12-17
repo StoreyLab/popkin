@@ -58,30 +58,3 @@ rescale_popkin <- function(kinship, subpops = NULL, min_kinship = NA) {
     # finally, perform a simple IBD rescaling
     kinship <- (kinship - min_kinship)/(1 - min_kinship) # return this matrix!
 }
-
-# stick deprecated function name here
-
-#' @title Rescale kinship matrix to set a given kinship value to zero.
-#' @description Rescale kinship matrix to set a given kinship value to zero.
-#' @param kinship A kinship matrix
-#' @param subpops Vector of subpopulation assignments for each individual.
-#' @param min_kinship A scalar kinship value to define the new zero kinship.
-#' @return The rescaled kinship matrix, with the desired level of relatedness set to zero.
-#'
-#' @name rescalePopkin-deprecated
-#' @usage rescalePopkin(kinship, subpops = NULL, min_kinship = NA)
-#' @seealso \code{\link{popkin-deprecated}}
-#' @keywords internal
-NULL
-
-#' @rdname popkin-deprecated
-#' @section \code{rescalePopkin}:
-#' For \code{rescalePopkin}, use \code{\link{rescale_popkin}}.
-#'
-#' @export
-rescalePopkin <- function(kinship, subpops = NULL, min_kinship = NA) {
-    # mark as deprecated
-    .Deprecated('rescale_popkin')
-    # return as usual, to not break things just yet
-    rescale_popkin(kinship, subpops, min_kinship)
-}
