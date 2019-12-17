@@ -204,7 +204,7 @@ plot_popkin <- function(
         titles <- rep.int('', n) # make blank titles of the same length as data
     }
     # check label lengths
-    if (!is.null(labs) && class(labs) == 'list' && length(labs) != n)
+    if (!is.null(labs) && is.list(labs) && length(labs) != n)
         stop('there are ', n, ' non-NULL panels but ', length(labs), ' label sets!')
     # expand other things that may vary per panel
     names <- rep_check(names, n)
@@ -274,14 +274,17 @@ plot_popkin <- function(
         }
     }
     
-    # figure out layout given a requested number of rows
-    if (layout_add)
+    if (layout_add) {
+        # ...
+        
+        # figure out layout given a requested number of rows
         plot_popkin_layout(
             n = n_all,
             nr = layout_rows,
             leg_per_panel = leg_per_panel,
             leg_width = leg_width
         )
+    }
 
     # breaks of all following plots should match!
     breaks <- NULL
@@ -774,7 +777,7 @@ rep_check <- function(vals, n) {
 
 rep_check_list <- function(vals, n) {
     # expand objects as needed
-    if (class(vals) != 'list') {
+    if ( !is.list(vals) ) {
         vals <- rep(list(vals), n) # this is the desired transformation
     } else if (length(vals) != n)
         stop('`', deparse(substitute(vals)), '` does not have the correct length (', length(vals) ,' != ', n, ')')
@@ -924,6 +927,58 @@ scale_delta <- function(x, x_min = min(x), x_max = max(x), delta) {
     yMin + (yMax - yMin) * (x - x_min) / (x_max - x_min)
 }
 
+calc_leg_width_min <- function
+(
+    leg_mar = 3,
+    mar_pad = 0.2,
+    n_col = 1,
+    n_leg = 1,
+    gap_min_lines = 1
+) {
+    # to avoid errors and user frustration, let's calculate the minimum leg_width that will result in a nice-looking plot.
+    # in particular, we'll assume that the plot area for the legend should be at minimum one "line"
+    
+    # inner width, equals total width minus outer margins, in inches
+    width_inner <- par('pin')[1]
+    # number of lines that each inch has (default 5, is supposed to be read only but meh)
+    lines_per_inch <- 1 / par('csi')
+    # only part missing is default margins for legend
+
+    # when margins vary per panel, this won't work... maybe we should disallow this earlier (TODO DOCS)
+    if ( is.list( leg_mar ) )
+        return( NA )
+
+    # also the default of "preserving the last margin" is crap here
+    # in that case the margin could vary per panel too
+    if ( is.null(leg_mar) )
+        return( NA )
+    
+    # following code assumes leg_mar is the same across panels
+    if ( length( leg_mar ) == 1 ) {
+        # value of right margin (left is zero)
+        leg_mar_tot <- leg_mar
+    } else if ( length( leg_mar ) == 4 ) {
+        # full specification
+        leg_mar_tot <- leg_mar[2] + leg_mar[4]
+    } else 
+        stop('Invalid length for `leg_mar` (expected 1 or 4): ', length( leg_mar ) )
+    # add padding
+    leg_mar_tot <- leg_mar_tot + 2 * mar_pad
+
+    # final calculation
+    leg_width_min <- 
+        ( leg_mar_tot + gap_min_lines ) * n_col /
+        ( width_inner * lines_per_inch - ( leg_mar_tot + gap_min_lines ) * n_leg )
+
+    # this could be negative in an extreme case
+    # let's stop with an informative message
+    if ( leg_width_min < 0 )
+        stop('Figure width is too small to acomodate all panels.  Please increase this width!')
+    
+    # return that value
+    return( leg_width_min )
+}
+
 plot_popkin_layout <- function(n, nr = 1, leg_per_panel = FALSE, leg_width = 0.3) {
     # figure out layout given a requested number of rows
     
@@ -943,6 +998,20 @@ plot_popkin_layout <- function(n, nr = 1, leg_per_panel = FALSE, leg_width = 0.3
     # number of blank panels
     nb <- nr * nc - n
 
+    # using the given information, get the minimum legend width!
+    # get more values from main function
+    # TODO!!!  (currently unused)
+    leg_width_min <- calc_leg_width_min(
+        leg_mar = 3,
+        mar_pad = 0.2,
+        n_col = nc,
+        n_leg = if (leg_per_panel) nc else 1,
+        gap_min_lines = 1
+    )
+    # what to do when the above fails for whatever reason?
+    # we only needed with default layout, so is there a scenario where a custom layout allows this all to go away?
+    # (i.e. the restrictions on leg_mar)
+    
     if ( !leg_per_panel ) {
         # this is the default version
         
