@@ -193,8 +193,10 @@ More improvements to function `plot_popkin`:
 
 # 2019-12-17 - popkin 1.3.0
 
+* Fourth CRAN submission.
 * Removed deprecated function names: `inbrDiag`, `neff`, `plotPopkin`, `rescalePopkin`, `weightsSubpops`.
   * Removed deprecated parameter names on `popkin` function: `lociOnCols`, `memLim`.
 * Updated `class` usage now that matrices return a two-element array in R-devel (required by CRAN).
 * Added `calc_leg_width_min` internal function, though it is unfinished and unused.
+* Moved logo to `man/figures/`
 * Minor Roxygen-related updates.
