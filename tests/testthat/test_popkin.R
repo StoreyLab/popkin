@@ -176,6 +176,41 @@ test_that("function returns precomputed values: fst", {
     expect_true(fst <= 1)
 })
 
+test_that("fst with local inbreeding works", {
+    # construct a random fake local kinship matrix
+    n_ind <- nrow(Phi)
+    kinship_local <- matrix(
+        runif( n_ind * n_ind ),
+        nrow = n_ind,
+        ncol = n_ind
+    )
+    # make pos-def by cross-multiplying with itself
+    # normalize to keep in [0,1]
+    kinship_local <- crossprod( kinship_local ) / n_ind
+    # now create "total matrix" by combining effects
+    # however, do this in coancestry mode (inbr diag)
+    # - kinship_local has not been transformed yet so only Phi needs this
+    kinship_total <- inbr_diag(Phi) + kinship_local - inbr_diag(Phi) * kinship_local
+    # turn both local and total into proper kinship by altering diagonal
+    diag( kinship_local ) <- ( 1 + diag( kinship_local ) ) / 2
+    diag( kinship_total ) <- ( 1 + diag( kinship_total ) ) / 2
+    # now estimate FST
+    # correcting appropriately in all cases should result in the same FST as before...
+    expect_equal(fst(kinship_total, x_local = kinship_local), fst)
+    expect_equal(fst(kinship_total, x_local = kinship_local, w0), fst)
+    expect_equal(fst(kinship_total, x_local = kinship_local, w), fstW)
+    # test vector versions of both, and each separately
+    expect_equal(fst(inbr(kinship_total), x_local = kinship_local), fst)
+    expect_equal(fst(inbr(kinship_total), x_local = kinship_local, w0), fst)
+    expect_equal(fst(inbr(kinship_total), x_local = kinship_local, w), fstW)
+    expect_equal(fst(inbr(kinship_total), x_local = inbr(kinship_local)), fst)
+    expect_equal(fst(inbr(kinship_total), x_local = inbr(kinship_local), w0), fst)
+    expect_equal(fst(inbr(kinship_total), x_local = inbr(kinship_local), w), fstW)
+    expect_equal(fst(kinship_total, x_local = inbr(kinship_local)), fst)
+    expect_equal(fst(kinship_total, x_local = inbr(kinship_local), w0), fst)
+    expect_equal(fst(kinship_total, x_local = inbr(kinship_local), w), fstW)
+})
+
 test_that("function returns precomputed values: inbr", {
     expect_equal(inbr(Phi), inbr)
 })

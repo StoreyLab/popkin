@@ -3,13 +3,16 @@
 #' This function simply returns the weighted mean inbreeding coefficient.
 #' If weights are \code{NULL} (default), the regular mean is calculated.
 #' If a kinship matrix is provided, then the inbreeding coefficients are extracted from its diagonal using \code{\link{inbr}} (requires the diagonal to contains self-kinship values (\eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2}) as \code{\link{popkin}} returns, and not inbreeding coefficients (\eqn{f_j^T}) as \code{\link{inbr_diag}} returns).
+#' If there is local inbreeding and it can be estimated (from known pedigrees, for example), it can be subtracted from the total inbreeding coefficients, resulting in a vector of structural inbreeding that correctly averages into \eqn{F_{ST}}{FST}.
 #'
 #' The returned weighted mean inbreeding coefficient equals the generalized \eqn{F_{ST}}{FST} if all individuals are "locally outbred" (i.e. if the self-relatedness of every individual stems entirely from the population structure rather than due partly to having unusually closely related parents, such as first or second cousins).
 #' Note most individuals in population-scale human data are locally outbred.
-#' If there are locally-inbred individuals, the returned value will overestimate \eqn{F_{ST}}{FST}.
+#' If there are locally-inbred individuals, but their local inbreeding cannot be estiamted, then the returned value will overestimate \eqn{F_{ST}}{FST}.
+#' Good estimates of local inbreeding can be passed (parameter `x_local`), in which case the code will subtract their effect and \eqn{F_{ST}}{FST} will be more accurate.
 #' 
 #' @param x The vector of inbreeding coefficients, or the kinship matrix if \code{x} is a matrix.
 #' @param weights Weights for individuals (optional, defaults to uniform weights)
+#' @param x_local An optional vector of inbreeding coefficients, or a local kinship matrix if \code{x_local} is a matrix.
 #'
 #' @return \eqn{F_{ST}}{FST}
 #'
@@ -36,7 +39,7 @@
 #' Fst <- fst(inbr, weights) # ...use this inbreeding vector as input too!
 #'
 #' @export
-fst <- function(x, weights = NULL) {
+fst <- function(x, weights = NULL, x_local = NULL) {
     # validate inputs
     if (missing(x))
         stop('you must provide a kinship matrix or vector of inbreeding coefficients!')
@@ -46,7 +49,17 @@ fst <- function(x, weights = NULL) {
     if (is.matrix(x))
         x <- inbr(x)
     
-    # now x is a vector of inbreeding coefficients
+    # process and apply local data correction, if present
+    if ( !is.null( x_local ) ) {
+        # get inbreeding if needed
+        if ( is.matrix( x_local ) )
+            x_local <- inbr( x_local )
+        # subtract local inbreeding from total inbreeding to get structural inbreeding vector only!
+        x <- ( x - x_local ) / ( 1 - x_local )
+    }
+    
+    # now x is a vector of inbreeding coefficients, adjusted if that was necessary
+    # only choice left is how to weigh average
     if (is.null(weights)) {
         return( mean(x) ) # no weights implies uniform weights
     } else {

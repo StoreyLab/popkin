@@ -200,3 +200,7 @@ More improvements to function `plot_popkin`:
 * Added `calc_leg_width_min` internal function, though it is unfinished and unused.
 * Moved logo to `man/figures/`
 * Minor Roxygen-related updates.
+
+# 2020-02-18 - popkin 1.3.1.9000
+
+* Added `x_local` parameter to function `fst`, which permits estimation of FST when there is known local inbreeding (estimated from a pedigree or IBD blocks).
