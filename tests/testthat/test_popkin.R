@@ -32,6 +32,10 @@ test_that("validate_kinship works", {
     # and non-square matrices
     non_kinship <- matrix(1:2, nrow=2)
     expect_error( validate_kinship( non_kinship ) )
+    
+    # and non-symmetric matrices
+    non_kinship <- matrix(1:4, nrow=2)
+    expect_error( validate_kinship( non_kinship ) )
 })
 
 

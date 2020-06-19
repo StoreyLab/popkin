@@ -13,7 +13,7 @@ validate_kinship(kinship)
 Nothing
 }
 \description{
-Tests that the input is a valid kinship matrix (a numeric square R matrix).
+Tests that the input is a valid kinship matrix (a numeric, square, symmetric R matrix).
 Throws errors if the input is not as above.
 }
 \details{
@@ -41,6 +41,10 @@ try( validate_kinship( char_mat ) )
 
 # and non-square matrices
 non_kinship <- matrix(1:2, nrow=2)
+try( validate_kinship( non_kinship ) )
+
+# and non-symmetric matrices
+non_kinship <- matrix(1:4, nrow=2)
 try( validate_kinship( non_kinship ) )
 
 }

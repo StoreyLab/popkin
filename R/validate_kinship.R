@@ -1,6 +1,6 @@
 #' Validate a kinship matrix
 #'
-#' Tests that the input is a valid kinship matrix (a numeric square R matrix).
+#' Tests that the input is a valid kinship matrix (a numeric, square, symmetric R matrix).
 #' Throws errors if the input is not as above.
 #' 
 #' True kinship matrices have values strictly between 0 and 1, and diagonal values strictly between 0.5 and 1.
@@ -33,6 +33,10 @@
 #' non_kinship <- matrix(1:2, nrow=2)
 #' try( validate_kinship( non_kinship ) )
 #'
+#' # and non-symmetric matrices
+#' non_kinship <- matrix(1:4, nrow=2)
+#' try( validate_kinship( non_kinship ) )
+#'
 #' @export
 validate_kinship <- function(kinship) {
     # die if this is missing
@@ -49,4 +53,7 @@ validate_kinship <- function(kinship) {
     n <- ncol(kinship)
     if (n != m)
         stop('`kinship` must be a square matrix!  (nrow ', m, ' != ncol ', n, ')')
+    # test symmetry
+    if ( !isSymmetric( kinship ) )
+        stop( '`kinship` must be a symmetric matrix!' )
 }

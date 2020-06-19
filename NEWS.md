@@ -204,3 +204,8 @@ More improvements to function `plot_popkin`:
 # 2020-02-18 - popkin 1.3.1.9000
 
 * Added `x_local` parameter to function `fst`, which permits estimation of FST when there is known local inbreeding (estimated from a pedigree or IBD blocks).
+
+# 2020-06-19 - popkin 1.3.2.9000
+
+* `validate_kinship` now tests for symmetry in input kinship matrices too.
+
