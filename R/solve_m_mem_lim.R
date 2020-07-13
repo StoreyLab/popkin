@@ -74,6 +74,10 @@ solve_m_mem_lim <- function(
     ##     + vec_m * m
     ##     + vec_n * n
     ## ) * 8
+
+    # turn n into double
+    # to prevent integer overflows (experienced with `n * n` in particular, below)
+    n <- n + 0.0
     
     # reversed we get (with overheads)
     m_chunk <- (

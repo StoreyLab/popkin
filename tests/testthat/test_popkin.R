@@ -110,6 +110,24 @@ test_that("solve_m_mem_lim works", {
     solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, mat_n_n = 1)
     solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, vec_n = 1)
     solve_m_mem_lim_TESTER(mat_m_n = 1, vec_m = 1, vec_n = 1, mat_n_n = 1)
+
+    # test that we now successfully avoid a particularly bad integer overflow error
+    # caused internally by an `n*n` term, so only n has to be huge to cause it
+    # increase memory requested so that doesn't cause problems
+    n <- 50000L # pass as integer!
+    mem <- 32
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1, vec_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, vec_m = 1)
+    solve_m_mem_lim_TESTER(mem = mem, vec_m = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, vec_m = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, vec_m = 1, vec_n = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1, vec_m = 1)
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1, vec_m = 1, mat_n_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1, vec_m = 1, vec_n = 1)
+    solve_m_mem_lim_TESTER(mem = mem, mat_m_n = 1, vec_m = 1, vec_n = 1, mat_n_n = 1)
 })
 
 test_that("function returns precomputed values: weights_subpops", {

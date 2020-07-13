@@ -209,3 +209,7 @@ More improvements to function `plot_popkin`:
 
 * `validate_kinship` now tests for symmetry in input kinship matrices too.
 
+# 2020-07-13 - popkin 1.3.3.9000
+
+* Internal (non-exported) function `solve_m_mem_lim` now avoids a rare integer overflow caused when input number of inndividuals `n` was encoded as an integer and was greater than `sqrt(.Machine$integer.max)`, or 46340.95.
+
