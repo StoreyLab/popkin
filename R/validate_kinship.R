@@ -8,6 +8,7 @@
 #' For greater flexibility, this function does not check for out-of-range values.
 #'
 #' @param kinship The kinship matrix to validate.
+#' @param sym If `TRUE` (default), the matrix is required to be symmetric.  Othewise this particular test is skipped.
 #'
 #' @return Nothing
 #'
@@ -36,9 +37,11 @@
 #' # and non-symmetric matrices
 #' non_kinship <- matrix(1:4, nrow=2)
 #' try( validate_kinship( non_kinship ) )
+#' # but example passes if we drop symmetry requirement this way
+#' validate_kinship( non_kinship, sym = FALSE )
 #'
 #' @export
-validate_kinship <- function(kinship) {
+validate_kinship <- function(kinship, sym = TRUE) {
     # die if this is missing
     if (missing(kinship))
         stop('`kinship` matrix is required!')
@@ -54,6 +57,6 @@ validate_kinship <- function(kinship) {
     if (n != m)
         stop('`kinship` must be a square matrix!  (nrow ', m, ' != ncol ', n, ')')
     # test symmetry
-    if ( !isSymmetric( kinship ) )
+    if ( sym && !isSymmetric( kinship ) )
         stop( '`kinship` must be a symmetric matrix!' )
 }

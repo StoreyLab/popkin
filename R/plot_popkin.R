@@ -49,6 +49,7 @@
 #' If `weights` are non-`NULL` in a given panel, `raster = FALSE` is forced (this is necessary to plot images where columns and rows have variable width).
 #' If `weights` are `NULL`, the default is `raster = TRUE`, but in this case the user may override (for example, so panels are visually coherent when some use weights while others do not, as there are small differences in rendering implementation for each value of `raster`).
 #' Note that a multipanel figure with a list of `weights` sets `raster = FALSE` to all panels by default, even if the weights were only applied to a subset of panels.
+#' @param sym If `FALSE` (default), plots non-symmetric (but square) kinship matrices without issues.  If `TRUE`, stops if any input kinship matrices are not symmetric.
 #'
 #' AXIS LABEL OPTIONS
 #' 
@@ -166,6 +167,7 @@ plot_popkin <- function(
                         null_panel_data = FALSE,
                         weights = NULL,
                         raster = is.null(weights),
+                        sym = FALSE, # defaults to plotting non-symmetric matrices too
                         ...
                         ) {
     # wrapper around individual panels and color key
@@ -367,6 +369,7 @@ plot_popkin <- function(
             main = titles[i],
             weights = weights[[i]],
             raster = raster[i],
+            sym = sym,
             ...
         )
         # don't overwrite for non-data kinship[[i]] cases
@@ -463,6 +466,7 @@ plot_popkin_single <- function (
                                 diag_line = FALSE,
                                 weights = NULL,
                                 raster = is.null(weights),
+                                sym = FALSE, # defaults to plotting non-symmetric matrices too
                                 ...
                                 ) {
     # this "raw" version does not plot legend or set margins, best for optimized scenarios...
@@ -475,7 +479,7 @@ plot_popkin_single <- function (
         return(NULL) # return null breaks in this case only!
     } else {
         # non-null values must be proper kinship matrices!
-        validate_kinship(kinship)
+        validate_kinship( kinship, sym = sym )
     }
     
     # further data validation

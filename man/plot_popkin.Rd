@@ -43,6 +43,7 @@ plot_popkin(
   null_panel_data = FALSE,
   weights = NULL,
   raster = is.null(weights),
+  sym = FALSE,
   ...
 )
 }
@@ -169,7 +170,9 @@ Individuals with zero or negative weights are omitted.}
 \item{raster}{A logical equivalent to \code{useRaster} option in the \code{image} function used internally, or a vector of such logicals if the choice varies per panel.
 If \code{weights} are non-\code{NULL} in a given panel, \code{raster = FALSE} is forced (this is necessary to plot images where columns and rows have variable width).
 If \code{weights} are \code{NULL}, the default is \code{raster = TRUE}, but in this case the user may override (for example, so panels are visually coherent when some use weights while others do not, as there are small differences in rendering implementation for each value of \code{raster}).
-Note that a multipanel figure with a list of \code{weights} sets \code{raster = FALSE} to all panels by default, even if the weights were only applied to a subset of panels.
+Note that a multipanel figure with a list of \code{weights} sets \code{raster = FALSE} to all panels by default, even if the weights were only applied to a subset of panels.}
+
+\item{sym}{If \code{FALSE} (default), plots non-symmetric (but square) kinship matrices without issues.  If \code{TRUE}, stops if any input kinship matrices are not symmetric.
 
 AXIS LABEL OPTIONS}
 

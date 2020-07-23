@@ -4,10 +4,12 @@
 \alias{validate_kinship}
 \title{Validate a kinship matrix}
 \usage{
-validate_kinship(kinship)
+validate_kinship(kinship, sym = TRUE)
 }
 \arguments{
 \item{kinship}{The kinship matrix to validate.}
+
+\item{sym}{If \code{TRUE} (default), the matrix is required to be symmetric.  Othewise this particular test is skipped.}
 }
 \value{
 Nothing
@@ -46,5 +48,7 @@ try( validate_kinship( non_kinship ) )
 # and non-symmetric matrices
 non_kinship <- matrix(1:4, nrow=2)
 try( validate_kinship( non_kinship ) )
+# but example passes if we drop symmetry requirement this way
+validate_kinship( non_kinship, sym = FALSE )
 
 }
