@@ -14,7 +14,9 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
     # only repeat tests where genotypes X is input!
     
     test_that("function returns precomputed values: get_A", {
-        expect_equal(get_A(X), A)
+        expect_silent( obj <- get_A( X ) )
+        expect_equal( obj$A, A )
+        expect_equal( obj$M, M )
     })
 
     # higher-level tests now!

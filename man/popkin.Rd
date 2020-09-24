@@ -10,21 +10,22 @@ popkin(
   n = NA,
   loci_on_cols = FALSE,
   mem_factor = 0.7,
-  mem_lim = NA
+  mem_lim = NA,
+  want_M = FALSE
 )
 }
 \arguments{
-\item{X}{Genotype matrix, BEDMatrix object, or a function \eqn{X(m)} that returns the genotypes of all individuals at \eqn{m} successive locus blocks each time it is called, and NULL when no loci are left.}
+\item{X}{Genotype matrix, BEDMatrix object, or a function \code{X(m)} that returns the genotypes of all individuals at \code{m} successive locus blocks each time it is called, and \code{NULL} when no loci are left.}
 
-\item{subpops}{The length-\eqn{n} vector of subpopulation assignments for each individual.
+\item{subpops}{The length-\code{n} vector of subpopulation assignments for each individual.
 If missing, every individual is effectively treated as a different population.}
 
-\item{n}{Number of individuals (required only when \eqn{X} is a function, ignored otherwise).
-If \eqn{n} is missing but \code{subpops} is not, \eqn{n} is taken to be the length of \code{subpops}.}
+\item{n}{Number of individuals (required only when \code{X} is a function, ignored otherwise).
+If \code{n} is missing but \code{subpops} is not, \code{n} is taken to be the length of \code{subpops}.}
 
-\item{loci_on_cols}{If \code{TRUE}, \eqn{X} has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns.
-Has no effect if \eqn{X} is a function.
-If \eqn{X} is a BEDMatrix object, \code{loci_on_cols = TRUE} is set automatically.}
+\item{loci_on_cols}{If \code{TRUE}, \code{X} has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns.
+Has no effect if \code{X} is a function.
+If \code{X} is a BEDMatrix object, \code{loci_on_cols} is ignored (set automatically to \code{TRUE} internally).}
 
 \item{mem_factor}{Proportion of available memory to use loading and processing genotypes.
 Ignored if \code{mem_lim} is not \code{NA}.}
@@ -32,25 +33,39 @@ Ignored if \code{mem_lim} is not \code{NA}.}
 \item{mem_lim}{Memory limit in GB, used to break up genotype data into chunks for very large datasets.
 Note memory usage is somewhat underestimated and is not controlled strictly.
 Default in Linux and Windows is \code{mem_factor} times the free system memory, otherwise it is 1GB (OSX and other systems).}
+
+\item{want_M}{If \code{TRUE}, includes the matrix \code{M} of non-missing pair counts in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
+Default \code{FALSE} is to return the kinship matrix only.}
 }
 \value{
-The estimated \eqn{n \times n}{n-by-n} kinship matrix.
-If \eqn{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
+If \code{want_M} is \code{FALSE}, returns the estimated \code{n}-by-\code{n} kinship matrix only.
+If \code{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
+If \code{want_M} is \code{TRUE}, a named list is returned, containing:
+\itemize{
+\item \code{kinship}: the estimated \code{n}-by-\code{n} kinship matrix
+\item \code{M}: the \code{n}-by-\code{n} matrix of non-missing pair counts (see \code{want_M} option).
+}
 }
 \description{
-Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n \times n}{n-by-n} kinship matrix such that the kinship estimate between the most distant subpopulations is zero on average (this sets the ancestral population \eqn{T} to the most recent common ancestor population).
+Given the biallelic genotypes of \code{n} individuals, this function returns the \code{n}-by-\code{n} kinship matrix such that the kinship estimate between the most distant subpopulations is zero on average (this sets the ancestral population to the most recent common ancestor population).
 }
 \details{
 The subpopulation assignments are only used to estimate the baseline kinship (the zero value).
 If the user wants to re-estimate the kinship matrix using different subpopulation labels,
-it suffices to rescale it using \code{\link{rescale_popkin}}
-(as opposed to starting from the genotypes again, which gives the same answer less efficiently).
+it suffices to rescale it using \verb{\link{rescale_popkin}}
+(as opposed to starting from the genotypes again, which gives the same answer but more slowly).
 
-The matrix \eqn{X} must have values only in \code{c(0,1,2,NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.
+The matrix \code{X} must have values only in \code{c(0, 1, 2, NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.
 }
 \examples{
 # Construct toy data
-X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow = 3, byrow = TRUE) # genotype matrix
+X <- matrix(
+    c(0, 1, 2,
+      1, 0, 1,
+      1, 0, 2),
+    nrow = 3,
+    byrow = TRUE
+) # genotype matrix
 subpops <- c(1,1,2) # subpopulation assignments for individuals
 
 # NOTE: for BED-formatted input, use BEDMatrix!

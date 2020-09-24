@@ -29,7 +29,16 @@ NULL
 #
 # A <- get_A(X) # calculate A from genotypes
 # 
-get_A <- function(X, n_ind = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim = NA) {
+get_A <- function(
+                  X,
+                  n_ind = NA,
+                  loci_on_cols = FALSE,
+                  mem_factor = 0.7,
+                  mem_lim = NA
+                  ) {
+    if ( missing( X ) )
+        stop( 'Genotype matrix `X` is required!' )
+    
     # for some more recent memory tests (internal hack)
     mem_debugging <- FALSE
     
@@ -138,6 +147,13 @@ get_A <- function(X, n_ind = NA, loci_on_cols = FALSE, mem_factor = 0.7, mem_lim
         M <- M + obj$M # increment M's too
     }
 
-    # return final estimate!
-    A / M - 1
+    # calculate final (properly averaged) estimate!
+    A <- A / M - 1
+    # return parts of interest
+    return(
+        list(
+            A = A,
+            M = M
+        )
+    )
 }

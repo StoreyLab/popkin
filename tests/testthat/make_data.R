@@ -6,6 +6,7 @@ library(BEDMatrix)
 # NOTE: small BED data came from ~/dbs/popgenSim/psd1Ds2/
 # cp ~/dbs/popgenSim/psd1Ds2/Xs.{bed,bim,fam} .
 
+# NOTE: this X has missingness! (super important to test for)
 X <- BEDMatrix('Xs') # works if script is run from local dir...
 X <- t(X[,]) # immediately convert into a regular R int matrix
 # data has 10 individuals
@@ -22,7 +23,9 @@ Phi0 <- popkin(X)
 Phi <- popkin(X, subpops)
 
 # make all intermediate data to compare to
-A <- popkin:::get_A(X)
+obj <- popkin:::get_A(X)
+A <- obj$A
+M <- obj$M
 Amin0 <- popkin:::min_mean_subpops(A) # minimum value
 Amin <- popkin:::min_mean_subpops(A, subpops) # should also be minimum value
 phiMin0 <- popkin:::min_mean_subpops(Phi0, subpops) # redo to bad kinship estimate
@@ -38,4 +41,4 @@ pwF <- pwfst(Phi)
 PhiInbr <- inbr_diag(Phi)
 
 # save these values, to use in testing later!
-save(X, subpops, subpops0, Phi, Phi0, A, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, pwF, PhiInbr, file = 'Xs.RData')
+save(X, subpops, subpops0, Phi, Phi0, A, M, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, pwF, PhiInbr, file = 'Xs.RData')

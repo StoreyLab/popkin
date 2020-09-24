@@ -8,7 +8,10 @@ load('Xs.RData')
 ml <- 1 # keeps track of last locus not yet read from (will be edited as global)
 Xf <- function(m) {
     # set up range of loci to access
-    if (ml > nrow(X)) return(NULL) # return NULL if we've read everything (tells popkin to stop)
+    if (ml > nrow(X)) {
+        ml <<- 1 # reset after we're done, so next test just works
+        return(NULL) # return NULL if we've read everything (tells popkin to stop)
+    }
     is <- ml:min( (ml+m-1), nrow(X)) # this gives correct max length of "m"
     # if (max(is) > nrow(X)) { # reduce range if it's out of bounds of matrix
     #     is <- is[is <= nrow(X)] # reduce here
@@ -28,19 +31,17 @@ dimnames(Phi) <- NULL
 # only repeat tests where genotypes X is input!
 
 test_that("function returns precomputed values: get_A", {
-    expect_equal(get_A(Xf, n_ind = n), A)
-    ml <<- 1 # reset function after we're done!
+    expect_silent( obj <- get_A( Xf, n_ind = n ) )
+    expect_equal( obj$A, A )
+    expect_equal( obj$M, M )
 })
 
 # higher-level tests now!
 
 test_that("function returns precomputed values: popkin", {
     expect_equal(popkin(Xf, n=n), Phi0)
-    ml <<- 1 # reset function after we're done!
     expect_equal(popkin(Xf, subpops0), Phi0) # NOTE: n==length(subpops0) is inferred
-    ml <<- 1 # reset function after we're done!
     expect_equal(popkin(Xf, subpops), Phi)   # NOTE: n==length(subpops) is inferred
-    ml <<- 1 # reset function after we're done!
 })
 
 test_that("popkin individual names do not exist in this case", {
