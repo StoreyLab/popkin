@@ -222,4 +222,7 @@ More improvements to function `plot_popkin`:
 
 * Function `popkin`
   - Added `want_M` option, which if `TRUE` returns a list containing the `kinship` matrix as well as the pairwise complete count matrix `M`.
+  - Added `m_chunk_max` option (default 1000), which sets the maximum number of loci to process at the time.
+	The new default behavior reduces memory usage a lot, especially on machines with large memory, without sacrificing speed.
+	Original version would use a lot of memory just because it was available, which could be inconvenient when trying to run other processes, and did not result in increased speed, so it was unnecessary at best.
   - Minor documentation improvements.

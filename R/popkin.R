@@ -24,6 +24,8 @@
 #' Default in Linux and Windows is `mem_factor` times the free system memory, otherwise it is 1GB (OSX and other systems).
 #' @param want_M If `TRUE`, includes the matrix `M` of non-missing pair counts in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
 #' Default `FALSE` is to return the kinship matrix only.
+#' @param m_chunk_max Sets the maximum number of loci to process at the time.
+#' Actual number of loci loaded may be lower if memory is limiting.
 #'
 #' @return If `want_M` is `FALSE`, returns the estimated `n`-by-`n` kinship matrix only.
 #' If `X` has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
@@ -58,7 +60,8 @@ popkin <- function(
                    loci_on_cols = FALSE,
                    mem_factor = 0.7,
                    mem_lim = NA,
-                   want_M = FALSE
+                   want_M = FALSE,
+                   m_chunk_max = 1000
                    ) {
     # wrapper around get_A combined with subpopulation-based estimation of A_Emin
     if ( missing( X ) )
@@ -99,7 +102,8 @@ popkin <- function(
         n_ind = n,
         loci_on_cols = loci_on_cols,
         mem_factor = mem_factor,
-        mem_lim = mem_lim
+        mem_lim = mem_lim,
+        m_chunk_max = m_chunk_max
     )
     A <- obj$A
     M <- obj$M # no longer needed unless user wants it

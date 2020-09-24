@@ -2,6 +2,7 @@
 #' @importFrom Rcpp sourceCpp
 NULL
 
+# NOTE: this documentation is outdated!!!
 # Compute A matrix from genotypes
 #
 # Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n}-by-\eqn{n} matrix \eqn{A} that satisfies
@@ -34,7 +35,8 @@ get_A <- function(
                   n_ind = NA,
                   loci_on_cols = FALSE,
                   mem_factor = 0.7,
-                  mem_lim = NA
+                  mem_lim = NA,
+                  m_chunk_max = 1000 # gave good performance in tests
                   ) {
     if ( missing( X ) )
         stop( 'Genotype matrix `X` is required!' )
@@ -101,6 +103,9 @@ get_A <- function(
         mem_factor = mem_factor
     )
     m_chunk <- data$m_chunk
+    # cap value to a nice performing value (very good speed, minimal speed)
+    if ( m_chunk > m_chunk_max )
+        m_chunk <- m_chunk_max
     if (mem_debugging) {
         # hack: report things to troubleshoot
         message('mem_lim: ', round(data$mem_lim / GB, 1), ' GB')

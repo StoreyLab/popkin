@@ -166,6 +166,12 @@ test_that("function returns precomputed values: get_A", {
     expect_equal( obj$A, A )
     expect_equal( obj$M, M )
 
+    # make sure that non-default m_chunk_max version works
+    # this tests the edge case `m_chunk_max = 1` in particular
+    expect_silent( obj <- get_A( X, m_chunk_max = 1 ) )
+    expect_equal( obj$A, A )
+    expect_equal( obj$M, M )
+    
     # these should be square matrices
     expect_equal(nrow(A), ncol(A))
     expect_equal(nrow(M), ncol(M))
@@ -196,6 +202,9 @@ test_that("function returns precomputed values: popkin", {
     expect_equal(popkin(2L-X, subpops), Phi)
     expect_equal(popkin(2-X, subpops), Phi)
 
+    # test that non-default m_chunk_max options don't fail
+    expect_equal(popkin(X, subpops, m_chunk_max = 1), Phi)
+    
     # test want_M in these two cases only
     # though kinship is scaled differently in each version, M is the same for both
     expect_silent( obj <- popkin( X, want_M = TRUE ) )
