@@ -7,22 +7,26 @@
 rescale_popkin(kinship, subpops = NULL, min_kinship = NA)
 }
 \arguments{
-\item{kinship}{An \eqn{n \times n}{n-by-n} kinship matrix.}
+\item{kinship}{An \code{n}-by-\code{n} kinship matrix.}
 
-\item{subpops}{The length-\eqn{n} vector of subpopulation assignments for each individual.}
+\item{subpops}{The length-\code{n} vector of subpopulation assignments for each individual.}
 
 \item{min_kinship}{A scalar kinship value to define the new zero kinship.}
 }
 \value{
-The rescaled \eqn{n \times n}{n-by-n} kinship matrix, with the desired level of relatedness set to zero.
+The rescaled \code{n}-by-\code{n} kinship matrix, with the desired level of relatedness set to zero.
 }
 \description{
-Rescales the input kinship matrix \eqn{\Phi^T} so that the value \eqn{\phi_{\mbox{min}}^T}{\phi_min^T} in the original kinship matrix becomes zero, using the formula
-\deqn{\Phi^{T'} = \frac{\Phi^T - \phi_{\mbox{min}}^T}{1 - \phi_{\mbox{min}}^T}.}{\Phi^T' = (\Phi^T - \phi_min^T)/(1 - \phi_min^T).}
-This is equivalent to changing the ancestral population \eqn{T} into \eqn{T'} such that \eqn{\phi_{\mbox{min}}^{T'} = 0}{\phi_min^T' = 0}.
-If subpopulation labels \code{subpops} are provided, they are used to estimate \eqn{\phi_{\mbox{min}}^T}{\phi_min^T}.
+If you already have a population kinship matrix, and you desire to estimate the kinship matrix in a subset of the individuals, you could do it the slow way (reestimating starting from the genotypes of the subset of individuals) or you can do it the fast way: first subset the kinship matrix to only contain the individuals of interest, then use this function to rescale this kinship matrix so that the minimum kinship is zero.
+This rescaling is required when subsetting results in a more recent Most Recent Common Ancestor (MRCA) population compared to the original dataset (for example, if the original data had individuals from across the world but the subset only contains individuals from a single continent).
+}
+\details{
+This function rescales the input \code{kinship} matrix so that the value \code{min_kinship} in the original kinship matrix becomes zero, using the formula
+\code{kinship_rescaled = ( kinship - min_kinship ) / ( 1 - min_kinship )}.
+This is equivalent to changing the ancestral population of the data.
+If subpopulation labels \code{subpops} are provided (recommended), they are used to estimate \code{min_kinship} using the function \verb{\link[popkin_A_min_subpops]}, which is the recommended way to set the MRCA population correctly.
 If both \code{subpops} and \code{min_kinship} are provided, only \code{min_kinship} is used.
-If both \code{subpops} and \code{min_kinship} are omitted, the adjustment is equivalent to \code{min_kinship=min(kinship)}.
+If both \code{subpops} and \code{min_kinship} are omitted, the function sets \code{min_kinship = min( kinship )}.
 }
 \examples{
 # Construct toy data

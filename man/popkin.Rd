@@ -16,7 +16,8 @@ popkin(
 )
 }
 \arguments{
-\item{X}{Genotype matrix, BEDMatrix object, or a function \code{X(m)} that returns the genotypes of all individuals at \code{m} successive locus blocks each time it is called, and \code{NULL} when no loci are left.}
+\item{X}{Genotype matrix, BEDMatrix object, or a function \code{X(m)} that returns the genotypes of all individuals at \code{m} successive locus blocks each time it is called, and \code{NULL} when no loci are left.
+If a regular matrix, \code{X} must have values only in \code{c(0, 1, 2, NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.}
 
 \item{subpops}{The length-\code{n} vector of subpopulation assignments for each individual.
 If missing, every individual is effectively treated as a different population.}
@@ -58,8 +59,6 @@ The subpopulation assignments are only used to estimate the baseline kinship (th
 If the user wants to re-estimate the kinship matrix using different subpopulation labels,
 it suffices to rescale it using \verb{\link{rescale_popkin}}
 (as opposed to starting from the genotypes again, which gives the same answer but more slowly).
-
-The matrix \code{X} must have values only in \code{c(0, 1, 2, NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.
 }
 \examples{
 # Construct toy data

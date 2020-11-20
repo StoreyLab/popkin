@@ -7,9 +7,8 @@
 #' it suffices to rescale it using `\link{rescale_popkin}`
 #' (as opposed to starting from the genotypes again, which gives the same answer but more slowly).
 #' 
-#' The matrix `X` must have values only in `c(0, 1, 2, NA)`, encoded to count the number of reference alleles at the locus, or `NA` for missing data.
-#'
 #' @param X Genotype matrix, BEDMatrix object, or a function `X(m)` that returns the genotypes of all individuals at `m` successive locus blocks each time it is called, and `NULL` when no loci are left.
+#' If a regular matrix, `X` must have values only in `c(0, 1, 2, NA)`, encoded to count the number of reference alleles at the locus, or `NA` for missing data.
 #' @param subpops The length-`n` vector of subpopulation assignments for each individual.
 #' If missing, every individual is effectively treated as a different population.
 #' @param n Number of individuals (required only when `X` is a function, ignored otherwise).
@@ -63,7 +62,7 @@ popkin <- function(
                    want_M = FALSE,
                    m_chunk_max = 1000
                    ) {
-    # wrapper around get_A combined with subpopulation-based estimation of A_Emin
+    # wrapper around popkin_A combined with subpopulation-based estimation of A_Emin
     if ( missing( X ) )
         stop( 'Genotype matrix `X` is required!' )
     
@@ -97,9 +96,9 @@ popkin <- function(
     # actually run code
     
     # this is the main workhorse, estimating the numerators
-    obj <- get_A(
+    obj <- popkin_A(
         X,
-        n_ind = n,
+        n = n,
         loci_on_cols = loci_on_cols,
         mem_factor = mem_factor,
         mem_lim = mem_lim,
@@ -109,7 +108,7 @@ popkin <- function(
     M <- obj$M # no longer needed unless user wants it
     
     # the denominator is a simple average, a scalar shared by all individuals
-    A_min <- min_mean_subpops(A, subpops)
+    A_min <- popkin_A_min_subpops(A, subpops)
     
     # the kinship matrix is this simple ratio
     kinship <- 1 - A / A_min

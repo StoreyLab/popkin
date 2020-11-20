@@ -16,7 +16,7 @@ test_that("validate_kinship works", {
     # validate positive examples
     expect_silent( validate_kinship( Phi ) )
     expect_silent( validate_kinship( Phi0 ) )
-    expect_silent( validate_kinship( A ) ) # not real kinship but satisfies requirements
+    expect_silent( validate_kinship( A, name = 'A' ) ) # not real kinship but satisfies requirements
 
     # negative examples
     # dies if input is missing
@@ -145,30 +145,30 @@ test_that("function returns precomputed values: weights_subpops", {
     expect_true(all(w < 1))
 })
 
-test_that("function returns precomputed values: get_A", {
+test_that("function returns precomputed values: popkin_A", {
     # standard test (X is integer)
-    expect_silent( obj <- get_A( X ) )
+    expect_silent( obj <- popkin_A( X ) )
     expect_equal( obj$A, A )
     expect_equal( obj$M, M )
     
     # turns X into doubles
-    expect_silent( obj <- get_A( X + 0 ) )
+    expect_silent( obj <- popkin_A( X + 0 ) )
     expect_equal( obj$A, A )
     expect_equal( obj$M, M )
 
     # reflect, keep X integer
-    expect_silent( obj <- get_A( 2L - X ) )
+    expect_silent( obj <- popkin_A( 2L - X ) )
     expect_equal( obj$A, A )
     expect_equal( obj$M, M )
 
     # reflect and turn X doubles too
-    expect_silent( obj <- get_A( 2 - X ) )
+    expect_silent( obj <- popkin_A( 2 - X ) )
     expect_equal( obj$A, A )
     expect_equal( obj$M, M )
 
     # make sure that non-default m_chunk_max version works
     # this tests the edge case `m_chunk_max = 1` in particular
-    expect_silent( obj <- get_A( X, m_chunk_max = 1 ) )
+    expect_silent( obj <- popkin_A( X, m_chunk_max = 1 ) )
     expect_equal( obj$A, A )
     expect_equal( obj$M, M )
     
@@ -181,11 +181,26 @@ test_that("function returns precomputed values: get_A", {
     expect_true( max(M) <= nrow(X) )
 })
 
-test_that("function returns precomputed values: min_mean_subpops", {
-    expect_equal(min_mean_subpops(A), min(A))
-    expect_equal(min_mean_subpops(A), Amin0)
-    expect_equal(min_mean_subpops(A, subpops0), Amin0)
-    expect_equal(min_mean_subpops(A, subpops), Amin)
+test_that("function returns precomputed values: popkin_A_min_subpops", {
+    # trigger expected errors
+    # missing A
+    expect_error( popkin_A_min_subpops() )
+    # subpops with wrong length
+    expect_error( popkin_A_min_subpops( A, subpops[1:2] ) )
+    # subpops with a single subpop really (but right length)
+    n_ind <- length( subpops )
+    subpops_one <- rep.int( 1, n_ind )
+    expect_error( popkin_A_min_subpops( A, subpops_one ) )
+    # but two subpopulations should be ok
+    n2 <- round( n_ind / 2 )
+    subpops_two <- c( rep.int( 1, n2 ), rep.int( 2, n_ind - n2 ) )
+    expect_silent( popkin_A_min_subpops( A, subpops_two ) )
+    
+    # now positive examples
+    expect_equal(popkin_A_min_subpops(A), min(A))
+    expect_equal(popkin_A_min_subpops(A), Amin0)
+    expect_equal(popkin_A_min_subpops(A, subpops0), Amin0)
+    expect_equal(popkin_A_min_subpops(A, subpops), Amin)
 })
 
 # higher-level tests now!

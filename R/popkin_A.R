@@ -2,44 +2,48 @@
 #' @importFrom Rcpp sourceCpp
 NULL
 
-# NOTE: this documentation is outdated!!!
-# Compute A matrix from genotypes
-#
-# Given the biallelic genotypes of \eqn{n} individuals, this function returns the \eqn{n}-by-\eqn{n} matrix \eqn{A} that satisfies
-# \deqn{E[A] = \alpha(\Phi - 1),}
-# where \eqn{\Phi} is the kinship matrix and \eqn{\alpha} is a nuisance scaling factor (determined by the unknown ancestral allele frequencies of each locus).
-# Thus a \eqn{\Phi} estimate can be recovered from \eqn{A} after a separate step that estimates \eqn{\alpha = -\min E[A]}{M = -min E[A]} (see \code{\link{min_mean_subpops}} for one example).
-#
-# The matrix X (or the vectors returned by the function X) must have values only in c(0,1,2,NA), encoded to count the number of reference alleles at the locus, or NA for missing data.
-#
-# @param X Genotype matrix, BEDMatrix object, or a function X(mc) that returns the genotype matrix of all individuals at mc successive loci, and NULL when no loci are left.
-# @param n Number of individuals (required only when X is a function, ignored otherwise)
-# @param loci_on_cols If true, X has loci on columns and individuals on rows; if false, loci are on rows and individuals on columns. Has no effect if X is a function.  If X is a BEDMatrix object, loci_on_cols=TRUE is set automatically.
-# @param mem_lim Memory limit in GB used to calculate the "chunk size" (numbers of SNPs). Note memory usage is somewhat underestimated and is not controlled strictly.  Default is 1GB, except in linux it is the free memory in the system times 0.7.
-#
-# @return The A matrix.
-#
-# @examples
-# # Construct toy data
-# X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow = 3, byrow = TRUE) # genotype matrix
-#
-# # NOTE: for BED-formatted input, use BEDMatrix!
-# # "file" is path to BED file (excluding .bed extension)
-# # library(BEDMatrix)
-# # X <- BEDMatrix(file) # load genotype matrix object
-#
-# A <- get_A(X) # calculate A from genotypes
-# 
-get_A <- function(
-                  X,
-                  n_ind = NA,
-                  loci_on_cols = FALSE,
-                  mem_factor = 0.7,
-                  mem_lim = NA,
-                  m_chunk_max = 1000 # gave good performance in tests
-                  ) {
+#' Compute popkin's `A` and `M` matrices from genotypes
+#'
+#' This function returns lower-level, intermediate calculations for the main `popkin` function.
+#' These are not intended for most users, but rather for researchers studying the estimator.
+#' 
+#' @inheritParams popkin
+#'
+#' @return A named list containing:
+#'
+#' - `A`: n-by-n matrix, for individuals `j` and `k`, of average `( x_ij - 1 ) * ( x_ik - 1 ) - 1` values across all loci `i` in `X`
+#' - `M`: n-by-n matrix of sample sizes (number of loci with non-missing individual `j` and `k` pairs, used to normalize `A`)
+#'
+#' @examples
+#' # Construct toy data
+#' X <- matrix(c(0,1,2,1,0,1,1,0,2), nrow = 3, byrow = TRUE) # genotype matrix
+#'
+#' # NOTE: for BED-formatted input, use BEDMatrix!
+#' # "file" is path to BED file (excluding .bed extension)
+#' # library(BEDMatrix)
+#' # X <- BEDMatrix(file) # load genotype matrix object
+#'
+#' obj <- popkin_A(X) # calculate A and M from genotypes
+#' A <- obj$A
+#' M <- obj$M
+#'
+#' @seealso
+#' The main `\link[popkin]` function (a wrapper of this `popkin_A` function and `\link[popkin_A_min_subpops]` to estimate the minimum `A` value).
+#'
+#' @export
+popkin_A <- function(
+                     X,
+                     n = NA,
+                     loci_on_cols = FALSE,
+                     mem_factor = 0.7,
+                     mem_lim = NA,
+                     m_chunk_max = 1000 # gave good performance in tests
+                     ) {
     if ( missing( X ) )
         stop( 'Genotype matrix `X` is required!' )
+
+    # internally code uses this more specific variable name
+    n_ind <- n
     
     # for some more recent memory tests (internal hack)
     mem_debugging <- FALSE
@@ -50,7 +54,7 @@ get_A <- function(
     isFn <- FALSE
     if (is.function(X)) {
         isFn <- TRUE
-        if (is.na(n_ind))
+        if ( is.na( n_ind ) )
             stop('missing number of individuals "n", which is required when X is a function.')
     } else if ('BEDMatrix' %in% class(X)) { # same as general matrix but transposed
         loci_on_cols <- TRUE # this is always imposed for this particular format!
@@ -65,7 +69,7 @@ get_A <- function(
         m_loci <- NA # have to define as NA to pass to get_mem_lim_m below
     } else {
         if (loci_on_cols) {
-            if (!is.na(n_ind) && n_ind != nrow(X)) 
+            if ( !is.na( n_ind ) && n != nrow( X ) ) 
                 warning('User set number of samples that does not match X dimensions (will go with latter): ', n_ind, ' != ', nrow(X))
             n_ind <- nrow(X)
             m_loci <- ncol(X)
@@ -103,7 +107,7 @@ get_A <- function(
         mem_factor = mem_factor
     )
     m_chunk <- data$m_chunk
-    # cap value to a nice performing value (very good speed, minimal speed)
+    # cap value to a nice performing value (very good speed, minimal memory)
     if ( m_chunk > m_chunk_max )
         m_chunk <- m_chunk_max
     if (mem_debugging) {

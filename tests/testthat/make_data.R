@@ -23,12 +23,12 @@ Phi0 <- popkin(X)
 Phi <- popkin(X, subpops)
 
 # make all intermediate data to compare to
-obj <- popkin:::get_A(X)
+obj <- popkin_A(X)
 A <- obj$A
 M <- obj$M
-Amin0 <- popkin:::min_mean_subpops(A) # minimum value
-Amin <- popkin:::min_mean_subpops(A, subpops) # should also be minimum value
-phiMin0 <- popkin:::min_mean_subpops(Phi0, subpops) # redo to bad kinship estimate
+Amin0 <- popkin_A_min_subpops(A) # minimum value
+Amin <- popkin_A_min_subpops(A, subpops) # should also be minimum value
+phiMin0 <- popkin_A_min_subpops(Phi0, subpops) # redo to bad kinship estimate
 
 # implied Fst
 fst <- fst(Phi)

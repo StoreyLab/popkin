@@ -226,3 +226,11 @@ More improvements to function `plot_popkin`:
 	The new default behavior reduces memory usage a lot, especially on machines with large memory, without sacrificing speed.
 	Original version would use a lot of memory just because it was available, which could be inconvenient when trying to run other processes, and did not result in increased speed, so it was unnecessary at best.
   - Minor documentation improvements.
+
+# 2020-11-20 - popkin 1.3.6.9000
+
+* Added exported functions `popkin_A` (used to be unexported `get_A`) and `popkin_A_min_subpops` (used to be unexported `min_mean_subpops`)
+  - These are low-level functions providing intermediate calculations used by the main `popkin` function.
+  - Provided for researchers to try to improve the `popkin` method
+* Function `validate_kinship` added option `name` (default "kinship") for clear error reports when the matrix being tested is not actually a kinship matrix
+  - Internally used with `name = "A"` to validate `A` in `popkin_A_min_subpops`.

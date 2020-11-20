@@ -9,6 +9,8 @@
 #'
 #' @param kinship The kinship matrix to validate.
 #' @param sym If `TRUE` (default), the matrix is required to be symmetric.  Othewise this particular test is skipped.
+#' @param name Default "kinship".
+#' Change to desired variable name for more informative error messages (i.e. "A" when used to validate the `A` matrix inside `popkin_A_min_subpops`).
 #'
 #' @return Nothing
 #'
@@ -41,22 +43,22 @@
 #' validate_kinship( non_kinship, sym = FALSE )
 #'
 #' @export
-validate_kinship <- function(kinship, sym = TRUE) {
+validate_kinship <- function(kinship, sym = TRUE, name = 'kinship') {
     # die if this is missing
-    if (missing(kinship))
-        stop('`kinship` matrix is required!')
+    if ( missing( kinship ) )
+        stop( '`', name, '` matrix is required!' )
     # make sure it is an ordinary matrix or equivalent
-    if (!is.matrix(kinship))
-        stop('`kinship` must be an R matrix!')
+    if ( !is.matrix( kinship ) )
+        stop( '`', name, '` must be an R matrix!' )
     # make sure it is numeric
-    if (!is.numeric(kinship))
-        stop('`kinship` must be numeric!')
+    if ( !is.numeric( kinship ) )
+        stop( '`', name, '` must be numeric!' )
     # check dimensions
-    m <- nrow(kinship)
-    n <- ncol(kinship)
+    m <- nrow( kinship )
+    n <- ncol( kinship )
     if (n != m)
-        stop('`kinship` must be a square matrix!  (nrow ', m, ' != ncol ', n, ')')
+        stop( '`', name, '` must be a square matrix!  (nrow ', m, ' != ncol ', n, ')' )
     # test symmetry
     if ( sym && !isSymmetric( kinship ) )
-        stop( '`kinship` must be a symmetric matrix!' )
+        stop( '`', name, '` must be a symmetric matrix!' )
 }
