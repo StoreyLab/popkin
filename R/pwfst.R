@@ -1,13 +1,13 @@
 #' Estimate the individual-level pairwise FST matrix
 #'
-#' This function construct the individual-level pairwise \eqn{F_{ST}}{FST} matrix implied by the input kinship matrix.
-#' If the input is the true kinship matrix, the return value corresponds to the true pairwise \eqn{F_{ST}}{FST} matrix.
-#' On the other hand, if the input is the estimated kinship returned by \code{\link{popkin}}, then the return value is the pairwise \eqn{F_{ST}}{FST} estimates described in our paper.
-#' In all cases the diagonal of the pairwise \eqn{F_{ST}}{FST} matrix is zero by definition.
+#' This function construct the individual-level pairwise FST matrix implied by the input kinship matrix.
+#' If the input is the true kinship matrix, the return value corresponds to the true pairwise FST matrix.
+#' On the other hand, if the input is the estimated kinship returned by `\link{popkin}`, the same code results in the return value being the pairwise FST estimates described in our paper.
+#' In all cases the diagonal of the pairwise FST matrix is zero by definition.
 #'
-#' @param kinship The \eqn{n \times n}{n-by-n} kinship matrix
+#' @param kinship The `n`-by-`n` kinship matrix
 #'
-#' @return The \eqn{n \times n}{n-by-n} pairwise \eqn{F_{ST}}{FST} matrix
+#' @return The `n`-by-`n` pairwise FST matrix
 #'
 #' @examples
 #' # Construct toy data

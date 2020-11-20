@@ -1,16 +1,16 @@
 #' Replace kinship diagonal with inbreeding coefficients
 #'
-#' The usual kinship matrix contains self-kinship values \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} where \eqn{f_j^T} are inbreeding coefficients.
-#' This function returns a modified kinship matrix with each \eqn{\phi_{jj}^T}{\phi_jj^T} replaced with \eqn{f_j} (off-diagonal \eqn{j \ne k}{j != k} values stay the same).
-#' The resulting matrix is better for visualization, but is not appropriate for modeling (e.g. in mixed-effects models for association or heritability estimation).
+#' The usual kinship matrix contains self-kinship values along their diagonal given by `kinship_jj = ( 1 + inbr_j ) / 2`, where `inbr_j` is the inbreeding coefficients of individual `j`.
+#' This function returns a modified kinship matrix with diagonal values replaced with `inbr_j` values (off-diagonal `j != k` values stay the same).
+#' The resulting matrix is better for visualization, but is often not appropriate for modeling (e.g. in mixed-effects models for association or heritability estimation).
 #'
 #' @param kinship A kinship matrix with self-kinship values along the diagonal.
 #' Can pass multiple kinship matrices contained in a list.
-#' If \code{NULL}, it is returned as-is.
+#' If `NULL`, it is returned as-is.
 #'
 #' @return The modified kinship matrix, with inbreeding coefficients along the diagonal, preseving column and row names.
 #' If the input was a list of kinship matrices, the output is the corresponding list of transformed matrices.
-#' \code{NULL} inputs are preserved without causing errors.
+#' `NULL` inputs are preserved without causing errors.
 #'
 #' @examples
 #' #########
@@ -53,7 +53,7 @@
 #' kinship_inbr_diag <- inbr_diag(kinship)
 #'
 #' @seealso
-#' The inverse function is given by \code{\link[bnpsd]{coanc_to_kinship}}.
+#' The inverse function is given by `\link[bnpsd]{coanc_to_kinship}`.
 #' 
 #' @export
 inbr_diag <- function(kinship) {

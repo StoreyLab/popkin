@@ -684,9 +684,9 @@ rep_check_list <- function(vals, n) {
 # Note `\link{plot_popkin_single}` construct breaks that are symmetric about zero, which ensures that the middle color (white) corresponds to the zero kinship.
 # In contrast, kinship_range need not be symmetric and it is preferably the true range of the data.
 #
-# @param breaks The vector of \eqn{n+1} values at which colors switch, as returned by `\link{plot_popkin_single}`
+# @param breaks The vector of `n+1` values at which colors switch, as returned by `\link{plot_popkin_single}`
 # @param label The name of the variable that the colors measure (i.e. "Kinship")
-# @param col Color vector of length \eqn{n}.  Default colors are a progression from blue to white to red obtained from RColorBrewer.
+# @param col Color vector of length `n`.  Default colors are a progression from blue to white to red obtained from RColorBrewer.
 # @param kinship_range Range of the color key, preferably the range of the data (default is infered from the breaks, but they need not agree)
 # @param leg_n The desired number of ticks in the y-axis (input to `\link{pretty}`, see that for more details)
 #

@@ -7,14 +7,14 @@
 weights_subpops(subpops)
 }
 \arguments{
-\item{subpops}{The length-\eqn{n} vector of subpopulation assignments for each individual.}
+\item{subpops}{The length-\code{n} vector of subpopulation assignments for each individual.}
 }
 \value{
-The length-\eqn{n} vector of weights for each individual.
+The length-\code{n} vector of weights for each individual.
 }
 \description{
 This function returns positive weights that sum to one for individuals using subpopulation labels, such that every subpopulation receives equal weight.
-In particular, if there are \eqn{K} subpopulations, then the sum of weights for every individuals of a given subpopulation will equal \eqn{\frac{1}{K}}{1/K}.
+In particular, if there are \code{K} subpopulations, then the sum of weights for every individuals of a given subpopulation will equal \code{1 / K}.
 The weight of every individual is thus inversely proportional to the number of individuals in its subpopulation.
 }
 \examples{

@@ -1,12 +1,12 @@
 #' Get weights for individuals that balance subpopulations
 #'
 #' This function returns positive weights that sum to one for individuals using subpopulation labels, such that every subpopulation receives equal weight.
-#' In particular, if there are \eqn{K} subpopulations, then the sum of weights for every individuals of a given subpopulation will equal \eqn{\frac{1}{K}}{1/K}.
+#' In particular, if there are `K` subpopulations, then the sum of weights for every individuals of a given subpopulation will equal `1 / K`.
 #' The weight of every individual is thus inversely proportional to the number of individuals in its subpopulation.
 #'
-#' @param subpops The length-\eqn{n} vector of subpopulation assignments for each individual.
+#' @param subpops The length-`n` vector of subpopulation assignments for each individual.
 #'
-#' @return The length-\eqn{n} vector of weights for each individual.
+#' @return The length-`n` vector of weights for each individual.
 #'
 #' @examples
 #' # if every individual has a different subpopulation, weights are uniform:

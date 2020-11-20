@@ -1,13 +1,13 @@
 #' Calculate the weighted mean kinship
 #'
-#' This function computes a particular weighted mean kinship that arises in the context of kinship and \eqn{F_{ST}}{FST} estimators and in the definition of the effective sample size.
+#' This function computes a particular weighted mean kinship that arises in the context of kinship and FST estimators and in the definition of the effective sample size.
 #' This function allows for weights to be zero or even negative, but they are internally normalized to sum to one.
 #'
 #' @param kinship The kinship matrix
 #' @param weights Weights for individuals (optional).
-#' If \code{NULL} (default), uniform weights are used.
+#' If `NULL` (default), uniform weights are used.
 #'
-#' @return The weighted mean kinship matrix, equivalent to \code{ drop( weights \%*\% kinship \%*\% weights ) } for normalized weights (which sum to one).
+#' @return The weighted mean kinship matrix, equivalent to `drop( weights %*% kinship %*% weights )` after normalizing weights to sum to one.
 #'
 #' @examples
 #' # construct a dummy kinship matrix

@@ -17,9 +17,9 @@ If the input was a list of kinship matrices, the output is the corresponding lis
 \code{NULL} inputs are preserved without causing errors.
 }
 \description{
-The usual kinship matrix contains self-kinship values \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2} where \eqn{f_j^T} are inbreeding coefficients.
-This function returns a modified kinship matrix with each \eqn{\phi_{jj}^T}{\phi_jj^T} replaced with \eqn{f_j} (off-diagonal \eqn{j \ne k}{j != k} values stay the same).
-The resulting matrix is better for visualization, but is not appropriate for modeling (e.g. in mixed-effects models for association or heritability estimation).
+The usual kinship matrix contains self-kinship values along their diagonal given by \code{kinship_jj = ( 1 + inbr_j ) / 2}, where \code{inbr_j} is the inbreeding coefficients of individual \code{j}.
+This function returns a modified kinship matrix with diagonal values replaced with \code{inbr_j} values (off-diagonal \code{j != k} values stay the same).
+The resulting matrix is better for visualization, but is often not appropriate for modeling (e.g. in mixed-effects models for association or heritability estimation).
 }
 \examples{
 #########
@@ -63,5 +63,5 @@ kinship_inbr_diag <- inbr_diag(kinship)
 
 }
 \seealso{
-The inverse function is given by \code{\link[bnpsd]{coanc_to_kinship}}.
+The inverse function is given by \verb{\link[bnpsd]\{coanc_to_kinship\}}.
 }

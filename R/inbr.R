@@ -1,11 +1,11 @@
 #' Extract inbreeding coefficients from a kinship matrix
 #'
-#' The kinship matrix contains inbreeding coefficients \eqn{f_j^T} along the diagonal, present as \eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2}.
-#' This function extracts the vector of \eqn{f_j^T} values from the input kinship matrix.
+#' The kinship matrix contains transformed inbreeding coefficients along the diagonal.
+#' This function extracts the vector of inbreeding values from the input kinship matrix, by transforming the diagonal using the formula `2 * x - 1`.
 #' 
-#' @param kinship The \eqn{n \times n}{n-by-n} kinship matrix.
+#' @param kinship The `n`-by-`n` kinship matrix.
 #'
-#' @return The length-\eqn{n} vector of inbreeding coefficient for each individual.
+#' @return The length-`n` vector of inbreeding coefficient for each individual.
 #'
 #' @examples
 #' #########

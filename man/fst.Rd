@@ -14,19 +14,19 @@ fst(x, weights = NULL, x_local = NULL)
 \item{x_local}{An optional vector of inbreeding coefficients, or a local kinship matrix if \code{x_local} is a matrix.}
 }
 \value{
-\eqn{F_{ST}}{FST}
+FST
 }
 \description{
 This function simply returns the weighted mean inbreeding coefficient.
 If weights are \code{NULL} (default), the regular mean is calculated.
-If a kinship matrix is provided, then the inbreeding coefficients are extracted from its diagonal using \code{\link{inbr}} (requires the diagonal to contains self-kinship values (\eqn{\phi_{jj}^T = \frac{1}{2}(1+f_j^T)}{\phi_jj^T = (1+f_j^T)/2}) as \code{\link{popkin}} returns, and not inbreeding coefficients (\eqn{f_j^T}) as \code{\link{inbr_diag}} returns).
-If there is local inbreeding and it can be estimated (from known pedigrees, for example), it can be subtracted from the total inbreeding coefficients, resulting in a vector of structural inbreeding that correctly averages into \eqn{F_{ST}}{FST}.
+If a kinship matrix is provided, then the inbreeding coefficients are extracted from its diagonal using \verb{\link{inbr}} (requires the diagonal to contains self-kinship values as \verb{\link{popkin}} returns, and not inbreeding coefficients as \verb{\link{inbr_diag}} returns).
+If there is local inbreeding and it can be estimated (from known pedigrees, for example), it can be subtracted from the total inbreeding coefficients, resulting in a vector of structural inbreeding that correctly averages into FST.
 }
 \details{
-The returned weighted mean inbreeding coefficient equals the generalized \eqn{F_{ST}}{FST} if all individuals are "locally outbred" (i.e. if the self-relatedness of every individual stems entirely from the population structure rather than due partly to having unusually closely related parents, such as first or second cousins).
+The returned weighted mean inbreeding coefficient equals the generalized FST if all individuals are "locally outbred" (i.e. if the self-relatedness of every individual stems entirely from the population structure rather than due partly to having unusually closely related parents, such as first or second cousins).
 Note most individuals in population-scale human data are locally outbred.
-If there are locally-inbred individuals, but their local inbreeding cannot be estiamted, then the returned value will overestimate \eqn{F_{ST}}{FST}.
-Good estimates of local inbreeding can be passed (parameter \code{x_local}), in which case the code will subtract their effect and \eqn{F_{ST}}{FST} will be more accurate.
+If there are locally-inbred individuals, but their local inbreeding cannot be estiamted, then the returned value will overestimate FST.
+Good estimates of local inbreeding can be passed (parameter \code{x_local}), in which case the code will subtract their effect and FST will be more accurate.
 }
 \examples{
 # Get FST from a genotype matrix

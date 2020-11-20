@@ -7,16 +7,16 @@
 pwfst(kinship)
 }
 \arguments{
-\item{kinship}{The \eqn{n \times n}{n-by-n} kinship matrix}
+\item{kinship}{The \code{n}-by-\code{n} kinship matrix}
 }
 \value{
-The \eqn{n \times n}{n-by-n} pairwise \eqn{F_{ST}}{FST} matrix
+The \code{n}-by-\code{n} pairwise FST matrix
 }
 \description{
-This function construct the individual-level pairwise \eqn{F_{ST}}{FST} matrix implied by the input kinship matrix.
-If the input is the true kinship matrix, the return value corresponds to the true pairwise \eqn{F_{ST}}{FST} matrix.
-On the other hand, if the input is the estimated kinship returned by \code{\link{popkin}}, then the return value is the pairwise \eqn{F_{ST}}{FST} estimates described in our paper.
-In all cases the diagonal of the pairwise \eqn{F_{ST}}{FST} matrix is zero by definition.
+This function construct the individual-level pairwise FST matrix implied by the input kinship matrix.
+If the input is the true kinship matrix, the return value corresponds to the true pairwise FST matrix.
+On the other hand, if the input is the estimated kinship returned by \verb{\link{popkin}}, the same code results in the return value being the pairwise FST estimates described in our paper.
+In all cases the diagonal of the pairwise FST matrix is zero by definition.
 }
 \examples{
 # Construct toy data
