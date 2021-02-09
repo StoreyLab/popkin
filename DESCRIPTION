@@ -17,7 +17,7 @@ Description: Provides functions to estimate the kinship matrix of individuals fr
 Depends: R (>= 3.5.0)
 Imports: Rcpp (>= 0.12.10), RColorBrewer, graphics, grDevices
 LinkingTo: Rcpp, RcppEigen
-Suggests: BEDMatrix, testthat, knitr, rmarkdown, lfa
+Suggests: BEDMatrix, testthat, knitr, rmarkdown, lfa, bnpsd
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
