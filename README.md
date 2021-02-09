@@ -87,6 +87,9 @@ Please see the `popkin` R vignette for a description of the key parameters and m
 
 ## Citations
 
-Ochoa, Alejandro, and John D. Storey. 2016a. "FST And Kinship for Arbitrary Population Structures I: Generalized Definitions." bioRxiv [doi:10.1101/083915](http://doi.org/10.1101/083915).
+Alejandro Ochoa, John D Storey.  2021.  "Estimating FST and kinship for arbitrary population structures." PLoS Genet 17(1): e1009241. PubMed ID 33465078. [doi:10.1371/journal.pgen.1009241](https://doi.org/10.1371/journal.pgen.1009241). bioRxiv [doi:10.1101/083923](https://doi.org/10.1101/083923) 2016-10-27.
 
-Ochoa, Alejandro, and John D. Storey. 2016b. "FST And Kinship for Arbitrary Population Structures II: Method of Moments Estimators." bioRxiv [doi:10.1101/083923](http://doi.org/10.1101/083923).
+Alejandro Ochoa, John D Storey.  2019.  "New kinship and FST estimates reveal higher levels of differentiation in the global human population." bioRxiv [doi:10.1101/653279](https://doi.org/10.1101/653279).
+
+Alejandro Ochoa, John D Storey.  2016.  "FST And Kinship for Arbitrary Population Structures I: Generalized Definitions." bioRxiv [doi:10.1101/083915](https://doi.org/10.1101/083915).
+

@@ -1,11 +1,11 @@
 ---
-title: "Estimate Kinship and $F_{\\text{ST}}$ under Arbitrary Population Structure with `popkin`"
+title: "Estimate Kinship and FST under Arbitrary Population Structure with `popkin`"
 author: "Alejandro Ochoa and John D. Storey"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: popkin.bib
 vignette: >
-  %\VignetteIndexEntry{Estimate Kinship and FST under Arbitrary Population Structure}
+  %\VignetteIndexEntry{Estimate Kinship and FST under Arbitrary Population Structure with `popkin`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -37,12 +37,13 @@ if (!all(sapply(required, requireNamespace, quietly = TRUE)))
 # Introduction
 
 The `popkin` ("population kinship") package estimates the kinship matrix of individuals and $\Fst$ from their biallelic genotypes.
-Our estimation framework is the first to be practically unbiased under arbitrary population structures [@Ochoa083915; @Ochoa083923].
+Our estimation framework is the first to be practically unbiased under arbitrary population structures [@ochoa_estimating_2021; @Ochoa083915].
+We have also applied our approach to real human datasets [@ochoa_human].
 Here we briefly summarize the notation and intuition behind the key parameters.
 
 ## Kinship and inbreeding coefficients
 
-Kinship and inbreeding coefficients are probabilities of "identity by descent" (IBD) carefully defined elsewhere [@Ochoa083915; @Ochoa083923].
+Kinship and inbreeding coefficients are probabilities of "identity by descent" (IBD) carefully defined elsewhere [@ochoa_estimating_2021; @Ochoa083915].
 The reference ancestral population $T$ sets the level of relatedness treated as zero (as demonstrated in the sample usage section below).
 $\ft$ is the inbreeding coefficient of individual $j$ when $T$ is the ancestral population, and
 $\kt$ is the kinship coefficient of the pair individuals $j,k$ when $T$ is the ancestral population.

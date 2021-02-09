@@ -235,3 +235,8 @@ More improvements to function `plot_popkin`:
 * Function `validate_kinship` added option `name` (default "kinship") for clear error reports when the matrix being tested is not actually a kinship matrix
   - Internally used with `name = "A"` to validate `A` in `popkin_A_min_subpops`.
 * Simplified documentation (most functions) by using markdown roxygen and replacing all LaTeX equations with simpler code equations.
+
+# 2021-02-09 - popkin 1.3.7
+
+* 5th CRAN submission.
+* Updated paper citations in `DESCRIPTION`, `README.md` and the vignette, to point to the published method in PLoS Genetics, and also a related preprint of human analysis on bioRxiv.
