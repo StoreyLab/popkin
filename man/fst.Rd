@@ -25,7 +25,7 @@ If there is local inbreeding and it can be estimated (from known pedigrees, for 
 \details{
 The returned weighted mean inbreeding coefficient equals the generalized FST if all individuals are "locally outbred" (i.e. if the self-relatedness of every individual stems entirely from the population structure rather than due partly to having unusually closely related parents, such as first or second cousins).
 Note most individuals in population-scale human data are locally outbred.
-If there are locally-inbred individuals, but their local inbreeding cannot be estiamted, then the returned value will overestimate FST.
+If there are locally-inbred individuals, but their local inbreeding cannot be estimated, then the returned value will overestimate FST.
 Good estimates of local inbreeding can be passed (parameter \code{x_local}), in which case the code will subtract their effect and FST will be more accurate.
 }
 \examples{

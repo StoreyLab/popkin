@@ -12,7 +12,7 @@ Can pass multiple kinship matrices contained in a list.
 If \code{NULL}, it is returned as-is.}
 }
 \value{
-The modified kinship matrix, with inbreeding coefficients along the diagonal, preseving column and row names.
+The modified kinship matrix, with inbreeding coefficients along the diagonal, preserving column and row names.
 If the input was a list of kinship matrices, the output is the corresponding list of transformed matrices.
 \code{NULL} inputs are preserved without causing errors.
 }

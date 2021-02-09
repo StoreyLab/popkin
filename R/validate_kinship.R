@@ -8,7 +8,7 @@
 #' For greater flexibility, this function does not check for out-of-range values.
 #'
 #' @param kinship The kinship matrix to validate.
-#' @param sym If `TRUE` (default), the matrix is required to be symmetric.  Othewise this particular test is skipped.
+#' @param sym If `TRUE` (default), the matrix is required to be symmetric.  Otherwise this particular test is skipped.
 #' @param name Default "kinship".
 #' Change to desired variable name for more informative error messages (i.e. "A" when used to validate the `A` matrix inside `popkin_A_min_subpops`).
 #'

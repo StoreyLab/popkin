@@ -240,3 +240,4 @@ More improvements to function `plot_popkin`:
 
 * 5th CRAN submission.
 * Updated paper citations in `DESCRIPTION`, `README.md` and the vignette, to point to the published method in PLoS Genetics, and also a related preprint of human analysis on bioRxiv.
+* Minor spellcheck corrections in documentation.

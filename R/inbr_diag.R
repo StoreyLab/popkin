@@ -8,7 +8,7 @@
 #' Can pass multiple kinship matrices contained in a list.
 #' If `NULL`, it is returned as-is.
 #'
-#' @return The modified kinship matrix, with inbreeding coefficients along the diagonal, preseving column and row names.
+#' @return The modified kinship matrix, with inbreeding coefficients along the diagonal, preserving column and row names.
 #' If the input was a list of kinship matrices, the output is the corresponding list of transformed matrices.
 #' `NULL` inputs are preserved without causing errors.
 #'

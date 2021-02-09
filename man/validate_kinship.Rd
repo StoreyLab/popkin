@@ -9,7 +9,7 @@ validate_kinship(kinship, sym = TRUE, name = "kinship")
 \arguments{
 \item{kinship}{The kinship matrix to validate.}
 
-\item{sym}{If \code{TRUE} (default), the matrix is required to be symmetric.  Othewise this particular test is skipped.}
+\item{sym}{If \code{TRUE} (default), the matrix is required to be symmetric.  Otherwise this particular test is skipped.}
 
 \item{name}{Default "kinship".
 Change to desired variable name for more informative error messages (i.e. "A" when used to validate the \code{A} matrix inside \code{popkin_A_min_subpops}).}
