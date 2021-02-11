@@ -2,7 +2,7 @@
 * local R:             x86_64-redhat-linux-gnu R 4.0.3
 * local R-devel:       x86_64-redhat-linux-gnu R Under development (unstable) (2021-02-09 r79976)
 * local R-devel-noLD:  x86_64-redhat-linux-gnu R Under development (unstable) (2021-02-09 r79976)
-* win-builder devel:   x86_64-w64-mingw32      R Under development (unstable) (2021-02-07 r79964)
+* win-builder devel:   x86_64-w64-mingw32      R Under development (unstable) (2021-02-10 r79988)
 * win-builder release: x86_64-w64-mingw32      R 4.0.3 (2020-10-10)
 * rhub (windows):      x86_64-w64-mingw32      R Under development (unstable) (2021-02-07 r79964)
 * rhub (ubuntu):       x86_64-pc-linux-gnu     R 4.0.3 (2020-10-10)
@@ -17,7 +17,7 @@ NOTEs:
 
 * checking CRAN incoming feasibility ... NOTE
   Maintainer: ‘Alejandro Ochoa <alejandro.ochoa@duke.edu>’
-  Days since last update: 1
+  Days since last update: 2
 
 ## Downstream dependencies
 Tested `bnpsd` and `ggmix` (only downstream dependencies) and found no errors or warnings related to `popkin`.
