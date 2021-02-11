@@ -39,7 +39,10 @@ get_mem_lim <- function(factor = 0.7, verbose = FALSE) {
         mem <- mem*1024 # previous units were KB, convert to bytes
     }
     if (is.na(mem)) {
-        warning("Could not infer available memory, will default to 1GB!\nPlease specify a memory limit if your run exceeds memory or if default is too low!")
+        # I used to have a warning, but not anymore because:
+        # 1) It's too annoying (tests fail when they really shouldn't)
+        # 2) This issue (of not really knowing the available memory) is not limiting (except on the largest numbers of individuals) now that popkin defaults to using the least memory possible anyway
+        #warning("Could not infer available memory, will default to 1GB!\nPlease specify a memory limit if your run exceeds memory or if default is too low!")
         mem <- GB # when we can't determine free or available memory from system, default to using 1GB!
     } else {
         mem <- mem * factor # shrink memory by a factor to leave some more memory

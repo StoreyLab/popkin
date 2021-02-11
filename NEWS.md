@@ -241,3 +241,10 @@ More improvements to function `plot_popkin`:
 * 5th CRAN submission.
 * Updated paper citations in `DESCRIPTION`, `README.md` and the vignette, to point to the published method in PLoS Genetics, and also a related preprint of human analysis on bioRxiv.
 * Minor spellcheck corrections in documentation.
+
+# 2021-02-10 - popkin 1.3.8
+
+* 6th CRAN submission.
+* Removed a warning message triggered on MacOS and other systems (except Linux and Windows) when the `popkin` function is run.
+  Free memory is not calculated in these systems and defaults to 1GB, which threw a warning since could cause problems if the actual memory available is less.
+  However, since free memory is rarely below 1GB on reasonable systems, throwing this warning had become more problematic than it was useful (it interfered with internal unit testing), so I decided to remove the warning.
