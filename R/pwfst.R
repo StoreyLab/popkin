@@ -2,7 +2,7 @@
 #'
 #' This function construct the individual-level pairwise FST matrix implied by the input kinship matrix.
 #' If the input is the true kinship matrix, the return value corresponds to the true pairwise FST matrix.
-#' On the other hand, if the input is the estimated kinship returned by `\link{popkin}`, the same code results in the return value being the pairwise FST estimates described in our paper.
+#' On the other hand, if the input is the estimated kinship returned by [popkin()], the same code results in the return value being the pairwise FST estimates described in our paper.
 #' In all cases the diagonal of the pairwise FST matrix is zero by definition.
 #'
 #' @param kinship The `n`-by-`n` kinship matrix

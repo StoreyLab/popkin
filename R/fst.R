@@ -2,7 +2,7 @@
 #'
 #' This function simply returns the weighted mean inbreeding coefficient.
 #' If weights are `NULL` (default), the regular mean is calculated.
-#' If a kinship matrix is provided, then the inbreeding coefficients are extracted from its diagonal using `\link{inbr}` (requires the diagonal to contains self-kinship values as `\link{popkin}` returns, and not inbreeding coefficients as `\link{inbr_diag}` returns).
+#' If a kinship matrix is provided, then the inbreeding coefficients are extracted from its diagonal using [inbr()] (requires the diagonal to contains self-kinship values as [popkin()] returns, and not inbreeding coefficients as [inbr_diag()] returns).
 #' If there is local inbreeding and it can be estimated (from known pedigrees, for example), it can be subtracted from the total inbreeding coefficients, resulting in a vector of structural inbreeding that correctly averages into FST.
 #'
 #' The returned weighted mean inbreeding coefficient equals the generalized FST if all individuals are "locally outbred" (i.e. if the self-relatedness of every individual stems entirely from the population structure rather than due partly to having unusually closely related parents, such as first or second cousins).

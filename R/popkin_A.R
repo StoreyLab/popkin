@@ -28,7 +28,7 @@ NULL
 #' M <- obj$M
 #'
 #' @seealso
-#' The main `\link[popkin]` function (a wrapper of this `popkin_A` function and `\link[popkin_A_min_subpops]` to estimate the minimum `A` value).
+#' The main [popkin()] function (a wrapper of this `popkin_A` function and [popkin_A_min_subpops()] to estimate the minimum `A` value).
 #'
 #' @export
 popkin_A <- function(

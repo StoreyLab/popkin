@@ -38,6 +38,9 @@
 #'
 #' # extract inbreeding coefficients from Kinship
 #' inbr <- inbr(kinship)
+#'
+#' @seealso
+#' [inbr_diag()] to replace kinship diagonal with inbreeding values (better for plots)
 #' 
 #' @export
 inbr <- function(kinship) {

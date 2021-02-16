@@ -4,7 +4,7 @@
 #'
 #' The subpopulation assignments are only used to estimate the baseline kinship (the zero value).
 #' If the user wants to re-estimate the kinship matrix using different subpopulation labels,
-#' it suffices to rescale it using `\link{rescale_popkin}`
+#' it suffices to rescale it using [rescale_popkin()]
 #' (as opposed to starting from the genotypes again, which gives the same answer but more slowly).
 #' 
 #' @param X Genotype matrix, BEDMatrix object, or a function `X(m)` that returns the genotypes of all individuals at `m` successive locus blocks each time it is called, and `NULL` when no loci are left.

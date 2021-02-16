@@ -24,7 +24,7 @@ This rescaling is required when subsetting results in a more recent Most Recent 
 This function rescales the input \code{kinship} matrix so that the value \code{min_kinship} in the original kinship matrix becomes zero, using the formula
 \code{kinship_rescaled = ( kinship - min_kinship ) / ( 1 - min_kinship )}.
 This is equivalent to changing the ancestral population of the data.
-If subpopulation labels \code{subpops} are provided (recommended), they are used to estimate \code{min_kinship} using the function \verb{\link[popkin_A_min_subpops]}, which is the recommended way to set the MRCA population correctly.
+If subpopulation labels \code{subpops} are provided (recommended), they are used to estimate \code{min_kinship} using the function \code{\link[=popkin_A_min_subpops]{popkin_A_min_subpops()}}, which is the recommended way to set the MRCA population correctly.
 If both \code{subpops} and \code{min_kinship} are provided, only \code{min_kinship} is used.
 If both \code{subpops} and \code{min_kinship} are omitted, the function sets \code{min_kinship = min( kinship )}.
 }

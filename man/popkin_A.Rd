@@ -60,5 +60,5 @@ M <- obj$M
 
 }
 \seealso{
-The main \verb{\link[popkin]} function (a wrapper of this \code{popkin_A} function and \verb{\link[popkin_A_min_subpops]} to estimate the minimum \code{A} value).
+The main \code{\link[=popkin]{popkin()}} function (a wrapper of this \code{popkin_A} function and \code{\link[=popkin_A_min_subpops]{popkin_A_min_subpops()}} to estimate the minimum \code{A} value).
 }

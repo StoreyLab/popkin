@@ -1,7 +1,7 @@
 #' Replace kinship diagonal with inbreeding coefficients
 #'
-#' The usual kinship matrix contains self-kinship values along their diagonal given by `kinship_jj = ( 1 + inbr_j ) / 2`, where `inbr_j` is the inbreeding coefficients of individual `j`.
-#' This function returns a modified kinship matrix with diagonal values replaced with `inbr_j` values (off-diagonal `j != k` values stay the same).
+#' The usual kinship matrix contains self-kinship values along their diagonal given by `diag(kinship) = ( 1 + inbr ) / 2`, where `inbr` is the vector of inbreeding coefficient.
+#' This function returns a modified kinship matrix with diagonal values replaced with `inbr` (off-diagonal values stay the same).
 #' The resulting matrix is better for visualization, but is often not appropriate for modeling (e.g. in mixed-effects models for association or heritability estimation).
 #'
 #' @param kinship A kinship matrix with self-kinship values along the diagonal.
@@ -53,7 +53,9 @@
 #' kinship_inbr_diag <- inbr_diag(kinship)
 #'
 #' @seealso
-#' The inverse function is given by `\link[bnpsd]{coanc_to_kinship}`.
+#' The inverse function is given by [bnpsd::coanc_to_kinship()].
+#' 
+#' [inbr()] to extract the vector of inbreeding values from a kinship matrix.
 #' 
 #' @export
 inbr_diag <- function(kinship) {

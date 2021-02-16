@@ -38,7 +38,8 @@
 #' stopifnot( A_min_est == min( A ) )
 #'
 #' @seealso
-#' The `\link[popkin_A]` to generate the A matrix normally inputted into this function (`popkin_A_min_subpops`), and `\link[popkin]` is the wrapper function around both of these.
+#' [popkin_A()] to generate the `A` matrix usually inputted into this function (`popkin_A_min_subpops`).
+#' [popkin()] is the wrapper function around both of these.
 #'
 #' @export
 popkin_A_min_subpops <- function(A, subpops = NULL) {

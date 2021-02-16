@@ -57,7 +57,7 @@ Given the biallelic genotypes of \code{n} individuals, this function returns the
 \details{
 The subpopulation assignments are only used to estimate the baseline kinship (the zero value).
 If the user wants to re-estimate the kinship matrix using different subpopulation labels,
-it suffices to rescale it using \verb{\link{rescale_popkin}}
+it suffices to rescale it using \code{\link[=rescale_popkin]{rescale_popkin()}}
 (as opposed to starting from the genotypes again, which gives the same answer but more slowly).
 }
 \examples{

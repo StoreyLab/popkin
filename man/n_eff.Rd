@@ -53,7 +53,7 @@ The minimum \code{n_eff} possible is 1, which is attained in an extremely struct
 Moreover, for \code{K} extremely-differentiated subpopulations (FST = 1 per subpopulation) \code{n_eff = K}.
 In this way, \code{n_eff} is smaller than the ideal value of \code{2 * n} depending on the amount of kinship (covariance) in the data.
 
-Occasionally, depending on the quality of the input kinship matrix, the estimated \code{n_eff} may be outside the theoretical \verb{\[1, 2*n\]} range, in which case the return value is set to the closest boundary value.
+Occasionally, depending on the quality of the input kinship matrix, the estimated \code{n_eff} may be outside the theoretical [\code{1}, \code{2*n}] range, in which case the return value is set to the closest boundary value.
 The quality of the results depends on the success of matrix inversion (which for numerical reasons may incorrectly contain negative eigenvalues, for example) or of the gradient optimization.
 }
 \examples{

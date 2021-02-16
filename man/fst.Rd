@@ -19,7 +19,7 @@ FST
 \description{
 This function simply returns the weighted mean inbreeding coefficient.
 If weights are \code{NULL} (default), the regular mean is calculated.
-If a kinship matrix is provided, then the inbreeding coefficients are extracted from its diagonal using \verb{\link{inbr}} (requires the diagonal to contains self-kinship values as \verb{\link{popkin}} returns, and not inbreeding coefficients as \verb{\link{inbr_diag}} returns).
+If a kinship matrix is provided, then the inbreeding coefficients are extracted from its diagonal using \code{\link[=inbr]{inbr()}} (requires the diagonal to contains self-kinship values as \code{\link[=popkin]{popkin()}} returns, and not inbreeding coefficients as \code{\link[=inbr_diag]{inbr_diag()}} returns).
 If there is local inbreeding and it can be estimated (from known pedigrees, for example), it can be subtracted from the total inbreeding coefficients, resulting in a vector of structural inbreeding that correctly averages into FST.
 }
 \details{

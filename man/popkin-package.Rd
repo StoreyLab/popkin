@@ -6,11 +6,11 @@
 \alias{_PACKAGE}
 \title{A package for estimating kinship and FST under arbitrary population structure}
 \description{
-The heart of this package is the \verb{\link{popkin}} function, which estimates the kinship matrix of all individual pairs from their genotype matrix.
-Inbreeding coefficients, the generalized \code{FST}, and the individual-level pairwise \code{FST} matrix are extracted from the kinship matrix using \verb{\link{inbr}}, \verb{\link{fst}}, and \verb{\link{pwfst}}, respectively.
-\verb{\link{fst}} accepts weights for individuals to balance subpopulations obtained with \verb{\link{weights_subpops}}.
-Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using \verb{\link{rescale_popkin}}.
-Lastly, kinship and pairwise FST matrices can be visualized using \verb{\link{plot_popkin}} (with the help of \verb{\link{inbr_diag}} for kinship matrices only).
+The heart of this package is the \code{\link[=popkin]{popkin()}} function, which estimates the kinship matrix of all individual pairs from their genotype matrix.
+Inbreeding coefficients, the generalized \code{FST}, and the individual-level pairwise \code{FST} matrix are extracted from the kinship matrix using \code{\link[=inbr]{inbr()}}, \code{\link[=fst]{fst()}}, and \code{\link[=pwfst]{pwfst()}}, respectively.
+\code{\link[=fst]{fst()}} accepts weights for individuals to balance subpopulations obtained with \code{\link[=weights_subpops]{weights_subpops()}}.
+Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using \code{\link[=rescale_popkin]{rescale_popkin()}}.
+Lastly, kinship and pairwise FST matrices can be visualized using \code{\link[=plot_popkin]{plot_popkin()}} (with the help of \code{\link[=inbr_diag]{inbr_diag()}} for kinship matrices only).
 }
 \examples{
 # estimate and visualize kinship and FST from a genotype matrix

@@ -49,3 +49,6 @@ kinship <- popkin(X, subpops) # calculate kinship from X and optional subpop lab
 inbr <- inbr(kinship)
 
 }
+\seealso{
+\code{\link[=inbr_diag]{inbr_diag()}} to replace kinship diagonal with inbreeding values (better for plots)
+}

@@ -1,10 +1,10 @@
 #' A package for estimating kinship and FST under arbitrary population structure
 #'
-#' The heart of this package is the `\link{popkin}` function, which estimates the kinship matrix of all individual pairs from their genotype matrix.
-#' Inbreeding coefficients, the generalized `FST`, and the individual-level pairwise `FST` matrix are extracted from the kinship matrix using `\link{inbr}`, `\link{fst}`, and `\link{pwfst}`, respectively.
-#' `\link{fst}` accepts weights for individuals to balance subpopulations obtained with `\link{weights_subpops}`.
-#' Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using `\link{rescale_popkin}`.
-#' Lastly, kinship and pairwise FST matrices can be visualized using `\link{plot_popkin}` (with the help of `\link{inbr_diag}` for kinship matrices only).
+#' The heart of this package is the [popkin()] function, which estimates the kinship matrix of all individual pairs from their genotype matrix.
+#' Inbreeding coefficients, the generalized `FST`, and the individual-level pairwise `FST` matrix are extracted from the kinship matrix using [inbr()], [fst()], and [pwfst()], respectively.
+#' [fst()] accepts weights for individuals to balance subpopulations obtained with [weights_subpops()].
+#' Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using [rescale_popkin()].
+#' Lastly, kinship and pairwise FST matrices can be visualized using [plot_popkin()] (with the help of [inbr_diag()] for kinship matrices only).
 #' 
 #' @examples
 #' # estimate and visualize kinship and FST from a genotype matrix

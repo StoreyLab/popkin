@@ -12,7 +12,7 @@
 #' Moreover, for `K` extremely-differentiated subpopulations (FST = 1 per subpopulation) `n_eff = K`.
 #' In this way, `n_eff` is smaller than the ideal value of `2 * n` depending on the amount of kinship (covariance) in the data.
 #' 
-#' Occasionally, depending on the quality of the input kinship matrix, the estimated `n_eff` may be outside the theoretical `\[1, 2*n\]` range, in which case the return value is set to the closest boundary value.
+#' Occasionally, depending on the quality of the input kinship matrix, the estimated `n_eff` may be outside the theoretical \[`1`, `2*n`\] range, in which case the return value is set to the closest boundary value.
 #' The quality of the results depends on the success of matrix inversion (which for numerical reasons may incorrectly contain negative eigenvalues, for example) or of the gradient optimization.
 #'
 #' @param kinship An `n`-by-`n` kinship matrix.

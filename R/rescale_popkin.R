@@ -6,7 +6,7 @@
 #' This function rescales the input `kinship` matrix so that the value `min_kinship` in the original kinship matrix becomes zero, using the formula
 #' `kinship_rescaled = ( kinship - min_kinship ) / ( 1 - min_kinship )`.
 #' This is equivalent to changing the ancestral population of the data.
-#' If subpopulation labels `subpops` are provided (recommended), they are used to estimate `min_kinship` using the function `\link[popkin_A_min_subpops]`, which is the recommended way to set the MRCA population correctly.
+#' If subpopulation labels `subpops` are provided (recommended), they are used to estimate `min_kinship` using the function [popkin_A_min_subpops()], which is the recommended way to set the MRCA population correctly.
 #' If both `subpops` and `min_kinship` are provided, only `min_kinship` is used.
 #' If both `subpops` and `min_kinship` are omitted, the function sets `min_kinship = min( kinship )`.
 #'

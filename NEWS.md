@@ -248,3 +248,8 @@ More improvements to function `plot_popkin`:
 * Removed a warning message triggered on MacOS and other systems (except Linux and Windows) when the `popkin` function is run.
   Free memory is not calculated in these systems and defaults to 1GB, which threw a warning since could cause problems if the actual memory available is less.
   However, since free memory is rarely below 1GB on reasonable systems, throwing this warning had become more problematic than it was useful (it interfered with internal unit testing), so I decided to remove the warning.
+
+# 2021-02-16 - popkin 1.3.8.9000
+
+* Documentation updates:
+  - Fixed links to functions, in many cases these were broken because of incompatible mixed Rd and markdown syntax (now markdown is used more fully).

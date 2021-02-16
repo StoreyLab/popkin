@@ -50,5 +50,6 @@ stopifnot( A_min_est == min( A ) )
 
 }
 \seealso{
-The \verb{\link[popkin_A]} to generate the A matrix normally inputted into this function (\code{popkin_A_min_subpops}), and \verb{\link[popkin]} is the wrapper function around both of these.
+\code{\link[=popkin_A]{popkin_A()}} to generate the \code{A} matrix usually inputted into this function (\code{popkin_A_min_subpops}).
+\code{\link[=popkin]{popkin()}} is the wrapper function around both of these.
 }
