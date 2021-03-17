@@ -387,5 +387,50 @@ plot_popkin(
 	)
 ```
 
+## Coancestry estimation from allele frequencies
+
+Analogously to the way `popkin` estimates kinship from genotype matrices, `popkin_af` estimates coancestry from allele frequency matrices.
+For this demonstration, we estimate allele frequencies from the HGDP data.
+However, this approach is most useful for data that does not have corresponding genotypes, such as the `P` matrices from admixture inference approaches.
+
+This code creates the desired allele frequency matrix `P`, where each column belongs to a continental subpopulation
+```{r}
+# number of loci (rows)
+m_loci <- nrow( X )
+# number of subpopulations (columns)
+k_subpops <- length( pop_order )
+# initialize matrix
+P <- matrix( NA, nrow = m_loci, ncol = k_subpops )
+# copy names from data
+colnames( P ) <- pop_order
+rownames( P ) <- rownames( X )
+# navigate subpopulations
+for ( u in 1 : k_subpops ) {
+    # subpopulation label name
+    pop <- pop_order[ u ]
+    # columns of interest
+    js <- subpops == pop
+    # now average genotypes into allele frequency estimates and store
+    P[ , u ] <- rowMeans( X[ , js ], na.rm = TRUE ) / 2
+}
+```
+
+Now we use `popkin_af` to estimate the coancestry matrix:
+```{r}
+coancestry <- popkin_af( P )
+```
+
+Lastly, we visualize this estimate, which resembles the kinship matrix estimated from individuals except it has much lower resolution:
+```{r, fig.width = 4.2, fig.height = 3, fig.align = 'center'}
+# coancestry matrix plot
+# NOTE: inbr_diag() is not needed for coancestry!
+plot_popkin(
+    coancestry,
+    mar = 3,
+    names = TRUE,
+    ylab = 'Subpopulations'
+)
+```
+
 
 # References

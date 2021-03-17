@@ -10,10 +10,10 @@
 #' @param X Genotype matrix, BEDMatrix object, or a function `X(m)` that returns the genotypes of all individuals at `m` successive locus blocks each time it is called, and `NULL` when no loci are left.
 #' If a regular matrix, `X` must have values only in `c(0, 1, 2, NA)`, encoded to count the number of reference alleles at the locus, or `NA` for missing data.
 #' @param subpops The length-`n` vector of subpopulation assignments for each individual.
-#' If missing, every individual is effectively treated as a different population.
+#' If `NULL`, every individual is effectively treated as a different population.
 #' @param n Number of individuals (required only when `X` is a function, ignored otherwise).
 #' If `n` is missing but `subpops` is not, `n` is taken to be the length of `subpops`.
-#' @param loci_on_cols If `TRUE`, `X` has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns.
+#' @param loci_on_cols If `TRUE`, `X` has loci on columns and individuals on rows; if `FALSE` (default), loci are on rows and individuals on columns.
 #' Has no effect if `X` is a function.
 #' If `X` is a BEDMatrix object, `loci_on_cols` is ignored (set automatically to `TRUE` internally).
 #' @param mem_factor Proportion of available memory to use loading and processing genotypes.
@@ -26,9 +26,9 @@
 #' @param m_chunk_max Sets the maximum number of loci to process at the time.
 #' Actual number of loci loaded may be lower if memory is limiting.
 #'
-#' @return If `want_M` is `FALSE`, returns the estimated `n`-by-`n` kinship matrix only.
+#' @return If `want_M = FALSE`, returns the estimated `n`-by-`n` kinship matrix only.
 #' If `X` has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
-#' If `want_M` is `TRUE`, a named list is returned, containing:
+#' If `want_M = TRUE`, a named list is returned, containing:
 #'
 #' - `kinship`: the estimated `n`-by-`n` kinship matrix
 #' - `M`: the `n`-by-`n` matrix of non-missing pair counts (see `want_M` option).
@@ -50,6 +50,9 @@
 #' ## X <- BEDMatrix(file) # load genotype matrix object
 #'
 #' kinship <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
+#'
+#' @seealso
+#' [popkin_af()] for coancestry estimation from allele frequency matrices.
 #'
 #' @export
 popkin <- function(

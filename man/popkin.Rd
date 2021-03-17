@@ -20,12 +20,12 @@ popkin(
 If a regular matrix, \code{X} must have values only in \code{c(0, 1, 2, NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.}
 
 \item{subpops}{The length-\code{n} vector of subpopulation assignments for each individual.
-If missing, every individual is effectively treated as a different population.}
+If \code{NULL}, every individual is effectively treated as a different population.}
 
 \item{n}{Number of individuals (required only when \code{X} is a function, ignored otherwise).
 If \code{n} is missing but \code{subpops} is not, \code{n} is taken to be the length of \code{subpops}.}
 
-\item{loci_on_cols}{If \code{TRUE}, \code{X} has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns.
+\item{loci_on_cols}{If \code{TRUE}, \code{X} has loci on columns and individuals on rows; if \code{FALSE} (default), loci are on rows and individuals on columns.
 Has no effect if \code{X} is a function.
 If \code{X} is a BEDMatrix object, \code{loci_on_cols} is ignored (set automatically to \code{TRUE} internally).}
 
@@ -43,9 +43,9 @@ Default \code{FALSE} is to return the kinship matrix only.}
 Actual number of loci loaded may be lower if memory is limiting.}
 }
 \value{
-If \code{want_M} is \code{FALSE}, returns the estimated \code{n}-by-\code{n} kinship matrix only.
+If \code{want_M = FALSE}, returns the estimated \code{n}-by-\code{n} kinship matrix only.
 If \code{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
-If \code{want_M} is \code{TRUE}, a named list is returned, containing:
+If \code{want_M = TRUE}, a named list is returned, containing:
 \itemize{
 \item \code{kinship}: the estimated \code{n}-by-\code{n} kinship matrix
 \item \code{M}: the \code{n}-by-\code{n} matrix of non-missing pair counts (see \code{want_M} option).
@@ -78,4 +78,7 @@ subpops <- c(1,1,2) # subpopulation assignments for individuals
 
 kinship <- popkin(X, subpops) # calculate kinship from genotypes and subpopulation labels
 
+}
+\seealso{
+\code{\link[=popkin_af]{popkin_af()}} for coancestry estimation from allele frequency matrices.
 }

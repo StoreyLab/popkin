@@ -83,9 +83,9 @@ popkin_A <- function(
         }
     } 
     
-    # initialize desired matrix
+    # initialize desired matrices
     A <- matrix(0, nrow = n_ind, ncol = n_ind)
-    M <- matrix(0, nrow = n_ind, ncol = n_ind) # normalization now varies per individual pair (this tracks NAs, so subtract from overall m below)
+    M <- matrix(0, nrow = n_ind, ncol = n_ind)
     
     # transfer names from X to A if present
     # this will carry over all the way to the final kinship matrix!

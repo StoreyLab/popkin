@@ -4,7 +4,8 @@
 #' Inbreeding coefficients, the generalized `FST`, and the individual-level pairwise `FST` matrix are extracted from the kinship matrix using [inbr()], [fst()], and [pwfst()], respectively.
 #' [fst()] accepts weights for individuals to balance subpopulations obtained with [weights_subpops()].
 #' Kinship matrices can be renormalized (to change the most recent common ancestor population or MRCA) using [rescale_popkin()].
-#' Lastly, kinship and pairwise FST matrices can be visualized using [plot_popkin()] (with the help of [inbr_diag()] for kinship matrices only).
+#' Coancestry matrices can be estimated from allele frequency matrices using [popkin_af()].
+#' Lastly, kinship, coancestry, and pairwise FST matrices can be visualized using [plot_popkin()] (with the help of [inbr_diag()] for kinship matrices only).
 #' 
 #' @examples
 #' # estimate and visualize kinship and FST from a genotype matrix
@@ -43,6 +44,13 @@
 #'
 #' # rescale the kinship matrix using different subpopulations (implicitly changes the MRCA)
 #' kinship2 <- rescale_popkin(kinship, subpops2)
+#'
+#' # toy allele frequency data
+#' P <- matrix( runif( 9 ), nrow = 3 )
+#'
+#' # estimate coancestry from allele frequency matrix
+#' # (useful from P matrices from admixture models)
+#' coancestry <- popkin_af( P )
 #'
 #' @docType package
 #' @name popkin-package

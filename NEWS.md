@@ -253,3 +253,8 @@ More improvements to function `plot_popkin`:
 
 * Documentation updates:
   - Fixed links to functions, in many cases these were broken because of incompatible mixed Rd and markdown syntax (now markdown is used more fully).
+
+
+# 2021-03-16 - popkin 1.3.9.9000
+
+- Added function `popkin_af`, which is the analog of `popkin` but for allele frequency matrices instead of genotypes, and as a consequence it estimates coancestry instead of kinship.

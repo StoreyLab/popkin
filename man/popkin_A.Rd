@@ -20,7 +20,7 @@ If a regular matrix, \code{X} must have values only in \code{c(0, 1, 2, NA)}, en
 \item{n}{Number of individuals (required only when \code{X} is a function, ignored otherwise).
 If \code{n} is missing but \code{subpops} is not, \code{n} is taken to be the length of \code{subpops}.}
 
-\item{loci_on_cols}{If \code{TRUE}, \code{X} has loci on columns and individuals on rows; if false (the default), loci are on rows and individuals on columns.
+\item{loci_on_cols}{If \code{TRUE}, \code{X} has loci on columns and individuals on rows; if \code{FALSE} (default), loci are on rows and individuals on columns.
 Has no effect if \code{X} is a function.
 If \code{X} is a BEDMatrix object, \code{loci_on_cols} is ignored (set automatically to \code{TRUE} internally).}
 

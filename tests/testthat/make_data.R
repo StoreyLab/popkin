@@ -42,3 +42,6 @@ PhiInbr <- inbr_diag(Phi)
 
 # save these values, to use in testing later!
 save(X, subpops, subpops0, Phi, Phi0, A, M, Amin, Amin0, phiMin0, w, w0, fst, fstW, inbr, pwF, PhiInbr, file = 'Xs.RData')
+
+# wanted to compare non-NA counts to GCTA:
+# ~/bin/gcta_1.93.2beta/gcta64 --bfile Xs --make-grm --out Xs

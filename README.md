@@ -82,6 +82,11 @@ Rescale the kinship matrix using different subpopulations (implicitly changes th
 kinship2 <- rescale_popkin(kinship, subpops2)
 ```
 
+Estimate the coancestry matrix from a matrix of allele frequencies `P` (useful when `P` comes from an admixture inference model)
+```R
+coancestry <- popkin_af( P )
+```
+
 Please see the `popkin` R vignette for a description of the key parameters and more detailed examples, including complex plots with multiple kinship matrices and multi-level subpopulation labeling.
 
 
