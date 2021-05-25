@@ -4,7 +4,7 @@
 \alias{validate_kinship}
 \title{Validate a kinship matrix}
 \usage{
-validate_kinship(kinship, sym = TRUE, name = "kinship")
+validate_kinship(kinship, sym = TRUE, name = "kinship", logical = FALSE)
 }
 \arguments{
 \item{kinship}{The kinship matrix to validate.}
@@ -13,13 +13,19 @@ validate_kinship(kinship, sym = TRUE, name = "kinship")
 
 \item{name}{Default "kinship".
 Change to desired variable name for more informative error messages (i.e. "A" when used to validate the \code{A} matrix inside \code{popkin_A_min_subpops}).}
+
+\item{logical}{If \code{FALSE} (default), function stops with an error message if the input is not a kinship matrix.
+If \code{TRUE}, function instead returns \code{TRUE} if the input passed all tests (appears to be a valid kinship matrix) or \code{FALSE} otherwise.}
 }
 \value{
-Nothing
+If \code{logical = FALSE} (default), nothing.
+If \code{logical = TRUE}, returns \code{TRUE} if the input is a valid kinship matrix, \code{FALSE} otherwise.
 }
 \description{
-Tests that the input is a valid kinship matrix (a numeric, square, symmetric R matrix).
+Tests that the input is a valid kinship matrix (a numeric, square, and optionally symmetric R matrix).
+Intended for matrices to plot and for other uses, including biased estimates, so there is flexibility as to what constitutes a valid kinship matrix.
 Throws errors if the input is not as above.
+Can instead return \code{TRUE}/\code{FALSE} if \code{logical = TRUE}.
 }
 \details{
 True kinship matrices have values strictly between 0 and 1, and diagonal values strictly between 0.5 and 1.
@@ -53,5 +59,9 @@ non_kinship <- matrix(1:4, nrow=2)
 try( validate_kinship( non_kinship ) )
 # but example passes if we drop symmetry requirement this way
 validate_kinship( non_kinship, sym = FALSE )
+
+# instead of stopping, can get a logical value
+# this returns FALSE
+validate_kinship( non_kinship, logical = TRUE )
 
 }

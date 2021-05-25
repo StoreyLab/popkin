@@ -1,8 +1,7 @@
-#' Visualize one or more kinship matrices
+#' Visualize one or more kinship matrices and other related objects
 #'
-#' This function plots one or more kinship matrices and a shared legend for the color key.
+#' This function plots one or more kinship matrices, trees (class `phylo` objects, see `ape` package), and arbitrary functions, and a shared legend for the kinship color key.
 #' Many options allow for fine control of individual or subpopulation labeling.
-#' This code assumes input matrices are symmetric.
 #'
 #' `plot_popkin` plots the input kinship matrices as-is.
 #' For best results, a standard kinship matrix (such as the output of [popkin()]) should have its diagonal rescaled to contain inbreeding coefficients using [inbr_diag()] before `plot_popkin` is used.
@@ -10,10 +9,13 @@
 #' This function permits the labeling of individuals (from row and column names when `names = TRUE`) and of subpopulations (passed through `labs`).
 #' The difference is that the labels passed through `labs` are assumed to be shared by many individuals, and lines (or other optional visual aids) are added to demarcate these subgroups.
 #'
-#' @param kinship A numeric kinship matrix or a list of matrices.
-#' Note `kinship` may contain `NULL` elements (makes blank plots with titles; good for placeholders or non-existent data)
-#' @param titles Titles to add to each matrix panel (default is no titles)
-#' @param col Colors for heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).
+#' @param kinship A numeric kinship matrix, a `phylo` or `function` object, or a list of any such objects (at least one kinship matrix is expected).
+#' This list may contain `NULL` elements (makes blank panels with titles; good for placeholders or non-existent data)
+#' `phylo` objects are plotted with [plot_phylo()], which is a wrapper around [ape::plot.phylo()] that makes some adjustments so resulting plots are more consistent with accompanying kinship matrices.
+#' `function` elements are executed without arguments, and are expected to produce single arbitrary plot panels.
+#' @param titles Titles to add to each matrix panel (default is no titles).
+#' Applied to kinship and phylo panels only.
+#' @param col Colors for kinship heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).
 #' @param col_n The number of colors to use in the heatmap (applies if `col = NULL`).
 #' @param mar Margins shared by all panels (if a vector) or for each panel (if a list of such vectors).
 #' If the vector has length 1, `mar` corresponds to the shared lower and left margins, while the top and right margins are set to zero.
@@ -23,43 +25,55 @@
 #' Note the padding `mar_pad` below is added to every margin if set.
 #' If `NULL`, the original margin values are used without change, and are reset for every panel that has a `NULL` value.
 #' The original margins are also reset after plotting is complete.
+#' Applied to panels of all types (kinship, phylo, and function).
 #' @param mar_pad Margin padding added to all panels (`mar` above and `leg_mar` below).
 #' Default 0.2.
 #' Must be a scalar or a vector of length 4 to match [graphics::par()] 'mar'.
+#' Applied to panels of all types (kinship, phylo, and function).
 #' @param oma Outer margin vector.
 #' If length 1, the value of `oma` is applied to the left outer margin only (so `ylab` below displays correctly) and zero outer margins elsewhere.
 #' If length 4, all outer margins are expected in standard format [graphics::par()] 'mar' expects (see `mar` above).
 #' `mar_pad` above is never added to outer margins.
 #' If `NULL`, no outer margins are set (previous settings are preserved).
 #' Vectors of invalid lengths produce a warning.
-#' @param diag_line If `TRUE` adds a line along the diagonal (default no line).
+#' @param diag_line If `TRUE` adds a line along the kinship diagonal (default no line).
 #' May also be a vector of logicals to set per panel (lengths must agree).
+#' Has no effect on non-kinship panels.
 #' @param panel_letters Vector of strings for labeling panels (default A-Z).
 #' No labels are added if `NULL`, or when there is only one panel except if its set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
+#' Applied to panels of all types (kinship, phylo, and function).
 #' @param panel_letters_cex Scaling factor of panel letters (default 1.5).
+#' @param panel_letters_adj X-axis adjustment for letter (default -0.1).
+#' Negative values place the letter into the left margin area.
+#' Might need adjustment depending on the size of the left margin.
 #' @param null_panel_data
 #' If `FALSE` (default), panels with `NULL` kinship matrices must not have titles or other parameters set, and no panel letters are used in these cases.
 #' If `TRUE`, panels with `NULL` kinship matrices must have titles and other parameters set.
 #' In the latter case, these `NULL` panels also get panel letters.
 #' The difference is important when checking that lengths of non-singleton parameters agree.
 #' @param weights A vector with weights for every individual, or a list of such vectors if they vary per panel.
-#' The width of every individual becomes proportional to their weight.
+#' The width of every individual in the kinship matrix becomes proportional to their weight.
 #' Individuals with zero or negative weights are omitted.
+#' Has no effect on non-kinship panels.
 #' @param raster A logical equivalent to `useRaster` option in the `image` function used internally, or a vector of such logicals if the choice varies per panel.
 #' If `weights` are non-`NULL` in a given panel, `raster = FALSE` is forced (this is necessary to plot images where columns and rows have variable width).
 #' If `weights` are `NULL`, the default is `raster = TRUE`, but in this case the user may override (for example, so panels are visually coherent when some use weights while others do not, as there are small differences in rendering implementation for each value of `raster`).
 #' Note that a multipanel figure with a list of `weights` sets `raster = FALSE` to all panels by default, even if the weights were only applied to a subset of panels.
-#' @param sym If `FALSE` (default), plots non-symmetric (but square) kinship matrices without issues.  If `TRUE`, stops if any input kinship matrices are not symmetric.
+#' Has no effect on non-kinship panels.
+#' @param sym If `FALSE` (default), plots non-symmetric (but square) kinship matrices without issues.  If `TRUE`, stops if any input kinship matrices (excluding `phylo` or `function` objects) are not symmetric.
 #'
 #' AXIS LABEL OPTIONS
 #' 
 #' @param ylab The y-axis label (default "Individuals").
 #' If `length(ylab) == 1`, the label is placed in the outer margin (shared across panels);
 #' otherwise `length(ylab)` must equal the number of panels and each label is placed in the inner margin of the respective panel.
-#' @param ylab_adj The value of `adj` passed to [graphics::mtext()].
+#' Applied to panels of all types (kinship, phylo, and function).
+#' @param ylab_adj The value of `adj` for `ylab` passed to [graphics::mtext()].
 #' If `length(ylab) == 1`, only the first value is used, otherwise `length(ylab_adj)` must equal the number of panels.
-#' @param ylab_line The value of `line` passed to [graphics::mtext()].
+#' @param ylab_line The value of `line` for `ylab` passed to [graphics::mtext()].
 #' If `length(ylab) == 1`, only the first value is used, otherwise `length(ylab_line)` must equal the number of panels.
+#' @param ylab_side The value of `side` for `ylab` passed to [graphics::mtext()] (2 is y-axis, 1 is x-axis, can also place on top (3) or right (4)).
+#' If `length(ylab) == 1`, only the first value is used, otherwise `length(ylab_side)` must equal the number of panels.
 #' 
 #' LAYOUT OPTIONS
 #' 
@@ -70,30 +84,36 @@
 #'
 #' LEGEND (COLOR KEY) OPTIONS
 #' 
-#' @param leg_per_panel If `TRUE`, every kinship matrix get its own legend/color key (best for matrices with very different scales).
-#' If `FALSE` (default), a single legend/color key is shared by all kinship matrix panels.
-#' @param leg_title The name of the variable that the heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.
+#' @param leg_per_panel If `TRUE`, every kinship matrix get its own legend/color key (best for matrices with very different scales), and each phylo tree has its own x-axis range.
+#' If `FALSE` (default), a single legend/color key is shared by all kinship matrix panels, and also every tree has the same x-axis range (different from the kinship range).
+#' @param leg_title The name of the variable that the kinship heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.
 #' @param leg_cex Scaling factor for `leg_title` (default 1), or a vector of such values if they vary per panel.
-#' @param leg_n The desired number of ticks in the legend y-axis (input to [pretty()], see that for more details), or a vector of such values if they vary per panel.
-#' @param leg_width The width of the legend panel, relative to the width of the kinship panel.
+#' @param leg_n The desired number of ticks in the kinship legend y-axis, and phylo x-axis (input to [pretty()], see that for more details), or a vector of such values if they vary per panel.
+#' @param leg_width The width of the kinship legend panel, relative to the width of the kinship panel.
 #' This value is passed to [graphics::layout()] (ignored if `layout_add = FALSE`).
-#' @param leg_mar Margin values for the legend panel only, or a list of such values if they vary per panel.
+#' @param leg_mar Margin values for the kinship legend panel only, or a list of such values if they vary per panel.
 #' A length-4 vector (in `c( bottom, left, top, right )` format that [graphics::par()] 'mar' expects) specifies the full margins, to which `mar_pad` is added.
 #' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if `leg_mar` is length-1, it is used to specify the right margin (plus the value of `mar_pad`, see above).
+#' @param leg_column The column number in which to place the kinship legend (default `NA` is for last column).
+#' Ignored if `leg_per_panel = TRUE`.
 #'
 #' INDIVIDUAL LABEL OPTIONS
 #' 
-#' @param names If `TRUE`, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.
-#' @param names_cex Scaling factor for the column and row names, or a vector of such values if they vary per panel.
-#' @param names_line Line where column and row names are placed, or a vector of such values if they vary per panel.
+#' @param names If `TRUE`, the column and row names are plotted in the kinship heatmap, or a vector of such values if they vary per panel.
+#' (`names` has no effect on `phylo` panels, whose tip labels are always plotted, or other panel types.)
+#' @param names_cex Scaling factor for the column and row names of a kinship matrix, or the tip labels of a `phylo` object, or a vector of such values if they vary per panel.
+#' @param names_line Line where kinship column and row names are placed, or a vector of such values if they vary per panel.
+#' Has no effect on non-kinship panels.
 #' @param names_las Orientation of labels relative to axis.
 #' Default (2) makes labels perpendicular to axis.
+#' Has no effect on non-kinship panels.
 #'
 #' SUBPOPULATION LABEL OPTIONS
 #' 
-#' @param labs Subpopulation labels for individuals.
+#' @param labs Subpopulation labels for individuals in kinship matrices.
 #' Use a matrix of labels to show groupings at more than one level (for a hierarchy or otherwise).
-#' If input is a vector or a matrix, the same subpopulation labels are shown for every heatmap panel; the input must be a list of such vectors or matrices if the labels vary per panel.
+#' If input is a vector or a matrix, the same subpopulation labels are shown for every kinship matrix; the input must be a list of such vectors or matrices if the labels vary per panel.
+#' Has no effect on non-kinship panels.
 #' @param labs_cex A vector of label scaling factors for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_las A vector of label orientations (in format that [graphics::mtext()] expects) for each level of labs, or a list of such vectors if labels vary per panel.
 #' @param labs_line A vector of lines where labels are placed (in format that [graphics::mtext()] expects) for each level of labs, or a list of such vectors if labels vary per panel.
@@ -107,7 +127,8 @@
 #' When `TRUE`, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.
 #' 
 #' @param ... Additional options passed to [graphics::image()].
-#' These are shared across panels
+#' These are shared across kinship panels.
+#' Have no effect on non-kinship panels.
 #'
 #' @examples
 #' # Construct toy data
@@ -139,9 +160,11 @@ plot_popkin <- function(
                         diag_line = FALSE,
                         panel_letters = toupper(letters),
                         panel_letters_cex = 1.5,
+                        panel_letters_adj = -0.1,
                         ylab = 'Individuals',
                         ylab_adj = NA,
                         ylab_line = 0,
+                        ylab_side = 2,
                         layout_add = TRUE,
                         layout_rows = 1, 
                         leg_per_panel = FALSE,
@@ -150,6 +173,7 @@ plot_popkin <- function(
                         leg_n = 5,
                         leg_mar = 3,
                         leg_width = 0.3,
+                        leg_column = NA,
                         names = FALSE,
                         names_cex = 1,
                         names_line = NA,
@@ -174,7 +198,12 @@ plot_popkin <- function(
     # does not set PDF output, margins, layout, etc
     # assumes kinship is a list of matrices, if not it is internally turned into one
 
+    # only this is required
+    if ( missing( kinship ) )
+        stop( '`kinship` is required!' )
+    
     # NOTE: we'll let plot_popkin_single validate kinship matrices (no validation here)
+    # (actually no longer true, but we allow other types too, so this validation is not fatal)
     if (!is.list(kinship))
         kinship <- list(kinship) # turn into list so rest works
     
@@ -186,7 +215,11 @@ plot_popkin <- function(
     indexes_not_null <- !sapply(kinship, is.null)
     if ( !any( indexes_not_null ) )
         stop('Every element of list "kinship" is NULL!')
-
+    # similarly, need to know which panels are valid kinship matrices (a subset of non-NULL cases)
+    indexes_kinship <- sapply( kinship, validate_kinship, sym = sym, logical = TRUE )
+    # and identify trees too
+    indexes_phylo <- sapply( kinship, function(x) 'phylo' %in% class(x) )
+    
     # decide which length to use for validations
     if (null_panel_data) {
         # NULL kinship panels require titles and other parameters set
@@ -201,7 +234,7 @@ plot_popkin <- function(
     # start checking lengths, etc
     if (!is.null(titles)) {
         if (length(titles) != n)
-            stop('`titles` provided are not the same length as data! Data: ', n, ', titles: ', length(titles))
+            stop('`titles` does not have the same length as data! Data: ', n, ', titles: ', length(titles))
     } else {
         titles <- rep.int('', n) # make blank titles of the same length as data
     }
@@ -233,6 +266,7 @@ plot_popkin <- function(
         ylab <- rep_check(ylab, n) # just makes sure length is n
         ylab_adj <- rep_check(ylab_adj, n)
         ylab_line <- rep_check(ylab_line, n)
+        ylab_side <- rep_check(ylab_side, n)
     }
     # all of these can vary when legend is panel-specific!
     if ( leg_per_panel ) {
@@ -241,7 +275,9 @@ plot_popkin <- function(
         leg_n <- rep_check( leg_n, n )
         leg_mar <- rep_check_list( leg_mar, n )
     }
-    
+
+    # for tree limits, set to NULL so automatic limits kicks on unless we set a joint value below
+    tree_max_edge <- NULL
     if ( !leg_per_panel ) {
         # this shared range is for a shared scale
         # if leg_per_panel is TRUE, leave these values NULL so we can catch bugs if they are used improperly 
@@ -250,11 +286,15 @@ plot_popkin <- function(
         # - range_real is the real range, used in the end so the color key doesn't show values that weren't actually used
         # - range_sym is a symmetric range, used internally to ensure zero is in the exact middle (set to white in the default)
         # get range and construct symmetric range that helps with plotting nice colors with white at zero
-        # range of all non-NULL data plotted
-        range_real <- range( unlist( lapply( kinship[ indexes_not_null ], range, na.rm = TRUE ) ) )
+        # range of all validated kinship data plotted
+        range_real <- range( unlist( lapply( kinship[ indexes_kinship ], range, na.rm = TRUE ) ) )
         # these next few lines force symmetry for colors (looks better)
         max_sym <- max( abs( range_real ) )
         range_sym <- c( -max_sym, max_sym )
+
+        # let's do something similar with trees
+        if ( any( indexes_phylo ) )
+            tree_max_edge <- max( sapply( kinship[ indexes_phylo ], phylo_max_edge ) )
     }
 
     # save entire original setup, to reset in the end
@@ -272,19 +312,20 @@ plot_popkin <- function(
             # here the whole vector was specified, set that
             graphics::par( oma = oma )
         } else {
-            warning("`oma` has an invalid length (was not 1 or 4): ", length( oma ), "\nOuter margins were unchanged!")
+            warning("`oma` has an invalid length (not 1 or 4): ", length( oma ), "\nOuter margins were unchanged!")
         }
     }
     
     if (layout_add) {
         # ...
         
-        # figure out layout given a requested number of rows
+        # figure out layout given a requested number of rows and other parameters
         plot_popkin_layout(
             n = n_all,
             nr = layout_rows,
             leg_per_panel = leg_per_panel,
-            leg_width = leg_width
+            leg_width = leg_width,
+            leg_column = leg_column
         )
     }
 
@@ -346,32 +387,59 @@ plot_popkin <- function(
             graphics::par( mar = mar_orig )
         }
 
-        breaks_i <- plot_popkin_single(
-            kinship[[ i_all ]],
-            kinship_range = range_sym,
-            col = col,
-            col_n = col_n,
-            names = names[i],
-            names_cex = names_cex[i],
-            names_line = names_line[i],
-            names_las = names_las[i],
-            labs = labs[[i]],
-            labs_cex = labs_cex[[i]],
-            labs_las = labs_las[[i]],
-            labs_line = labs_line[[i]],
-            labs_lwd = labs_lwd[[i]],
-            labs_sep = labs_sep[[i]],
-            labs_ticks = labs_ticks[[i]],
-            labs_text = labs_text[[i]],
-            labs_col = labs_col[[i]],
-            labs_even = labs_even[[i]],
-            diag_line = diag_line[i],
-            main = titles[i],
-            weights = weights[[i]],
-            raster = raster[i],
-            sym = sym,
-            ...
-        )
+        # copy down data here, decide what to do with it
+        # the validations will occur in this loop
+        kinship_i <- kinship[[ i_all ]]
+        class_i <- class( kinship_i )
+        # the special cases don't get these breaks
+        breaks_i <- NULL
+        # shortcut when there's no data to plot (placeholders)
+        # let's still start a new plot with a title, nothing else gets added
+        if ( is.null( kinship_i ) ) {
+            graphics::plot.new() # new blank figure
+            graphics::title(...) # this works?
+        } else if ( 'phylo' %in% class_i ) {
+            # use this other internal function for this
+            plot_phylo(
+                kinship_i,
+                main = titles[ i ],
+                cex = names_cex[ i ],
+                leg_n = if ( leg_per_panel ) leg_n[ i ] else leg_n, # have to pass it to each tree, though in default mode it's a scalar!
+                xmax = tree_max_edge,
+                xlab = NA # there's a good default for isolated figs, but in this context better to set it outside (on `plot_popkin` rather than `plot_popkin_single`)
+            )
+        } else if ( 'function' %in% class_i ) {
+            # execute function, without arguments!
+            kinship_i()
+        } else if ( validate_kinship( kinship_i, sym = sym, logical = TRUE ) ) {
+            breaks_i <- plot_popkin_single(
+                kinship_i,
+                kinship_range = range_sym,
+                col = col,
+                col_n = col_n,
+                names = names[i],
+                names_cex = names_cex[i],
+                names_line = names_line[i],
+                names_las = names_las[i],
+                labs = labs[[i]],
+                labs_cex = labs_cex[[i]],
+                labs_las = labs_las[[i]],
+                labs_line = labs_line[[i]],
+                labs_lwd = labs_lwd[[i]],
+                labs_sep = labs_sep[[i]],
+                labs_ticks = labs_ticks[[i]],
+                labs_text = labs_text[[i]],
+                labs_col = labs_col[[i]],
+                labs_even = labs_even[[i]],
+                diag_line = diag_line[i],
+                main = titles[i],
+                weights = weights[[i]],
+                raster = raster[i],
+                sym = sym,
+                ...
+            )
+        } else
+            stop( '`kinship` list element number ', i_all, ' was none of the supported classes: kinship matrix (passes `validate_kinship( kinship, sym = sym )`, see that function for more info), `function` or `phylo` objects, or `NULL`.' )
         # don't overwrite for non-data kinship[[i]] cases
         if (!is.null(breaks_i))
             breaks <- breaks_i
@@ -379,7 +447,7 @@ plot_popkin <- function(
         # add ylab for every panel when there is more than one choice, and provided it was non-NA
         # uses inner rather than outer margin (only choice that makes sense)
         if ( length(ylab) > 1 && !is.na( ylab[i] ) ) 
-            graphics::mtext( ylab[i], side = 2, adj = ylab_adj[i], line = ylab_line[i] )
+            graphics::mtext( ylab[i], side = ylab_side[i], adj = ylab_adj[i], line = ylab_line[i] )
         
         # add letters only when ...
         if (
@@ -395,7 +463,7 @@ plot_popkin <- function(
             # and if we haven't exceeded the available letters (to prevent stupid errors)
             i <= length(panel_letters)
         )
-            panel_letter(panel_letters[i], cex = panel_letters_cex)
+            panel_letter( panel_letters[i], cex = panel_letters_cex, adj = panel_letters_adj )
 
         if ( leg_per_panel ) {
             # add panel-specific legend/color key
@@ -430,7 +498,7 @@ plot_popkin <- function(
 
     # add margin only once if there was only one, place in outer margin (only choice that makes sense)
     if ( length(ylab) == 1 )
-        graphics::mtext( ylab, side = 2, adj = ylab_adj, outer = TRUE, line = ylab_line )
+        graphics::mtext( ylab, side = ylab_side, adj = ylab_adj, outer = TRUE, line = ylab_line )
 
     # restore original setup when done, but only if we created the default layout
     # otherwise the external layout gets reset, which is bad if we were not done adding panels
@@ -443,7 +511,7 @@ plot_popkin <- function(
 }
 
 plot_popkin_single <- function (
-                                kinship = NULL,
+                                kinship,
                                 kinship_range = NULL,
                                 col = NULL,
                                 col_n = 100,
@@ -470,17 +538,11 @@ plot_popkin_single <- function (
                                 ...
                                 ) {
     # this "raw" version does not plot legend or set margins, best for optimized scenarios...
-
-    # shortcut when there's no data to plot (placeholders)
-    # let's still start a new plot with a title, nothing else gets added
-    if (is.null(kinship)) {
-        graphics::plot.new() # new blank figure
-        graphics::title(...) # this works?
-        return(NULL) # return null breaks in this case only!
-    } else {
-        # non-null values must be proper kinship matrices!
-        validate_kinship( kinship, sym = sym )
-    }
+    if ( missing( kinship ) )
+        stop( '`kinship` is required!' )
+    
+    # non-null values must be proper kinship matrices!
+    validate_kinship( kinship, sym = sym )
     
     # further data validation
     if (is.null(col))
@@ -567,8 +629,9 @@ plot_popkin_single <- function (
         # compute bin centers from boundaries (whether they were weighted or not)
         xc <- centers_from_boundaries(xb)
         yc <- centers_from_boundaries(yb)
-        graphics::axis(1, xc, colnames(kinship), las = names_las, cex.axis = names_cex, tick = FALSE, line = names_line)
-        graphics::axis(2, yc, rownames(kinship), las = names_las, cex.axis = names_cex, tick = FALSE, line = names_line)
+        # gap.axis = -1 # added so names show up overlapping rather than not show up at all (can be misleading/confusing)
+        graphics::axis( 1, xc, colnames(kinship), las = names_las, cex.axis = names_cex, tick = FALSE, line = names_line, gap.axis = -1 )
+        graphics::axis( 2, yc, rownames(kinship), las = names_las, cex.axis = names_cex, tick = FALSE, line = names_line, gap.axis = -1 )
     }
     if (diag_line)
         # diagonal line, version for c(1, n) range
@@ -868,7 +931,8 @@ calc_leg_width_min <- function
     return( leg_width_min )
 }
 
-plot_popkin_layout <- function(n, nr = 1, leg_per_panel = FALSE, leg_width = 0.3) {
+# `leg_column` for placing color key in a given column (rather than just last), ignored if `leg_per_panel = TRUE`.
+plot_popkin_layout <- function(n, nr = 1, leg_per_panel = FALSE, leg_width = 0.3, leg_column = NA) {
     # figure out layout given a requested number of rows
     
     # step 1: dimensions
@@ -926,6 +990,40 @@ plot_popkin_layout <- function(n, nr = 1, leg_per_panel = FALSE, leg_width = 0.3
         # step 3: set up widths vector too
         # last column for color key is `leg_width` fraction of the width of the rest
         widths <- c( rep.int(1, nc), leg_width )
+
+        # step 4: optionally reorder color key column
+        if ( !is.na( leg_column ) ) {
+            # just round or whatever
+            # requiring integers fails unless we specify them as proper integers (i.e. 3L instead of 3), which I'd rather not burden people with
+            leg_column <- as.integer( leg_column )
+            # make sure request makes sense
+            if ( leg_column < 1 )
+                stop( '`leg_column` must be positive!' )
+            if ( leg_column > nc + 1 )
+                stop( '`leg_column` must be smaller or equal than the number of columns: ', nc + 1, '!' )
+
+            # don't do anything if we asked to stay in the last column
+            # (it's another edge case to code up otherwise)
+            if ( leg_column < nc + 1 ) {
+                # this is desired order
+                # (handle another edge cases)
+                if ( leg_column == 1 ) {
+                    indexes <- c(
+                        nc + 1,
+                        leg_column : nc
+                    )
+                } else {
+                    indexes <- c(
+                        1 : ( leg_column - 1 ),
+                        nc + 1,
+                        leg_column : nc
+                    )
+                }
+                # now perform column reordering/swap
+                layout <- layout[ , indexes, drop = FALSE ]
+                widths <- widths[ indexes ]
+            }
+        }
     } else {
         # every panel has a legend, so there's 2*n panels actually
         # still need zeroes (twice as many as default too)
@@ -1004,7 +1102,7 @@ line_to_user <- function(line, side) {
            stop("Side must be 1, 2, 3, or 4", call. = FALSE))
 }
 
-panel_letter <- function(letter, cex = 1.5, line = 0.5, adj = 0) {
+panel_letter <- function( letter, cex = 1.5, line = 0.5, adj = -0.1 ) {
     # a wrapper around mtext with useful default values
     graphics::mtext(letter, cex = cex, line = line, adj = adj)
 }

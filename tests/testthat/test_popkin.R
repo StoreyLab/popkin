@@ -1,5 +1,8 @@
 context('popkin_Rdata')
 
+# used in some examples
+library(ape)
+
 # loads Rdata matrices to test
 load('Xs.RData')
 
@@ -25,29 +28,46 @@ test_that( "M is correct", {
 })
 
 test_that("validate_kinship works", {
+    # try default "error" versions alongside logical versions
+    
     # validate positive examples
     expect_silent( validate_kinship( Phi ) )
     expect_silent( validate_kinship( Phi0 ) )
     expect_silent( validate_kinship( A, name = 'A' ) ) # not real kinship but satisfies requirements
+    expect_true( validate_kinship( Phi, logical = TRUE ) )
+    expect_true( validate_kinship( Phi0, logical = TRUE ) )
+    expect_true( validate_kinship( A, name = 'A', logical = TRUE ) ) # not real kinship but satisfies requirements
 
     # negative examples
     # dies if input is missing
     expect_error( validate_kinship() )
+    expect_error( validate_kinship( logical = TRUE ) ) # still dies here
+    
+    # NULL values should fail (important for `plot_popkin`)
+    expect_error( validate_kinship( NULL ) )
+    expect_false( validate_kinship( NULL, logical = TRUE ) )
     
     # and if input is not a matrix
     expect_error( validate_kinship( 1:5 ) )
+    expect_false( validate_kinship( 1:5, logical = TRUE ) )
     
     # and for non-numeric matrices
     char_mat <- matrix(c('a', 'b', 'c', 'd'), nrow=2)
     expect_error( validate_kinship( char_mat ) )
+    expect_false( validate_kinship( char_mat, logical = TRUE ) )
     
     # and non-square matrices
     non_kinship <- matrix(1:2, nrow=2)
     expect_error( validate_kinship( non_kinship ) )
+    expect_false( validate_kinship( non_kinship, logical = TRUE ) )
     
     # and non-symmetric matrices
+    # (also test `sym = FALSE` option that lets this case pass)
     non_kinship <- matrix(1:4, nrow=2)
     expect_error( validate_kinship( non_kinship ) )
+    expect_silent( validate_kinship( non_kinship, sym = FALSE ) )
+    expect_false( validate_kinship( non_kinship, logical = TRUE ) )
+    expect_true( validate_kinship( non_kinship, sym = FALSE, logical = TRUE ) )
 })
 
 
@@ -432,6 +452,36 @@ test_that("n_eff works", {
     expect_true(min(obj$weights) < 0) # this example must have negative weights, or it's useless!
 })
 
+test_that("phylo_max_edge works", {
+    # plot examples with trees
+    tree <- rtree( 3 )
+
+    expect_silent(
+        max_length <- phylo_max_edge( tree )
+    )
+    expect_true( is.numeric( max_length ) )
+    expect_equal( length( max_length ), 1 )
+    expect_true( max_length >= 0 )
+    expect_true( max_length <= sum( tree$edge.length ) )
+})
+
+test_that("plot_phylo works", {
+    # just in case some standalone defaults don't work as they should
+    
+    # set up a temporary path to write to
+    fo <- tempfile('test-plot-phylo', fileext = '.pdf')
+    # random sample tree
+    tree <- rtree( 3 )
+    
+    # this should work
+    pdf( fo, width = 14 )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_phylo( tree ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+})
+
 test_that("plot_popkin works", {
     # set up a temporary path to write to
     fo <- tempfile('test-plot-popkin', fileext = '.pdf')
@@ -493,6 +543,18 @@ test_that("plot_popkin works", {
     expect_silent( plot_popkin( inbr_diag( list(Phi, NULL) ), titles = 'a', null_panel_data = FALSE ) )
     invisible( dev.off() )
     invisible( file.remove(fo) )
+
+    # plot examples with trees
+    tree <- rtree( 3 )
+
+    # this should work
+    pdf( fo, width = 14 )
+    par(oma = c(0, 1.5, 0, 3))
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_popkin( list( tree, inbr_diag( Phi ), NULL) ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+    
 })
 
 #################

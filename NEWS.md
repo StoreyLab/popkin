@@ -258,3 +258,22 @@ More improvements to function `plot_popkin`:
 # 2021-03-16 - popkin 1.3.9.9000
 
 - Added function `popkin_af`, which is the analog of `popkin` but for allele frequency matrices instead of genotypes, and as a consequence it estimates coancestry instead of kinship.
+
+# 2021-05-25 - popkin 1.3.10.9000
+
+Overall added tree plotting capabilities and more plotting fine control.
+
+- Added function `plot_phylo` for plotting `phylo` trees.
+  This is a wrapper around `ape::plot.phylo` that makes several adjustments so plots agree more with accompanying kinship matrices (package `ape` is now a dependency for this feature).
+- Function `plot_popkin` had the following updates:
+  - Objects of type `phylo` and `function` are now accepted elements in input list `kinship` (first argument).
+    If `phylo`, these trees are plotted via `plot_phylo`.
+    If `function`, its code is executed without arguments, which is expected to plot a single panel.
+  - Added option `ylab_side` to allow placing labels on x-axis (bottom, but also top, and right side) instead of the default y-axis (left side).
+  - Added option `leg_column` for placing legend/color key in any column (default last column, which was the only choice before).
+  - Added option `panel_letters_adj` for positioning panel letters more finely, farther into the margin.
+    Also, previous hardcoded default of `0` (inside x-axis range) was changed now to `-0.1` (just outside the x-axis range in most cases).
+  - Matrix row and column names (when `names = TRUE`) are now always plotted entirely, even if overlapping.
+    The old behavior (R's default) plotted names in order and skipped overlapping labels (see `?axis`), which looks prettier but was confusing for this plot as it suggested incorrectly that some individuals or subpopulations were not present.
+	The solution is unfortunately a hack, to pass `gap.axis = -1` to `axis` (suggested in `?axis`), which hopefully does not break in the future.
+- Function `validate_kinship` now has option `logical = TRUE` to return a logical value instead of throwing errors.

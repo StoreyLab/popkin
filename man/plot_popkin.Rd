@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_popkin.R
 \name{plot_popkin}
 \alias{plot_popkin}
-\title{Visualize one or more kinship matrices}
+\title{Visualize one or more kinship matrices and other related objects}
 \usage{
 plot_popkin(
   kinship,
@@ -15,9 +15,11 @@ plot_popkin(
   diag_line = FALSE,
   panel_letters = toupper(letters),
   panel_letters_cex = 1.5,
+  panel_letters_adj = -0.1,
   ylab = "Individuals",
   ylab_adj = NA,
   ylab_line = 0,
+  ylab_side = 2,
   layout_add = TRUE,
   layout_rows = 1,
   leg_per_panel = FALSE,
@@ -26,6 +28,7 @@ plot_popkin(
   leg_n = 5,
   leg_mar = 3,
   leg_width = 0.3,
+  leg_column = NA,
   names = FALSE,
   names_cex = 1,
   names_line = NA,
@@ -48,12 +51,15 @@ plot_popkin(
 )
 }
 \arguments{
-\item{kinship}{A numeric kinship matrix or a list of matrices.
-Note \code{kinship} may contain \code{NULL} elements (makes blank plots with titles; good for placeholders or non-existent data)}
+\item{kinship}{A numeric kinship matrix, a \code{phylo} or \code{function} object, or a list of any such objects (at least one kinship matrix is expected).
+This list may contain \code{NULL} elements (makes blank panels with titles; good for placeholders or non-existent data)
+\code{phylo} objects are plotted with \code{\link[=plot_phylo]{plot_phylo()}}, which is a wrapper around \code{\link[ape:plot.phylo]{ape::plot.phylo()}} that makes some adjustments so resulting plots are more consistent with accompanying kinship matrices.
+\code{function} elements are executed without arguments, and are expected to produce single arbitrary plot panels.}
 
-\item{titles}{Titles to add to each matrix panel (default is no titles)}
+\item{titles}{Titles to add to each matrix panel (default is no titles).
+Applied to kinship and phylo panels only.}
 
-\item{col}{Colors for heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).}
+\item{col}{Colors for kinship heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).}
 
 \item{col_n}{The number of colors to use in the heatmap (applies if \code{col = NULL}).}
 
@@ -64,11 +70,13 @@ If this length is 4, then \code{mar} is a fully-specified margin vector in the s
 Vectors of invalid lengths produce a warning.
 Note the padding \code{mar_pad} below is added to every margin if set.
 If \code{NULL}, the original margin values are used without change, and are reset for every panel that has a \code{NULL} value.
-The original margins are also reset after plotting is complete.}
+The original margins are also reset after plotting is complete.
+Applied to panels of all types (kinship, phylo, and function).}
 
 \item{mar_pad}{Margin padding added to all panels (\code{mar} above and \code{leg_mar} below).
 Default 0.2.
-Must be a scalar or a vector of length 4 to match \code{\link[graphics:par]{graphics::par()}} 'mar'.}
+Must be a scalar or a vector of length 4 to match \code{\link[graphics:par]{graphics::par()}} 'mar'.
+Applied to panels of all types (kinship, phylo, and function).}
 
 \item{oma}{Outer margin vector.
 If length 1, the value of \code{oma} is applied to the left outer margin only (so \code{ylab} below displays correctly) and zero outer margins elsewhere.
@@ -77,23 +85,33 @@ If length 4, all outer margins are expected in standard format \code{\link[graph
 If \code{NULL}, no outer margins are set (previous settings are preserved).
 Vectors of invalid lengths produce a warning.}
 
-\item{diag_line}{If \code{TRUE} adds a line along the diagonal (default no line).
-May also be a vector of logicals to set per panel (lengths must agree).}
+\item{diag_line}{If \code{TRUE} adds a line along the kinship diagonal (default no line).
+May also be a vector of logicals to set per panel (lengths must agree).
+Has no effect on non-kinship panels.}
 
 \item{panel_letters}{Vector of strings for labeling panels (default A-Z).
-No labels are added if \code{NULL}, or when there is only one panel except if its set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).}
+No labels are added if \code{NULL}, or when there is only one panel except if its set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
+Applied to panels of all types (kinship, phylo, and function).}
 
 \item{panel_letters_cex}{Scaling factor of panel letters (default 1.5).}
 
+\item{panel_letters_adj}{X-axis adjustment for letter (default -0.1).
+Negative values place the letter into the left margin area.
+Might need adjustment depending on the size of the left margin.}
+
 \item{ylab}{The y-axis label (default "Individuals").
 If \code{length(ylab) == 1}, the label is placed in the outer margin (shared across panels);
-otherwise \code{length(ylab)} must equal the number of panels and each label is placed in the inner margin of the respective panel.}
+otherwise \code{length(ylab)} must equal the number of panels and each label is placed in the inner margin of the respective panel.
+Applied to panels of all types (kinship, phylo, and function).}
 
-\item{ylab_adj}{The value of \code{adj} passed to \code{\link[graphics:mtext]{graphics::mtext()}}.
+\item{ylab_adj}{The value of \code{adj} for \code{ylab} passed to \code{\link[graphics:mtext]{graphics::mtext()}}.
 If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_adj)} must equal the number of panels.}
 
-\item{ylab_line}{The value of \code{line} passed to \code{\link[graphics:mtext]{graphics::mtext()}}.
-If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_line)} must equal the number of panels.
+\item{ylab_line}{The value of \code{line} for \code{ylab} passed to \code{\link[graphics:mtext]{graphics::mtext()}}.
+If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_line)} must equal the number of panels.}
+
+\item{ylab_side}{The value of \code{side} for \code{ylab} passed to \code{\link[graphics:mtext]{graphics::mtext()}} (2 is y-axis, 1 is x-axis, can also place on top (3) or right (4)).
+If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_side)} must equal the number of panels.
 
 LAYOUT OPTIONS}
 
@@ -105,38 +123,45 @@ If a non-standard layout or additional panels (beyond those provided by \code{pl
 
 LEGEND (COLOR KEY) OPTIONS}
 
-\item{leg_per_panel}{If \code{TRUE}, every kinship matrix get its own legend/color key (best for matrices with very different scales).
-If \code{FALSE} (default), a single legend/color key is shared by all kinship matrix panels.}
+\item{leg_per_panel}{If \code{TRUE}, every kinship matrix get its own legend/color key (best for matrices with very different scales), and each phylo tree has its own x-axis range.
+If \code{FALSE} (default), a single legend/color key is shared by all kinship matrix panels, and also every tree has the same x-axis range (different from the kinship range).}
 
-\item{leg_title}{The name of the variable that the heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.}
+\item{leg_title}{The name of the variable that the kinship heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.}
 
 \item{leg_cex}{Scaling factor for \code{leg_title} (default 1), or a vector of such values if they vary per panel.}
 
-\item{leg_n}{The desired number of ticks in the legend y-axis (input to \code{\link[=pretty]{pretty()}}, see that for more details), or a vector of such values if they vary per panel.}
+\item{leg_n}{The desired number of ticks in the kinship legend y-axis, and phylo x-axis (input to \code{\link[=pretty]{pretty()}}, see that for more details), or a vector of such values if they vary per panel.}
 
-\item{leg_mar}{Margin values for the legend panel only, or a list of such values if they vary per panel.
+\item{leg_mar}{Margin values for the kinship legend panel only, or a list of such values if they vary per panel.
 A length-4 vector (in \code{c( bottom, left, top, right )} format that \code{\link[graphics:par]{graphics::par()}} 'mar' expects) specifies the full margins, to which \code{mar_pad} is added.
-Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if \code{leg_mar} is length-1, it is used to specify the right margin (plus the value of \code{mar_pad}, see above).
+Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if \code{leg_mar} is length-1, it is used to specify the right margin (plus the value of \code{mar_pad}, see above).}
+
+\item{leg_width}{The width of the kinship legend panel, relative to the width of the kinship panel.
+This value is passed to \code{\link[graphics:layout]{graphics::layout()}} (ignored if \code{layout_add = FALSE}).}
+
+\item{leg_column}{The column number in which to place the kinship legend (default \code{NA} is for last column).
+Ignored if \code{leg_per_panel = TRUE}.
 
 INDIVIDUAL LABEL OPTIONS}
 
-\item{leg_width}{The width of the legend panel, relative to the width of the kinship panel.
-This value is passed to \code{\link[graphics:layout]{graphics::layout()}} (ignored if \code{layout_add = FALSE}).}
+\item{names}{If \code{TRUE}, the column and row names are plotted in the kinship heatmap, or a vector of such values if they vary per panel.
+(\code{names} has no effect on \code{phylo} panels, whose tip labels are always plotted, or other panel types.)}
 
-\item{names}{If \code{TRUE}, the column and row names are plotted in the heatmap, or a vector of such values if they vary per panel.}
+\item{names_cex}{Scaling factor for the column and row names of a kinship matrix, or the tip labels of a \code{phylo} object, or a vector of such values if they vary per panel.}
 
-\item{names_cex}{Scaling factor for the column and row names, or a vector of such values if they vary per panel.}
-
-\item{names_line}{Line where column and row names are placed, or a vector of such values if they vary per panel.}
+\item{names_line}{Line where kinship column and row names are placed, or a vector of such values if they vary per panel.
+Has no effect on non-kinship panels.}
 
 \item{names_las}{Orientation of labels relative to axis.
 Default (2) makes labels perpendicular to axis.
+Has no effect on non-kinship panels.
 
 SUBPOPULATION LABEL OPTIONS}
 
-\item{labs}{Subpopulation labels for individuals.
+\item{labs}{Subpopulation labels for individuals in kinship matrices.
 Use a matrix of labels to show groupings at more than one level (for a hierarchy or otherwise).
-If input is a vector or a matrix, the same subpopulation labels are shown for every heatmap panel; the input must be a list of such vectors or matrices if the labels vary per panel.}
+If input is a vector or a matrix, the same subpopulation labels are shown for every kinship matrix; the input must be a list of such vectors or matrices if the labels vary per panel.
+Has no effect on non-kinship panels.}
 
 \item{labs_cex}{A vector of label scaling factors for each level of labs, or a list of such vectors if labels vary per panel.}
 
@@ -164,25 +189,27 @@ In the latter case, these \code{NULL} panels also get panel letters.
 The difference is important when checking that lengths of non-singleton parameters agree.}
 
 \item{weights}{A vector with weights for every individual, or a list of such vectors if they vary per panel.
-The width of every individual becomes proportional to their weight.
-Individuals with zero or negative weights are omitted.}
+The width of every individual in the kinship matrix becomes proportional to their weight.
+Individuals with zero or negative weights are omitted.
+Has no effect on non-kinship panels.}
 
 \item{raster}{A logical equivalent to \code{useRaster} option in the \code{image} function used internally, or a vector of such logicals if the choice varies per panel.
 If \code{weights} are non-\code{NULL} in a given panel, \code{raster = FALSE} is forced (this is necessary to plot images where columns and rows have variable width).
 If \code{weights} are \code{NULL}, the default is \code{raster = TRUE}, but in this case the user may override (for example, so panels are visually coherent when some use weights while others do not, as there are small differences in rendering implementation for each value of \code{raster}).
-Note that a multipanel figure with a list of \code{weights} sets \code{raster = FALSE} to all panels by default, even if the weights were only applied to a subset of panels.}
+Note that a multipanel figure with a list of \code{weights} sets \code{raster = FALSE} to all panels by default, even if the weights were only applied to a subset of panels.
+Has no effect on non-kinship panels.}
 
-\item{sym}{If \code{FALSE} (default), plots non-symmetric (but square) kinship matrices without issues.  If \code{TRUE}, stops if any input kinship matrices are not symmetric.
+\item{sym}{If \code{FALSE} (default), plots non-symmetric (but square) kinship matrices without issues.  If \code{TRUE}, stops if any input kinship matrices (excluding \code{phylo} or \code{function} objects) are not symmetric.
 
 AXIS LABEL OPTIONS}
 
 \item{...}{Additional options passed to \code{\link[graphics:image]{graphics::image()}}.
-These are shared across panels}
+These are shared across kinship panels.
+Have no effect on non-kinship panels.}
 }
 \description{
-This function plots one or more kinship matrices and a shared legend for the color key.
+This function plots one or more kinship matrices, trees (class \code{phylo} objects, see \code{ape} package), and arbitrary functions, and a shared legend for the kinship color key.
 Many options allow for fine control of individual or subpopulation labeling.
-This code assumes input matrices are symmetric.
 }
 \details{
 \code{plot_popkin} plots the input kinship matrices as-is.
