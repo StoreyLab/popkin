@@ -277,3 +277,7 @@ Overall added tree plotting capabilities and more plotting fine control.
     The old behavior (R's default) plotted names in order and skipped overlapping labels (see `?axis`), which looks prettier but was confusing for this plot as it suggested incorrectly that some individuals or subpopulations were not present.
 	The solution is unfortunately a hack, to pass `gap.axis = -1` to `axis` (suggested in `?axis`), which hopefully does not break in the future.
 - Function `validate_kinship` now has option `logical = TRUE` to return a logical value instead of throwing errors.
+
+# 2021-06-04 - popkin 1.3.11.9000
+
+- Updated citations in `inst/CITATION` (missed last time I updated them in other locations).
