@@ -281,3 +281,10 @@ Overall added tree plotting capabilities and more plotting fine control.
 # 2021-06-04 - popkin 1.3.11.9000
 
 - Updated citations in `inst/CITATION` (missed last time I updated them in other locations).
+
+# 2021-06-09 - popkin 1.3.12.9000
+
+- Function `weights_subpops` updates:
+  - Now accepts a second optional vector `subsubpops` for calculating weights on two levels.
+  - Return value is now a numeric vector (used to be of class `table`).
+

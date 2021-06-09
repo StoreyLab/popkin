@@ -163,6 +163,7 @@ test_that("solve_m_mem_lim works", {
 })
 
 test_that("function returns precomputed values: weights_subpops", {
+    # these are extremely trivial (sad choice but meh)
     expect_equal(weights_subpops(subpops0), w0)
     expect_equal(weights_subpops(subpops), w)
     # make sure dimensions match
@@ -175,6 +176,70 @@ test_that("function returns precomputed values: weights_subpops", {
     expect_true(all(w > 0))
     expect_true(all(w0 < 1))
     expect_true(all(w < 1))
+})
+
+test_that("weights_subpops works on random data", {
+    # cause errors on purpose
+    # missing arguments, etc
+    expect_error( weights_subpops() )
+    expect_error( weights_subpops( NULL ) )
+    expect_error( weights_subpops( c('a', NA ) ) ) # no NAs
+    
+    # construct a large but random `subpops` vector
+    # (this is the real test of correctness)
+    n <- 300
+    subpops <- sample( letters, n, replace = TRUE )
+    expect_silent(
+        w <- weights_subpops( subpops )
+    )
+    # make sure dimensions match
+    expect_equal( length( w ), n )
+    # test the basic qualities of weights
+    expect_equal( sum( w ), 1 )
+    expect_true( all( w > 0 ) )
+    expect_true( all( w < 1 ) )
+    # can check that every subpop has equal weight too
+    K <- length( unique( subpops ) )
+    w_by_subpops_obs <- aggregate( w, list( subpops = subpops ), sum )$x
+    w_by_subpops_exp <- rep.int( 1 / K, K )
+    expect_equal( w_by_subpops_obs, w_by_subpops_exp )
+
+    # construct 2-level hierarchy case
+    # have top level have fewer choices to minimize the chance of empty and trivial cases
+    subpops <- sample( letters[1:3], n, replace = TRUE )
+    #subsubpops <- sample( letters[1:3], n, replace = TRUE )
+    subsubpops <- sample( letters, n, replace = TRUE )
+    # to ensure nestedness, sub-subpopulations get unique suffixes by subpop
+    subsubpops <- paste0( subsubpops, subpops )
+    expect_silent(
+        w <- weights_subpops( subpops, subsubpops )
+    )
+    # make sure dimensions match
+    expect_equal( length( w ), n )
+    # test the basic qualities of weights
+    expect_equal( sum( w ), 1 )
+    expect_true( all( w > 0 ) )
+    expect_true( all( w < 1 ) )
+    # can check that every subpop has equal weight too
+    K <- length( unique( subpops ) )
+    w_by_subpops_obs <- aggregate( w, list( subpops = subpops ), sum )$x
+    w_by_subpops_exp <- rep.int( 1 / K, K )
+    expect_equal( w_by_subpops_obs, w_by_subpops_exp )
+    # and for this case, each sub-subpopulation has equal weight within its subpopulation
+    w_by_subsubpops_obs <- aggregate( w, list( subsubpops = subsubpops ), sum )$x
+    # expectation here is harder to construct, but we do it!
+    # this should result in same weights per sub-subpopulation, essentially converting them to individuals
+    tab <- unique( data.frame( subpops = subpops, subsubpops = subsubpops ) )
+    # have to sort subsubpops to be in same order as aggregate returns them
+    tab <- tab[ order( tab$subsubpops ), ]
+    labs2 <- tab$subpops
+    w_by_subsubpops_exp <- weights_subpops( labs2 )
+    expect_equal( w_by_subsubpops_obs, w_by_subsubpops_exp )
+
+    # cause an error on purpose for non-nested subpopulations
+    subpops <- c(1, 1, 2, 2)
+    subsubpops <- c(1, 2, 1, 2)
+    expect_error( weights_subpops( subpops, subsubpops ) )
 })
 
 test_that("function returns precomputed values: popkin_A", {

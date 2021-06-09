@@ -4,10 +4,13 @@
 \alias{weights_subpops}
 \title{Get weights for individuals that balance subpopulations}
 \usage{
-weights_subpops(subpops)
+weights_subpops(subpops, subsubpops = NULL)
 }
 \arguments{
 \item{subpops}{The length-\code{n} vector of subpopulation assignments for each individual.}
+
+\item{subsubpops}{The optional length-\code{n} vector of sub-subpopulation assignments for each individual.
+Each sub-subpopulation must belong to a single subpopulation (a nested hierarchy) or an error is produced.}
 }
 \value{
 The length-\code{n} vector of weights for each individual.
@@ -16,24 +19,31 @@ The length-\code{n} vector of weights for each individual.
 This function returns positive weights that sum to one for individuals using subpopulation labels, such that every subpopulation receives equal weight.
 In particular, if there are \code{K} subpopulations, then the sum of weights for every individuals of a given subpopulation will equal \code{1 / K}.
 The weight of every individual is thus inversely proportional to the number of individuals in its subpopulation.
+If the optional sub-subpopulation labels are also provided, then each sub-subpopulation within a given subpopulation is also weighted equally.
 }
 \examples{
 # if every individual has a different subpopulation, weights are uniform:
 subpops <- 1:10
-weights <- weights_subpops(subpops)
-stopifnot(all(weights == rep.int(1/10,10)))
+weights <- weights_subpops( subpops )
+stopifnot( all( weights == rep.int( 1/10, 10 ) ) )
 
 # subpopulations can be strings too
 subpops <- c('a', 'b', 'c')
-weights <- weights_subpops(subpops)
-stopifnot(all(weights == rep.int(1/3,3)))
+weights <- weights_subpops( subpops )
+stopifnot( all( weights == rep.int( 1/3, 3 ) ) )
 
 # if there are two subpopulations
 # and the first has twice as many individuals as the second
 # then the individuals in this first subpopulation weight half as much 
 # as the ones in the second subpopulation
 subpops <- c(1, 1, 2)
-weights <- weights_subpops(subpops)
-stopifnot(all(weights == c(1/4,1/4,1/2)))
+weights <- weights_subpops( subpops )
+stopifnot( all( weights == c( 1/4, 1/4, 1/2 ) ) )
+
+# hierarchy example
+subpops <- c(1, 1, 1, 2, 2)
+subsubpops <- c('a', 'b', 'b', 'c', 'd')
+weights <- weights_subpops( subpops, subsubpops )
+stopifnot( all( weights == c( 1/4, 1/8, 1/8, 1/4, 1/4 ) ) )
 
 }
