@@ -240,6 +240,9 @@ test_that("weights_subpops works on random data", {
     subpops <- c(1, 1, 2, 2)
     subsubpops <- c(1, 2, 1, 2)
     expect_error( weights_subpops( subpops, subsubpops ) )
+    # and lenghts that don't match
+    subsubpops <- 1:5
+    expect_error( weights_subpops( subpops, subsubpops ) )
 })
 
 test_that("function returns precomputed values: popkin_A", {

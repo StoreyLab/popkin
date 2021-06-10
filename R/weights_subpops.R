@@ -30,7 +30,7 @@
 #' weights <- weights_subpops( subpops )
 #' stopifnot( all( weights == c( 1/4, 1/4, 1/2 ) ) )
 #'
-#' # hierarchy example
+#' # 2-level hierarchy example
 #' subpops <- c(1, 1, 1, 2, 2)
 #' subsubpops <- c('a', 'b', 'b', 'c', 'd')
 #' weights <- weights_subpops( subpops, subsubpops )
@@ -59,7 +59,10 @@ weights_subpops <- function(subpops, subsubpops = NULL) {
         # validate second input
         if ( anyNA( subsubpops ) )
             stop('`subsubpops` cannot contain NAs!')
-
+        # lengths should match
+        if ( length( subsubpops ) != length( subpops ) )
+            stop( 'The length of `subpops` (', length( subpops ), ') and `subsubpops` (', length( subsubpops ), ') must match!' )
+        
         # count number of individuals in each subsubpopulation
         subsubpop_counts <- table( subsubpops )
 

@@ -40,7 +40,7 @@ subpops <- c(1, 1, 2)
 weights <- weights_subpops( subpops )
 stopifnot( all( weights == c( 1/4, 1/4, 1/2 ) ) )
 
-# hierarchy example
+# 2-level hierarchy example
 subpops <- c(1, 1, 1, 2, 2)
 subsubpops <- c('a', 'b', 'b', 'c', 'd')
 weights <- weights_subpops( subpops, subsubpops )
