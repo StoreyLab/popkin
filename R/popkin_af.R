@@ -6,7 +6,7 @@
 #' This function is intended for cases where allele frequencies, but not individual genotypes, are available; otherwise it is best to use the individual genotypes and [popkin()].
 #' An application of interest is the allele frequency matrices from admixture models, in which case the columns correspond to subpopulations rather than individuals, and `subpops = NULL` is an acceptable choice.
 #' 
-#' @param P `m`-by-`n` matrix of individual-specifi allele frequencies, which should have values between `[0, 1]` (range is not strictly required) or `NA` for missing data.
+#' @param P `m`-by-`n` matrix of individual-specific allele frequencies, which should have values between `[0, 1]` (range is not strictly required) or `NA` for missing data.
 #' @param subpops The length-`n` vector of subpopulation assignments for each individual.
 #' If `NULL`, every individual is effectively treated as a different population.
 #' @param loci_on_cols If `TRUE`, `P` has loci on columns and individuals on rows; if `FALSE` (default), loci are on rows and individuals on columns.

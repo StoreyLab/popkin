@@ -15,7 +15,7 @@ popkin_af(
 )
 }
 \arguments{
-\item{P}{\code{m}-by-\code{n} matrix of individual-specifi allele frequencies, which should have values between \verb{[0, 1]} (range is not strictly required) or \code{NA} for missing data.}
+\item{P}{\code{m}-by-\code{n} matrix of individual-specific allele frequencies, which should have values between \verb{[0, 1]} (range is not strictly required) or \code{NA} for missing data.}
 
 \item{subpops}{The length-\code{n} vector of subpopulation assignments for each individual.
 If \code{NULL}, every individual is effectively treated as a different population.}

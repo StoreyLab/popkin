@@ -1,6 +1,6 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbitrary Population Structure
-Version: 1.3.12.9000
+Version: 1.3.13
 Authors@R: c(
     person(given = "Alejandro",
 	   family = "Ochoa",
@@ -20,7 +20,6 @@ LinkingTo: Rcpp, RcppEigen
 Suggests: BEDMatrix, testthat, knitr, rmarkdown, lfa, bnpsd
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
