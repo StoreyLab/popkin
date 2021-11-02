@@ -14,7 +14,7 @@ The current development version can be installed from the GitHub repository usin
 ```R
 install.packages("devtools") # if needed
 library(devtools)
-install_github('StoreyLab/popkin', build_opts = c())
+install_github('StoreyLab/popkin', build_vignettes = TRUE)
 ```
 
 You can see the package vignette, which has more detailed documentation, by typing this into your R session:

@@ -10,19 +10,15 @@ popkin_A_min_subpops(A, subpops = NULL)
 \item{A}{A symmetric \code{n}-by-\code{n} matrix with values between every individual pair, including self comparisons.}
 
 \item{subpops}{A length-\code{n} vector of subpopulation assignments for each individual.
-If missing, every individual is effectively treated as a different population.}
+If missing, every individual is treated as a different subpopulation.}
 }
 \value{
 The minimum of the average between-subpopulation \code{A} values, which estimates the minimum expected value of \code{A}
 }
 \description{
 This function averages the values of a square matrix \code{A} between every subpopulation pair and returns the minimum of these averages.
+If no subpopulation partition is provided, the function returns the minimum value of \code{A} excluding the diagonal, to agree when the code treats each individual as a subpopulation.
 The return value can be used to adjust an \code{A} matrix to yield the kinship matrix.
-}
-\details{
-If no subpopulation partition is provided, the function returns the minimum value of \code{A}.
-This default choice may be appropriate in some settings, but is susceptible to bias when there are few loci and many pairs of individuals with zero kinship (taking the most extreme estimate is clearly worse than averaging these values).
-This default is provided for convenience, to explore the data when a correct choice of subpopulations is not clear, but is not recommended as a final approach.
 }
 \examples{
 # Construct toy data
@@ -44,7 +40,7 @@ A_min_est <- popkin_A_min_subpops( A, subpops )
 kinship <- 1 - A / A_min_est
 stopifnot( kinship == popkin( X, subpops ) )
 
-# a simple default for exploratory analysis, equals min( A )
+# a simple default for exploratory analysis, equals min( A ) for correctly-calculated A
 A_min_est <- popkin_A_min_subpops( A )
 stopifnot( A_min_est == min( A ) )
 
@@ -52,4 +48,6 @@ stopifnot( A_min_est == min( A ) )
 \seealso{
 \code{\link[=popkin_A]{popkin_A()}} to generate the \code{A} matrix usually inputted into this function (\code{popkin_A_min_subpops}).
 \code{\link[=popkin]{popkin()}} is the wrapper function around both of these.
+
+\code{\link[=avg_kinship_subpops]{avg_kinship_subpops()}} for the full matrix of mean kinship values between subpopulations.
 }

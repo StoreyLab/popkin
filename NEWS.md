@@ -294,3 +294,12 @@ Overall added tree plotting capabilities and more plotting fine control.
 - Removed "LazyData: true" from DESCRIPTION (to avoid a new "NOTE" on CRAN).
 - Reformatted this `NEWS.md` slightly to improve its automatic parsing.
 - Fixed spelling in documentation.
+
+# popkin 1.3.13.9000 (2021-11-02)
+
+- Added function `avg_kinship_subpops`.
+- Function `popkin_A_min_subpops`:
+  - Now uses `avg_kinship_subpops` internally to perform the bulk of the calculations
+  - When `subpops = NULL`, calculation now returns minimum `A` among off-diagonal elements only (excluding diagonal) rather than the overall minimum of `A`.  There's no difference when `A` is calculated from genotypes (diagonal values are much greater than off-diagonal values), but made the change for consistency when it might differ for arbitrary inputs.
+- `README` updated github install instructions for building vignettes.
+
