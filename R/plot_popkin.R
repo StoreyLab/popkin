@@ -397,7 +397,8 @@ plot_popkin <- function(
         # let's still start a new plot with a title, nothing else gets added
         if ( is.null( kinship_i ) ) {
             graphics::plot.new() # new blank figure
-            graphics::title(...) # this works?
+            # NOTE: null_panel_data=FALSE was handled earlier and skips everything (loop is "next"ed), so if we're here it implies null_panel_data=TRUE
+            graphics::title( main = titles[i], ... ) # this works?
         } else if ( 'phylo' %in% class_i ) {
             # use this other internal function for this
             plot_phylo(

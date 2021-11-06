@@ -303,3 +303,6 @@ Overall added tree plotting capabilities and more plotting fine control.
   - When `subpops = NULL`, calculation now returns minimum `A` among off-diagonal elements only (excluding diagonal) rather than the overall minimum of `A`.  There's no difference when `A` is calculated from genotypes (diagonal values are much greater than off-diagonal values), but made the change for consistency when it might differ for arbitrary inputs.
 - `README` updated github install instructions for building vignettes.
 
+# popkin 1.3.14.9000 (2021-11-05)
+
+- Function `plot_popkin` fixed a bug when `null_panel_data = TRUE` in which titles that went over panels with `NULL` kinship were incorrectly omitted.
