@@ -306,3 +306,14 @@ Overall added tree plotting capabilities and more plotting fine control.
 # popkin 1.3.14.9000 (2021-11-05)
 
 - Function `plot_popkin` fixed a bug when `null_panel_data = TRUE` in which titles that went over panels with `NULL` kinship were incorrectly omitted.
+
+# popkin 1.3.15.9000 (2021-12-02)
+
+- Improved estimation of available memory on linux, fixing a bug where popkin incorrectly believes there is not enough memory.
+  - Old: retrieved `MemFree` (from `/proc/meminfo`).  This could underestimate available memory when `Buffers` and `Cached` memory are large (these count as available memory!), and in some cases cause this error:
+    ```
+    Error in solve_m_mem_lim : 
+    The resulting `m_chunk` was negative!  This is because either `mat_n_n` or `vec_n` are non-zero and `n` alone is too large for the available memory (even for `m_chunk == 0`).  The solution is to free more memory (ideal) or to reduce `n` if possible.
+    ```
+  - New: retrieve `MemAvailable` (still from `/proc/meminfo`), which is ideal but is absent in older linux kernels (<3.14), otherwise fallback into retrieving and returning the sum of `MemFree`, `Buffers`, and `Cached`.  Either way available memory is greater than `MemFree` alone and is also more accurate.
+  - Under the hood, cleaned parser considerably and check for several trouble scenarios that were previously taken for granted.
