@@ -317,3 +317,9 @@ Overall added tree plotting capabilities and more plotting fine control.
     ```
   - New: retrieve `MemAvailable` (still from `/proc/meminfo`), which is ideal but is absent in older linux kernels (<3.14), otherwise fallback into retrieving and returning the sum of `MemFree`, `Buffers`, and `Cached`.  Either way available memory is greater than `MemFree` alone and is also more accurate.
   - Under the hood, cleaned parser considerably and check for several trouble scenarios that were previously taken for granted.
+
+# popkin 1.3.16.9000 (2022-01-15)
+
+- Added function `plot_admix` for making admixture/structure plots with most of the same options as `plot_popkin`!
+  - Includes plotting examples in vignette.
+  - Cleaned up and extended internal function `print_labels_multi`, `print_labels`.

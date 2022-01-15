@@ -43,7 +43,7 @@
 #' No labels are added if `NULL`, or when there is only one panel except if its set to a single letter in that case (this behavior is useful if goal is to have multiple external panels but popkin only creates one of these panels).
 #' Applied to panels of all types (kinship, phylo, and function).
 #' @param panel_letters_cex Scaling factor of panel letters (default 1.5).
-#' @param panel_letters_adj X-axis adjustment for letter (default -0.1).
+#' @param panel_letters_adj X-axis adjustment for panel letters (default -0.1).
 #' Negative values place the letter into the left margin area.
 #' Might need adjustment depending on the size of the left margin.
 #' @param null_panel_data
@@ -89,11 +89,11 @@
 #' @param leg_title The name of the variable that the kinship heatmap colors measure (default "Kinship"), or a vector of such values if they vary per panel.
 #' @param leg_cex Scaling factor for `leg_title` (default 1), or a vector of such values if they vary per panel.
 #' @param leg_n The desired number of ticks in the kinship legend y-axis, and phylo x-axis (input to [pretty()], see that for more details), or a vector of such values if they vary per panel.
-#' @param leg_width The width of the kinship legend panel, relative to the width of the kinship panel.
+#' @param leg_width The width of the legend panel, relative to the width of a single main panel.
 #' This value is passed to [graphics::layout()] (ignored if `layout_add = FALSE`).
 #' @param leg_mar Margin values for the kinship legend panel only, or a list of such values if they vary per panel.
 #' A length-4 vector (in `c( bottom, left, top, right )` format that [graphics::par()] 'mar' expects) specifies the full margins, to which `mar_pad` is added.
-#' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if `leg_mar` is length-1, it is used to specify the right margin (plus the value of `mar_pad`, see above).
+#' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to `mar_pad`, and if `leg_mar` is length-1, it is added to `mar_pad` to specify the right margin.
 #' @param leg_column The column number in which to place the kinship legend (default `NA` is for last column).
 #' Ignored if `leg_per_panel = TRUE`.
 #'
@@ -316,10 +316,8 @@ plot_popkin <- function(
         }
     }
     
-    if (layout_add) {
-        # ...
-        
-        # figure out layout given a requested number of rows and other parameters
+    # figure out layout given a requested number of rows and other parameters
+    if (layout_add)
         plot_popkin_layout(
             n = n_all,
             nr = layout_rows,
@@ -327,8 +325,7 @@ plot_popkin <- function(
             leg_width = leg_width,
             leg_column = leg_column
         )
-    }
-
+    
     # breaks of all following plots should match!
     breaks <- NULL
     # index of non-null data
@@ -673,7 +670,7 @@ centers_from_boundaries <- function(xb) {
     return( xc )
 }
 
-print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, labs_sep, labs_even, labs_ticks, labs_text, labs_col, xb_ind, indexes_ind_keep) {
+print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, labs_sep, labs_even, labs_ticks, labs_text, labs_col, xb_ind = NULL, indexes_ind_keep = NULL, xc_ind = NULL, doMat = TRUE) {
     # normalize so we can loop over cases (assume arbitrary label levels)
     if (!is.matrix(labs))
         labs <- cbind(labs) # a col vector
@@ -683,7 +680,7 @@ print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, la
         labs <- labs[ indexes_ind_keep, , drop = FALSE ]
 
     # it's good to check numbers of individuals now
-    if (nrow(labs) != length(xb_ind) - 1)
+    if ( !is.null( xb_ind ) && nrow(labs) != length(xb_ind) - 1 )
         stop('Number of individuals disagrees between `labs` (', nrow(labs), ') and `xb_ind` (', length(xb_ind) - 1, ')!')
 
     # NOTE: here n is the number of label levels (not number of individuals, as usual)
@@ -714,7 +711,9 @@ print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, la
             text = labs_text[i],
             col = labs_col[i],
             # same for all levels (no [i])
-            xb_ind = xb_ind
+            xb_ind = xb_ind, # for kinship matrices only
+            xc_ind = xc_ind, # for barplots only
+            doMat = doMat
         )
     }
 }
@@ -1110,7 +1109,7 @@ panel_letter <- function( letter, cex = 1.5, line = 0.5, adj = -0.1 ) {
 
 print_labels <- function(
                          labs,
-                         x = NULL, # midpoints of individuals (in practice, given for barplots only)
+                         xc_ind = NULL, # midpoints of individuals (in practice, given for barplots only)
                          xb_ind = NULL, # boundaries between individuals (NEW)
                          doMat = TRUE,
                          cex = 1,
@@ -1141,14 +1140,13 @@ print_labels <- function(
     # number of groups / labels
     n_grp <- length(l)
 
-    if ( !is.null(x) ) {
-        if ( length(x) != n_ind )
-            stop('Length of individual centers `x` (', length(x), ') disagrees with `labs` length (', n_ind, ')!')
+    if ( !is.null( xc_ind ) ) {
+        if ( length( xc_ind ) != n_ind )
+            stop('Length of individual centers `xc_ind` (', length( xc_ind ), ') disagrees with `labs` length (', n_ind, ')!')
         # only old barplots trigger this
         # what is passed is centers only, regularly spaced
-        xc_ind <- x # copy this
         # get regular spacing interval
-        x_delta <- x[ 2L ] - x[ 1L ]
+        x_delta <- xc_ind[ 2L ] - xc_ind[ 1L ]
         # infer boundaries...
         # start by copying this again
         xb_ind <- xc_ind

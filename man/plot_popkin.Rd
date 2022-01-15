@@ -95,7 +95,7 @@ Applied to panels of all types (kinship, phylo, and function).}
 
 \item{panel_letters_cex}{Scaling factor of panel letters (default 1.5).}
 
-\item{panel_letters_adj}{X-axis adjustment for letter (default -0.1).
+\item{panel_letters_adj}{X-axis adjustment for panel letters (default -0.1).
 Negative values place the letter into the left margin area.
 Might need adjustment depending on the size of the left margin.}
 
@@ -134,9 +134,9 @@ If \code{FALSE} (default), a single legend/color key is shared by all kinship ma
 
 \item{leg_mar}{Margin values for the kinship legend panel only, or a list of such values if they vary per panel.
 A length-4 vector (in \code{c( bottom, left, top, right )} format that \code{\link[graphics:par]{graphics::par()}} 'mar' expects) specifies the full margins, to which \code{mar_pad} is added.
-Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to zero, and if \code{leg_mar} is length-1, it is used to specify the right margin (plus the value of \code{mar_pad}, see above).}
+Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to \code{mar_pad}, and if \code{leg_mar} is length-1, it is added to \code{mar_pad} to specify the right margin.}
 
-\item{leg_width}{The width of the kinship legend panel, relative to the width of the kinship panel.
+\item{leg_width}{The width of the legend panel, relative to the width of a single main panel.
 This value is passed to \code{\link[graphics:layout]{graphics::layout()}} (ignored if \code{layout_add = FALSE}).}
 
 \item{leg_column}{The column number in which to place the kinship legend (default \code{NA} is for last column).

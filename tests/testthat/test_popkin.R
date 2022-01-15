@@ -700,6 +700,72 @@ test_that("plot_popkin works", {
     
 })
 
+test_that("plot_admix works", {
+    # set up a temporary path to write to
+    fo <- tempfile('test-plot-admix', fileext = '.pdf')
+
+    # same example from vignette
+    # some subpopulation sizes
+    n1 <- 10
+    n2 <- n1
+    n3 <- 20
+    # construct unadmixed individuals
+    Q_pop1 <- matrix( c( 1, 0 ), ncol = 2, nrow = n1, byrow = TRUE )
+    Q_pop2 <- Q_pop1[ , 2:1 ] # reverse columns
+    # random admixture proportions
+    Q_admix <- rev( sort( runif( n3 ) ) )
+    Q_admix <- cbind( Q_admix, 1 - Q_admix )
+    # combine data for all populations
+    # add some informative row/col names too
+    rownames( Q_pop1 ) <- paste0( 'S1-ind', 1 : n1 )
+    rownames( Q_pop2 ) <- paste0( 'S2-ind', 1 : n2 )
+    rownames( Q_admix ) <- paste0( 'S3-ind', 1 : n3 )
+    Q <- rbind( Q_pop1, Q_pop2, Q_admix )
+    colnames( Q ) <- c('A1', 'A2')
+    # create subpopulation labels for later
+    labs1 <- c( rep.int( 'S1', n1 ), rep.int( 'S2', n2 ), rep.int( 'S3', n3 ) )
+    labs2 <- c( rep.int( 'Unadmixed', n1+n2 ), rep.int( 'Admixed', n3 ) )
+
+    # no labels/names
+    pdf( fo )
+    par(mar = c(1, 3, 1, 0.2) + 0.2)
+    expect_silent(
+        plot_admix( Q )
+    )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+
+    # names
+    pdf( fo )
+    par(mar = c(6, 3, 1, 0.2) + 0.2)
+    expect_silent( 
+        plot_admix( Q, names = TRUE, xlab_line = 5 )
+    )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+
+    # labels version
+    pdf( fo )
+    par(mar = c(3, 3, 1, 0.2) + 0.2)
+    expect_silent( 
+        plot_admix( Q, labs = labs1, xlab_line = 2 )
+    )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+
+    # labels version, legend omitted
+    pdf( fo )
+    par(mar = c(3, 3, 1, 0.2) + 0.2)
+    expect_silent( 
+        plot_admix( Q, labs = labs1, xlab_line = 2, leg_omit = TRUE )
+    )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+
+})
+
+
+
 #################
 ### popkin_af ###
 #################

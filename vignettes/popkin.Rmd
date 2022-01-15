@@ -432,5 +432,62 @@ plot_popkin(
 )
 ```
 
+## Admixture plot example
+
+The popkin package now includes a simple plotter for admixture proportions that shares style and code with `plot_popkin`.
+Let's create some toy data for this example
+```{r}
+# some subpopulation sizes
+n1 <- 10
+n2 <- n1
+n3 <- 20
+# construct unadmixed individuals
+Q_pop1 <- matrix( c( 1, 0 ), ncol = 2, nrow = n1, byrow = TRUE )
+Q_pop2 <- Q_pop1[ , 2:1 ] # reverse columns
+# random admixture proportions
+Q_admix <- rev( sort( runif( n3 ) ) )
+Q_admix <- cbind( Q_admix, 1 - Q_admix )
+# combine data for all populations
+# add some informative row/col names too
+rownames( Q_pop1 ) <- paste0( 'S1-ind', 1 : n1 )
+rownames( Q_pop2 ) <- paste0( 'S2-ind', 1 : n2 )
+rownames( Q_admix ) <- paste0( 'S3-ind', 1 : n3 )
+Q <- rbind( Q_pop1, Q_pop2, Q_admix )
+colnames( Q ) <- c('A1', 'A2')
+# create subpopulation labels for later
+labs1 <- c( rep.int( 'S1', n1 ), rep.int( 'S2', n2 ), rep.int( 'S3', n3 ) )
+labs2 <- c( rep.int( 'Unadmixed', n1+n2 ), rep.int( 'Admixed', n3 ) )
+```
+
+First plot is of admixture matrix alone, without annotations except those provided as column names (ancestries).
+```{r, fig.width = 6.5, fig.height = 2, fig.align = 'center'}
+# adjust margins
+par(mar = c(2, 3, 1, 0.2) + 0.2)
+# actual plot
+plot_admix( Q )
+```
+
+By default row names (individuals) are omitted as this can be very cluttery for large datasets, but can be shown with `names = TRUE`:
+```{r, fig.width = 6.5, fig.height = 3, fig.align = 'center'}
+# adjust margins
+par(mar = c(6, 3, 1, 0.2) + 0.2)
+# actual plot
+plot_admix( Q, names = TRUE, xlab_line = 5 )
+```
+
+However, most of the time it's better visually to group individuals by subpopulations, where it can be seen more clearly that subpopulation S1 equals ancestry A1, and S2 = A2 as well.
+```{r, fig.width = 6.5, fig.height = 2.2, fig.align = 'center'}
+# adjust margins
+par(mar = c(2, 3, 1, 0.2) + 0.2)
+# actual plot
+plot_admix( Q, labs = labs1 )
+```
+Lastly, two or more levels can be plotted just as for `plot_popkin`:
+```{r, fig.width = 6.5, fig.height = 2.3, fig.align = 'center'}
+# adjust margins
+par(mar = c(3, 3, 1, 0.2) + 0.2)
+# actual plot
+plot_admix( Q, labs = cbind( labs1, labs2 ), labs_line = c(0, 1), xlab_line = 2 )
+```
 
 # References
