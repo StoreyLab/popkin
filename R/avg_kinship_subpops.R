@@ -1,7 +1,7 @@
 #' Calculate a kinship matrix between subpopulations by averaging individual data
 #'
 #' This function calculates a kinship matrix between subpopulations, whose values are the average kinship values between all individual pairs where one individual is in the first subpopulation and the other individual is in the second subpopulation.
-#' To estimate coanestry instead of kinship, which is recommended to get more interpretable diagonal values, the input kinship matrix should be transformed using [inbr_diag()].
+#' To estimate coancestry instead of kinship, which is recommended to get more interpretable diagonal values, the input kinship matrix should be transformed using [inbr_diag()].
 #'
 #' @param kinship A symmetric `n`-by-`n` kinship matrix.
 #' @param subpops The length-`n` vector of subpopulation assignments for each individual.

@@ -21,7 +21,7 @@ The symmetric \code{K}-by-\code{K} kinship matrix between subpopulations, where 
 }
 \description{
 This function calculates a kinship matrix between subpopulations, whose values are the average kinship values between all individual pairs where one individual is in the first subpopulation and the other individual is in the second subpopulation.
-To estimate coanestry instead of kinship, which is recommended to get more interpretable diagonal values, the input kinship matrix should be transformed using \code{\link[=inbr_diag]{inbr_diag()}}.
+To estimate coancestry instead of kinship, which is recommended to get more interpretable diagonal values, the input kinship matrix should be transformed using \code{\link[=inbr_diag]{inbr_diag()}}.
 }
 \examples{
 # a toy kinship matrix with 5 individuals belonging to 2 subpopulations

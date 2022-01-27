@@ -323,3 +323,8 @@ Overall added tree plotting capabilities and more plotting fine control.
 - Added function `plot_admix` for making admixture/structure plots with most of the same options as `plot_popkin`!
   - Includes plotting examples in vignette.
   - Cleaned up and extended internal function `print_labels_multi`, `print_labels`.
+
+# popkin 1.3.17 (2022-01-26)
+
+- 8th CRAN submission.
+- Fixed some typos.

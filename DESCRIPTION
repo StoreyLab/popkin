@@ -1,6 +1,6 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbitrary Population Structure
-Version: 1.3.16.9000
+Version: 1.3.17
 Authors@R: c(
     person(given = "Alejandro",
 	   family = "Ochoa",
