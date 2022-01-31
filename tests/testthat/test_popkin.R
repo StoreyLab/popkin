@@ -982,3 +982,78 @@ test_that( "popkin_af works", {
     )
     expect_equal( obj2, obj )
 })
+
+test_that( 'admix_order_cols works', {
+    # write a toy Q where the desired order is evident
+    Q <- matrix(
+        c(
+            0.1, 0.8, 0.1,
+            0.1, 0.7, 0.2,
+            0.0, 0.4, 0.6,
+            0.0, 0.3, 0.7,
+            0.9, 0.0, 0.1
+        ),
+        nrow = 5,
+        ncol = 3,
+        byrow = TRUE
+    )
+    order_exp <- c(2, 3, 1)
+    expect_silent( 
+        order_obs <- admix_order_cols( Q )
+    )
+    expect_equal( order_obs, order_exp )
+    
+})
+
+test_that( 'make_unique works', {
+    # simple function just feed it some quick expectations
+    x <- 1:10
+    # was already unique
+    expect_equal( make_unique( x ), x )
+    # simple repeats
+    expect_equal( make_unique( c('A', 'A', 'B') ), c('A1', 'A2', 'B') )
+    expect_equal( make_unique( c('A', 'B', 'B') ), c('A', 'B1', 'B2') )
+    # more complex repeats
+    expect_equal( make_unique( c('A', 'Z', 'B', 'Z', 'A') ), c('A1', 'Z1', 'B', 'Z2', 'A2') )
+})
+
+test_that( 'admix_mean_subpops_single and admix_label_cols work', {
+    # same toy data, but now add labels for individuals
+    Q <- matrix(
+        c(
+            0.1, 0.8, 0.1,
+            0.1, 0.7, 0.2,
+            0.0, 0.4, 0.6,
+            0.0, 0.3, 0.7,
+            0.9, 0.0, 0.1
+        ),
+        nrow = 5,
+        ncol = 3,
+        byrow = TRUE
+    )
+    labs <- c('X', 'X', 'Y', 'Y', 'Z')
+    
+    # repeat "single" test for each column
+    for ( k in 1 : ncol(Q) ) {
+        q <- Q[, k]
+        # run code
+        admix_mean_obs <- admix_mean_subpops_single( q, labs )
+        # explicit calculation hardcoded to the above labels
+        admix_mean_exp <- c( mean( q[1:2] ), mean( q[3:4] ), q[5] )
+        names( admix_mean_exp ) <- c('X', 'Y', 'Z')
+        expect_equal( admix_mean_obs, admix_mean_exp )
+    }
+
+    # now test the overall procedure of assigning labels to columns
+    col_labs_obs <- admix_label_cols( Q, labs )
+    col_labs_exp <- c('Z', 'X', 'Y')
+    expect_equal( col_labs_obs, col_labs_exp )
+
+    # a case where there's repeats that we make unique
+    # (there's 3 ancestries but 2 labels, so obviously there's repeats)
+    labs <- c('A', 'A', 'A', 'A', 'B')
+    col_labs_obs <- admix_label_cols( Q, labs )
+    col_labs_exp <- c('B', 'A1', 'A2')
+    expect_equal( col_labs_obs, col_labs_exp )
+})
+

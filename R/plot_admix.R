@@ -85,6 +85,11 @@
 #' plot_admix( Q )
 #'
 #' # See vignette for more elaborate examples!
+#'
+#' @seealso
+#' [admix_order_cols()] to automatically order ancestries given ordered individuals.
+#' 
+#' [admix_label_cols()] to automatically assign labels to ancestries given labels to individuals.
 #' 
 #' @export
 plot_admix <- function(

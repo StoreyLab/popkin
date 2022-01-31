@@ -167,3 +167,8 @@ plot_admix( Q )
 # See vignette for more elaborate examples!
 
 }
+\seealso{
+\code{\link[=admix_order_cols]{admix_order_cols()}} to automatically order ancestries given ordered individuals.
+
+\code{\link[=admix_label_cols]{admix_label_cols()}} to automatically assign labels to ancestries given labels to individuals.
+}

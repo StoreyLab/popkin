@@ -332,3 +332,9 @@ Overall added tree plotting capabilities and more plotting fine control.
 # popkin 1.3.17.9000 (2022-01-31)
 
 - Function `plot_admix` added options `leg_title_line` and `leg_las`, and changed the default of `leg_mar`, to better accomodate numerous long ancestry labels.
+
+# popkin 1.3.18.9000 (2022-01-31)
+
+- Added functions to complement `plot_admix`:
+  - `admix_order_cols`: to automatically order ancestries given ordered individuals.
+  - `admix_label_cols`: to automatically assign labels to ancestries given labels to individuals.
