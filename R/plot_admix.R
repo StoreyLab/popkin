@@ -35,12 +35,15 @@
 #' 
 #' @param leg_title The name of the categorical ancestry variable (default "Ancestries").
 #' @param leg_title_cex Scaling factor for legend title label.
+#' @param leg_title_line The value of `line` for `leg_title` passed to [graphics::mtext()].
 #' @param leg_cex Scaling factor for ancestry labels.
 #' @param leg_width The width of the legend panel, relative to the width of the main panel.
 #' This value is passed to [graphics::layout()] (ignored if `layout_add = FALSE`).
 #' @param leg_mar Margin values for the kinship legend panel only.
 #' A length-4 vector (in `c( bottom, left, top, right )` format that [graphics::par()] 'mar' expects) specifies the full margins, to which `mar_pad` is added.
-#' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to `mar_pad`, and if `leg_mar` is length-1, it is added to `mar_pad` to specify the right margin.
+#' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to `mar_pad`, and if `leg_mar` is length-1 (default), it is added to `mar_pad` to specify the right margin.
+#' By default the right margin is large enough to accomodate `leg_title` for the given value of `leg_title_line`.
+#' @param leg_las The ancestry label orientations (in format that [graphics::mtext()] expects).
 #' @param leg_omit If `TRUE`, no legend (second panel) is produced (default `FALSE` is to include legend).
 #' @param layout_add If `TRUE` (default) then [graphics::layout()] is called internally to create two panels: the main panel and the color key legend.
 #' The original layout is reset when plotting is complete and if `layout_add = TRUE`.
@@ -101,9 +104,11 @@ plot_admix <- function(
                        ylab_cex = axis_lab_cex,
                        leg_title = 'Ancestries', # diff default vs plot_popkin
                        leg_title_cex = axis_lab_cex,
+                       leg_title_line = 2,
                        leg_cex = 1, # for labels
-                       leg_mar = 3,
+                       leg_mar = leg_title_line + 1,
                        leg_width = 0.2, # diff default vs plot_popkin
+                       leg_las = 0,
                        leg_omit = FALSE,
                        layout_add = !leg_omit,
                        names = FALSE,
@@ -236,10 +241,11 @@ plot_admix <- function(
         # add color key
         graphics::image( y = x, z = rbind( x ), col = col, xaxt = "n", yaxt = "n" ) # , axes=FALSE
         # add labels if available
+        # gap.axis = -1 # added so names show up overlapping rather than not show up at all (can be misleading/confusing)  (NOTE: tested in vignette and appears to have not worked, not sure why, but will leave in just in case)
         if ( !is.null( colnames( Q ) ) )
-            graphics::axis( 4, at = x, labels = colnames( Q ), tick = FALSE, cex.axis = leg_cex )
+            graphics::axis( 4, at = x, labels = colnames( Q ), tick = FALSE, cex.axis = leg_cex, las = leg_las, gap.axis = -1 )
         # lastly, add axis label
-        graphics::mtext( side = 4, leg_title, line = 2, cex = leg_title_cex )
+        graphics::mtext( side = 4, leg_title, line = leg_title_line, cex = leg_title_cex )
     }
 
     # restore original setup when done, but only if we created the default layout
