@@ -16,6 +16,9 @@
 #' @param loci_on_cols If `TRUE`, `X` has loci on columns and individuals on rows; if `FALSE` (default), loci are on rows and individuals on columns.
 #' Has no effect if `X` is a function.
 #' If `X` is a BEDMatrix object, `loci_on_cols` is ignored (set automatically to `TRUE` internally).
+#' @param mean_of_ratios Chose how to weigh loci.
+#' If `FALSE` (default) loci have equal weights (in terms of variance, rare variants contribute less than common variants; also called the "ratio-of-means" version, this has known asymptotic behavior).
+#' If `TRUE`, rare variant loci are upweighed (in terms of variance, contributions are approximately the same across variant frequencies; also called the "mean-of-ratios" version, its asymptotic behavior is less well understood but performs better for association testing).
 #' @param mem_factor Proportion of available memory to use loading and processing genotypes.
 #' Ignored if `mem_lim` is not `NA`.
 #' @param mem_lim Memory limit in GB, used to break up genotype data into chunks for very large datasets.
@@ -60,6 +63,7 @@ popkin <- function(
                    subpops = NULL,
                    n = NA,
                    loci_on_cols = FALSE,
+                   mean_of_ratios = FALSE,
                    mem_factor = 0.7,
                    mem_lim = NA,
                    want_M = FALSE,
@@ -103,6 +107,7 @@ popkin <- function(
         X,
         n = n,
         loci_on_cols = loci_on_cols,
+        mean_of_ratios = mean_of_ratios,
         mem_factor = mem_factor,
         mem_lim = mem_lim,
         m_chunk_max = m_chunk_max

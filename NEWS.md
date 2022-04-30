@@ -338,3 +338,12 @@ Overall added tree plotting capabilities and more plotting fine control.
 - Added functions to complement `plot_admix`:
   - `admix_order_cols`: to automatically order ancestries given ordered individuals.
   - `admix_label_cols`: to automatically assign labels to ancestries given labels to individuals.
+
+# popkin 1.3.19.9000 (2022-04-29)
+
+- Functions `popkin`, `popkin_A`:
+  - Added option `mean_of_ratios`, default `FALSE` is original estimator, `TRUE` gives a new estimator that upweighs rare variants, which resembles in this way the standard kinship estimator, and which appears to improve performance in association testing.
+  - Fixed minor bug that `M` (one of the return values when `want_M = TRUE`) did not inherit individual names from `X` even though `A` and `kinship` did, and similarly all inherit names when `X` is a function (fixed accidentally when replacing Rcpp code with pure R).
+  - Internally, for original (`mean_of_ratios = FALSE`) replaced Rcpp code with pure R version, which results in large speedups, at a cost of higher memory use (despite my best attempts at improving the original Rcpp code, the simpler R code is doing something magically fast I don't understand).
+    Rcpp, RcppEigen dependencies have been dropped as a consequence.
+- Tests were separated into more files (contexts), had some cleanups

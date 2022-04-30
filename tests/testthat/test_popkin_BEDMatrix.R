@@ -1,7 +1,3 @@
-context('popkin_BEDMatrix')
-
-# message('getwd: ', getwd())
-
 if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
 
     # loads Rdata matrices to test

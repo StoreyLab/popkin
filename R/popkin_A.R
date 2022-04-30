@@ -1,7 +1,3 @@
-#' @useDynLib popkin
-#' @importFrom Rcpp sourceCpp
-NULL
-
 #' Compute popkin's `A` and `M` matrices from genotypes
 #'
 #' This function returns lower-level, intermediate calculations for the main `popkin` function.
@@ -11,7 +7,7 @@ NULL
 #'
 #' @return A named list containing:
 #'
-#' - `A`: n-by-n matrix, for individuals `j` and `k`, of average `( x_ij - 1 ) * ( x_ik - 1 ) - 1` values across all loci `i` in `X`
+#' - `A`: n-by-n matrix, for individuals `j` and `k`, of average `w_i * ( ( x_ij - 1 ) * ( x_ik - 1 ) - 1)` values across all loci `i` in `X`; if `mean_of_ratios = FALSE`, `w_i = 1`, otherwise `w_i = 1 / (p_est_i * (1 - p_est_i) )` where `p_est_i` is the reference allele frequency.
 #' - `M`: n-by-n matrix of sample sizes (number of loci with non-missing individual `j` and `k` pairs, used to normalize `A`)
 #'
 #' @examples
@@ -35,6 +31,7 @@ popkin_A <- function(
                      X,
                      n = NA,
                      loci_on_cols = FALSE,
+                     mean_of_ratios = FALSE,
                      mem_factor = 0.7,
                      mem_lim = NA,
                      m_chunk_max = 1000 # gave good performance in tests
@@ -101,8 +98,9 @@ popkin_A <- function(
     data <- solve_m_mem_lim(
         n = n_ind,
         m = m_loci,
-        mat_m_n = 1.5, # X (0.5) + ? + (BEDMatrix seems to consume too much additional memory, so be extra conservative overall)
-        mat_n_n = 1, # A + M (0.5 + 0.5)
+        mat_m_n = 1.5, # X (0.5) + is.na(X) (0.5) + ? (BEDMatrix seems to consume too much additional memory, so be extra conservative overall)
+        mat_n_n = 1, # A + M (0.5 + 0.5; tmp copies?)
+        vec_m = 1.5, # Vi, indexes_not_fixed (0.5)
         mem = mem_lim,
         mem_factor = mem_factor
     )
@@ -143,21 +141,57 @@ popkin_A <- function(
             i_chunk <- i_chunk + m_chunk # update starting point for next chunk! (overshoots at the end, that's ok)
         }
 
-        # before passing along to my RcppEigen code, I need to make sure the genotypes are treated by R as integers or RcppEigen dies on me
-        # I'm not sure if this always works though...
-        if (storage.mode(Xi) != 'integer')
-            storage.mode(Xi) <- 'integer'
+        # standard mean times half
+        Vi <- rowMeans(Xi, na.rm = TRUE) / 2
+        # variance estimate (length-i_chunk vector; factor of 2 or 4 cancels out in the end so it is ignored)
+        Vi <- Vi * ( 1 - Vi )
         
-        # solve chunk using very efficient RcppEigen code!
-        # it is both runtime and memory efficient!
-        obj <- getMAInt(Xi)
-        # increment each part
-        A <- A + obj$SA # increment sum of A_{ijk}'s
-        M <- M + obj$M # increment M's too
-    }
+        # in the mean_of_ratios formulation it's extra critical to handle fixed loci correctly... but let's just do the same thing both ways
+        indexes_not_fixed <- Vi > 0 # these are the good cases
+        # filter everything if needed (will increase memory but it's easy to see things are handled correctly)
+        if (any(!indexes_not_fixed)) {
+            Xi <- Xi[indexes_not_fixed,]
+            Vi <- Vi[indexes_not_fixed]
+        }
 
+        # only appears in this form in the rest of the code, MOR only
+        if (mean_of_ratios)
+            Vi <- 1 / sqrt( Vi )
+        
+        # center before cross product...
+        Xi <- Xi - 1
+        
+        # some complicated steps are only necessary when there's missing data...
+        if (anyNA(Xi)) {
+            M <- M + crossprod( !is.na(Xi) ) # add non-missingness counts to pair count matrix
+            # need this awkward adjustment for MOR
+            if (mean_of_ratios)
+                A <- A - crossprod( (!is.na(Xi)) * Vi )
+            
+            # before applying cross product, to prevent NA errors, just set those values to zero and it works out!
+            Xi[is.na(Xi)] <- 0
+        } else {
+            M <- M + nrow(Xi) # this is correct denominator
+            # need this adjustment for MOR
+            if (mean_of_ratios)
+                A <- A - sum( Vi^2 )
+        }
+        
+        if (mean_of_ratios)
+            # will average into A but scaling first!
+            Xi <- Xi * Vi # this works! (scales each row as needed)
+        
+        # cross product matrix at this SNP, add to running sum.  We'll add an extra -1 later... (this is computationally faster and maybe even more numerically stable)
+        A <- A + crossprod(Xi)
+        # NOTE: M and m count the same loci (including fixed loci in this case; as long as there's consistency the difference just cancels out as expected)
+    }
+    
     # calculate final (properly averaged) estimate!
-    A <- A / M - 1
+    A <- A / M
+    # add -1 only for ROM (has already been included for MOR)
+    if ( !mean_of_ratios )
+        A <- A - 1
+    
     # return parts of interest
     return(
         list(

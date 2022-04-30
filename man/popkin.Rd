@@ -9,6 +9,7 @@ popkin(
   subpops = NULL,
   n = NA,
   loci_on_cols = FALSE,
+  mean_of_ratios = FALSE,
   mem_factor = 0.7,
   mem_lim = NA,
   want_M = FALSE,
@@ -28,6 +29,10 @@ If \code{n} is missing but \code{subpops} is not, \code{n} is taken to be the le
 \item{loci_on_cols}{If \code{TRUE}, \code{X} has loci on columns and individuals on rows; if \code{FALSE} (default), loci are on rows and individuals on columns.
 Has no effect if \code{X} is a function.
 If \code{X} is a BEDMatrix object, \code{loci_on_cols} is ignored (set automatically to \code{TRUE} internally).}
+
+\item{mean_of_ratios}{Chose how to weigh loci.
+If \code{FALSE} (default) loci have equal weights (in terms of variance, rare variants contribute less than common variants; also called the "ratio-of-means" version, this has known asymptotic behavior).
+If \code{TRUE}, rare variant loci are upweighed (in terms of variance, contributions are approximately the same across variant frequencies; also called the "mean-of-ratios" version, its asymptotic behavior is less well understood but performs better for association testing).}
 
 \item{mem_factor}{Proportion of available memory to use loading and processing genotypes.
 Ignored if \code{mem_lim} is not \code{NA}.}
