@@ -1200,11 +1200,11 @@ print_labels <- function(
         # hard case
 
         # even sequence of boundaries: length n+1
-        xb_grp2 <- xb_min + ( 0 : n_grp ) / n_grp * xb_max
+        xb_grp2 <- xb_min + ( 0 : n_grp ) / n_grp * ( xb_max - xb_min )
         # even centers calculated from the even boundaries
         # this is where the labels will be placed at the end
         xc_grp <- centers_from_boundaries( xb_grp2 )
-            
+        
         # connect label boundaries to irregular boundaries in plot
         ysLines <- line_to_user( c(0, line), 1 ) # shared by every label boundary on x-axis
         xsLines <- line_to_user( c(0, line), 2 ) # shared by every label boundary on y-axis

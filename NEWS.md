@@ -347,3 +347,9 @@ Overall added tree plotting capabilities and more plotting fine control.
   - Internally, for original (`mean_of_ratios = FALSE`) replaced Rcpp code with pure R version, which results in large speedups, at a cost of higher memory use (despite my best attempts at improving the original Rcpp code, the simpler R code is doing something magically fast I don't understand).
     Rcpp, RcppEigen dependencies have been dropped as a consequence.
 - Tests were separated into more files (contexts), had some cleanups
+
+# popkin 1.3.20.9000 (2022-05-13)
+
+- Internal function `print_labels` fixed bug when `even = TRUE` and the minimum `xb_ind` is not zero, which caused the maximum to be off by `xb_ind`.
+  - This bug didn't affect the exported functions that use this function (`plot_popkin` or `plot_admix`) because the minimum `xb_ind` was always zero in those cases.
+  - Fixed to handle a new application outside this package.
