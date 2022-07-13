@@ -20,6 +20,7 @@ plot_popkin(
   ylab_adj = NA,
   ylab_line = 0,
   ylab_side = 2,
+  ylab_per_panel = FALSE,
   layout_add = TRUE,
   layout_rows = 1,
   leg_per_panel = FALSE,
@@ -83,7 +84,8 @@ If length 1, the value of \code{oma} is applied to the left outer margin only (s
 If length 4, all outer margins are expected in standard format \code{\link[graphics:par]{graphics::par()}} 'mar' expects (see \code{mar} above).
 \code{mar_pad} above is never added to outer margins.
 If \code{NULL}, no outer margins are set (previous settings are preserved).
-Vectors of invalid lengths produce a warning.}
+Vectors of invalid lengths produce a warning.
+Note: if \code{layout_add = FALSE}, this function still (re)sets the outer margins if \code{oma} is not \code{NULL}, which can be convenient if \code{plot_popkin} generates the first few panels, but otherwise a partial multipanel figure will be reset unless \code{oma = NULL} is also set!}
 
 \item{diag_line}{If \code{TRUE} adds a line along the kinship diagonal (default no line).
 May also be a vector of logicals to set per panel (lengths must agree).
@@ -111,13 +113,16 @@ If \code{length(ylab) == 1}, only the first value is used, otherwise \code{lengt
 If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_line)} must equal the number of panels.}
 
 \item{ylab_side}{The value of \code{side} for \code{ylab} passed to \code{\link[graphics:mtext]{graphics::mtext()}} (2 is y-axis, 1 is x-axis, can also place on top (3) or right (4)).
-If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_side)} must equal the number of panels.
+If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_side)} must equal the number of panels.}
+
+\item{ylab_per_panel}{Forces y-axis labels to appear for each panel, in the inner margins.
+Most useful to cover the case where there is a single panel but no outer margins (\code{oma = NULL}).
 
 LAYOUT OPTIONS}
 
 \item{layout_add}{If \code{TRUE} (default) then \code{\link[graphics:layout]{graphics::layout()}} is called internally with appropriate values for the required number of panels for each matrix, the desired number of rows (see \code{layout_rows} below) plus the color key legend.
-The original layout is reset when plotting is complete and if \code{layout_add = TRUE}.
-If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to \code{FALSE} and call \code{\link[graphics:layout]{graphics::layout()}} yourself beforehand.}
+The original layout is reset when plotting is complete if \code{layout_add = TRUE}.
+If a non-standard layout or additional panels (beyond those provided by \code{plot_popkin}) are desired, set to \code{FALSE} and call \code{\link[graphics:layout]{graphics::layout()}} yourself beforehand; in this case you may want to set \code{oma = NULL} (above) as well!}
 
 \item{layout_rows}{Number of rows in layout, used only if \code{layout_add = TRUE}.
 

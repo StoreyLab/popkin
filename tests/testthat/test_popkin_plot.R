@@ -46,6 +46,13 @@ test_that("plot_popkin works", {
     invisible( dev.off() )
     invisible( file.remove(fo) )
     
+    # singleton works with inner margins version
+    pdf( fo )
+    par(mar = c(0, 0, 2, 0) + 0.2)
+    expect_silent( plot_popkin( inbr_diag(Phi), labs = subpops, ylab_per_panel = TRUE ) )
+    invisible( dev.off() )
+    invisible( file.remove(fo) )
+    
     # list works
     pdf( fo, width = 14 ) # make wider
     par(oma = c(0, 1.5, 0, 3))

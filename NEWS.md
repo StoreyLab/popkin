@@ -353,3 +353,9 @@ Overall added tree plotting capabilities and more plotting fine control.
 - Internal function `print_labels` fixed bug when `even = TRUE` and the minimum `xb_ind` is not zero, which caused the maximum to be off by `xb_ind`.
   - This bug didn't affect the exported functions that use this function (`plot_popkin` or `plot_admix`) because the minimum `xb_ind` was always zero in those cases.
   - Fixed to handle a new application outside this package.
+
+# popkin 1.3.21.9000 (2022-07-13)
+
+* Function `plot_popkin`
+  * Added option `ylab_per_panel` to allow single-panel figures to place y-axis label in inner margin (before that case was forced to use outer margin).
+  * Added clarifications to existing options `oma` and `layout_add`, as in some cases you may want to turn off both features to avoid unexpected behaviors (though there are cases where turning off one but not the other also makes sense).
