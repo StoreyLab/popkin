@@ -7,6 +7,7 @@
 #' @param xlab The x-axis label (default "Coancestry").
 #' @param xmax X-axis maximum limit.
 #' @param leg_n The desired number of ticks in the x-axis (input to [pretty()], see that for more details).
+#' @param edge_width The width of the tree edges (passed to [ape::plot.phylo()] as `edge.width`).
 #' @param ... Additional parameters passed to [ape::plot.phylo()].
 #' However, these parameters cannot be passed: `x.lim` (controlled via `xmax`), `y.lim` (a better default for small trees is passed and cannot be changed) and `font` (takes the value of `par('font')` instead of `ape`'s default of 3 (italic)).
 #'
@@ -27,6 +28,7 @@ plot_phylo <- function(
                        xlab = 'Coancestry',
                        xmax = NULL,
                        leg_n = 5,
+		       edge_width = 1,
                        ...
                        ) {
     # validate inputs
@@ -57,6 +59,7 @@ plot_phylo <- function(
              # default limit fills edges, doesn't look good for small trees
              y.lim = c( 0.5, n_tips + 0.5 ),
              x.lim = xlim,
+	     edge.width = edge_width,
              ...
          )
 

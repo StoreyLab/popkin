@@ -4,7 +4,14 @@
 \alias{plot_phylo}
 \title{Plot a \code{phylo} tree object}
 \usage{
-plot_phylo(tree, xlab = "Coancestry", xmax = NULL, leg_n = 5, ...)
+plot_phylo(
+  tree,
+  xlab = "Coancestry",
+  xmax = NULL,
+  leg_n = 5,
+  edge_width = 1,
+  ...
+)
 }
 \arguments{
 \item{tree}{A \code{phylo} object to plot.}
@@ -14,6 +21,8 @@ plot_phylo(tree, xlab = "Coancestry", xmax = NULL, leg_n = 5, ...)
 \item{xmax}{X-axis maximum limit.}
 
 \item{leg_n}{The desired number of ticks in the x-axis (input to \code{\link[=pretty]{pretty()}}, see that for more details).}
+
+\item{edge_width}{The width of the tree edges (passed to \code{\link[ape:plot.phylo]{ape::plot.phylo()}} as \code{edge.width}).}
 
 \item{...}{Additional parameters passed to \code{\link[ape:plot.phylo]{ape::plot.phylo()}}.
 However, these parameters cannot be passed: \code{x.lim} (controlled via \code{xmax}), \code{y.lim} (a better default for small trees is passed and cannot be changed) and \code{font} (takes the value of \code{par('font')} instead of \code{ape}'s default of 3 (italic)).}

@@ -359,3 +359,10 @@ Overall added tree plotting capabilities and more plotting fine control.
 * Function `plot_popkin`
   * Added option `ylab_per_panel` to allow single-panel figures to place y-axis label in inner margin (before that case was forced to use outer margin).
   * Added clarifications to existing options `oma` and `layout_add`, as in some cases you may want to turn off both features to avoid unexpected behaviors (though there are cases where turning off one but not the other also makes sense).
+
+# popkin 1.3.22.9000 (2022-08-04)
+
+- Function `plot_phylo` added option `edge_width`, which defaults to 1.
+  - This restores the plotting behavior under the dependency package `ape` version 5.5 and prior, where its function `plot.phylo` (which `popkin::plot_phylo` wraps) had its parameter `edge.width` default to 1.
+  - In contrast, starting on `ape` version 5.6 (2021-12-20), `edge.width` defaults to `NULL`, with results in setting it to `par('lwd')`, which had undesireable consequences in my use cases and which is why the old default is overridden in popkin.
+  - By extension, `plot_popkin`'s old default edge widths for trees of class `phylo` is also restored.
