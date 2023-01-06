@@ -99,7 +99,7 @@ LEGEND (COLOR KEY) OPTIONS}
 \item{leg_mar}{Margin values for the kinship legend panel only.
 A length-4 vector (in \code{c( bottom, left, top, right )} format that \code{\link[graphics:par]{graphics::par()}} 'mar' expects) specifies the full margins, to which \code{mar_pad} is added.
 Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to \code{mar_pad}, and if \code{leg_mar} is length-1 (default), it is added to \code{mar_pad} to specify the right margin.
-By default the right margin is large enough to accomodate \code{leg_title} for the given value of \code{leg_title_line}.}
+By default the right margin is large enough to accommodate \code{leg_title} for the given value of \code{leg_title_line}.}
 
 \item{leg_width}{The width of the legend panel, relative to the width of the main panel.
 This value is passed to \code{\link[graphics:layout]{graphics::layout()}} (ignored if \code{layout_add = FALSE}).}

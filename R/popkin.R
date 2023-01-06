@@ -7,7 +7,7 @@
 #' it suffices to rescale it using [rescale_popkin()]
 #' (as opposed to starting from the genotypes again, which gives the same answer but more slowly).
 #' 
-#' @param X Genotype matrix, BEDMatrix object, or a function `X(m)` that returns the genotypes of all individuals at `m` successive locus blocks each time it is called, and `NULL` when no loci are left.
+#' @param X Genotype matrix, `BEDMatrix` object, or a function `X(m)` that returns the genotypes of all individuals at `m` successive locus blocks each time it is called, and `NULL` when no loci are left.
 #' If a regular matrix, `X` must have values only in `c(0, 1, 2, NA)`, encoded to count the number of reference alleles at the locus, or `NA` for missing data.
 #' @param subpops The length-`n` vector of subpopulation assignments for each individual.
 #' If `NULL`, every individual is effectively treated as a different population.
@@ -15,17 +15,17 @@
 #' If `n` is missing but `subpops` is not, `n` is taken to be the length of `subpops`.
 #' @param loci_on_cols If `TRUE`, `X` has loci on columns and individuals on rows; if `FALSE` (default), loci are on rows and individuals on columns.
 #' Has no effect if `X` is a function.
-#' If `X` is a BEDMatrix object, `loci_on_cols` is ignored (set automatically to `TRUE` internally).
+#' If `X` is a `BEDMatrix` object, `loci_on_cols` is ignored (set automatically to `TRUE` internally).
 #' @param mean_of_ratios Chose how to weigh loci.
 #' If `FALSE` (default) loci have equal weights (in terms of variance, rare variants contribute less than common variants; also called the "ratio-of-means" version, this has known asymptotic behavior).
 #' If `TRUE`, rare variant loci are upweighed (in terms of variance, contributions are approximately the same across variant frequencies; also called the "mean-of-ratios" version, its asymptotic behavior is less well understood but performs better for association testing).
-#' @param mem_factor Proportion of available memory to use loading and processing genotypes.
+#' @param mem_factor Proportion of available memory to use loading and processing data.
 #' Ignored if `mem_lim` is not `NA`.
-#' @param mem_lim Memory limit in GB, used to break up genotype data into chunks for very large datasets.
+#' @param mem_lim Memory limit in GB, used to break up data into chunks for very large datasets.
 #' Note memory usage is somewhat underestimated and is not controlled strictly.
-#' Default in Linux and Windows is `mem_factor` times the free system memory, otherwise it is 1GB (OSX and other systems).
+#' Default in Linux is `mem_factor` times the free system memory, otherwise it is 1GB (Windows, OSX and other systems).
 #' @param want_M If `TRUE`, includes the matrix `M` of non-missing pair counts in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
-#' Default `FALSE` is to return the kinship matrix only.
+#' Default `FALSE` is to return the relatedness matrix only.
 #' @param m_chunk_max Sets the maximum number of loci to process at the time.
 #' Actual number of loci loaded may be lower if memory is limiting.
 #'

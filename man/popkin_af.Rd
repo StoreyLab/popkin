@@ -22,15 +22,15 @@ If \code{NULL}, every individual is effectively treated as a different populatio
 
 \item{loci_on_cols}{If \code{TRUE}, \code{P} has loci on columns and individuals on rows; if \code{FALSE} (default), loci are on rows and individuals on columns.}
 
-\item{mem_factor}{Proportion of available memory to use loading and processing loci.
+\item{mem_factor}{Proportion of available memory to use loading and processing data.
 Ignored if \code{mem_lim} is not \code{NA}.}
 
-\item{mem_lim}{Memory limit in GB, used to break up \code{P} into chunks for very large datasets.
+\item{mem_lim}{Memory limit in GB, used to break up data into chunks for very large datasets.
 Note memory usage is somewhat underestimated and is not controlled strictly.
-Default in Linux and Windows is \code{mem_factor} times the free system memory, otherwise it is 1GB (OSX and other systems).}
+Default in Linux is \code{mem_factor} times the free system memory, otherwise it is 1GB (Windows, OSX and other systems).}
 
 \item{want_M}{If \code{TRUE}, includes the matrix \code{M} of non-missing pair counts in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
-Default \code{FALSE} is to return the coancestry matrix only.}
+Default \code{FALSE} is to return the relatedness matrix only.}
 
 \item{m_chunk_max}{Sets the maximum number of loci to process at the time.
 Actual number of loci loaded may be lower if memory is limiting.}

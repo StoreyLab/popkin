@@ -1,5 +1,5 @@
 # uses lots of hacks to try to estimate a reasonable amount of memory to use, in the most common systems!
-# currently only linux and windows are actually supported
+# currently only linux is actually supported
 get_mem_lim <- function(factor = 0.7, verbose = FALSE) {
     # make sure the factor makes sense
     if (factor <= 0)
@@ -20,14 +20,15 @@ get_mem_lim <- function(factor = 0.7, verbose = FALSE) {
         # only other option is WINDOWS
         # expanded from:
         # http://stackoverflow.com/questions/27788968/how-would-one-check-the-system-memory-available-using-r-on-a-windows-machine
-        
-        # get string with values from system
-        mem <- system('wmic OS get FreePhysicalMemory /Value', intern = TRUE)[3]
-        # remove carriage return
-        mem <- gsub("\r",'', mem)
-        # split value and keep number only
-        mem <- as.numeric(strsplit(mem, '=')[[1]][2])
-        mem <- mem*1024 # previous units were KB, convert to bytes
+
+        # started failing recently (2023-01-06), let's just use the default here too (as in MacOS, set further below)
+        ## # get string with values from system
+        ## mem <- system('wmic OS get FreePhysicalMemory /Value', intern = TRUE)[3]
+        ## # remove carriage return
+        ## mem <- gsub("\r",'', mem)
+        ## # split value and keep number only
+        ## mem <- as.numeric(strsplit(mem, '=')[[1]][2])
+        ## mem <- mem*1024 # previous units were KB, convert to bytes
     }
     if (is.na(mem)) {
         # I used to have a warning, but not anymore because:

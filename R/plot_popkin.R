@@ -15,7 +15,7 @@
 #' `function` elements are executed without arguments, and are expected to produce single arbitrary plot panels.
 #' @param titles Titles to add to each matrix panel (default is no titles).
 #' Applied to kinship and phylo panels only.
-#' @param col Colors for kinship heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).
+#' @param col Colors for kinship heatmap (default is a red-white-blue palette symmetric about zero constructed using `RColorBrewer`).
 #' @param col_n The number of colors to use in the heatmap (applies if `col = NULL`).
 #' @param mar Margins shared by all panels (if a vector) or for each panel (if a list of such vectors).
 #' If the vector has length 1, `mar` corresponds to the shared lower and left margins, while the top and right margins are set to zero.
@@ -114,7 +114,7 @@
 #' SUBPOPULATION LABEL OPTIONS
 #' 
 #' @param labs Subpopulation labels for individuals in kinship matrices.
-#' Use a matrix of labels to show groupings at more than one level (for a hierarchy or otherwise).
+#' Use a matrix of labels (individuals along rows, levels along columns) to show groupings at more than one level (for a hierarchy or otherwise).
 #' If input is a vector or a matrix, the same subpopulation labels are shown for every kinship matrix; the input must be a list of such vectors or matrices if the labels vary per panel.
 #' Has no effect on non-kinship panels.
 #' @param labs_cex A vector of label scaling factors for each level of labs, or a list of such vectors if labels vary per panel.
@@ -753,7 +753,7 @@ rep_check_list <- function(vals, n) {
 #
 # @param breaks The vector of `n+1` values at which colors switch, as returned by [plot_popkin_single()]
 # @param label The name of the variable that the colors measure (i.e. "Kinship")
-# @param col Color vector of length `n`.  Default colors are a progression from blue to white to red obtained from RColorBrewer.
+# @param col Color vector of length `n`.  Default colors are a progression from blue to white to red obtained from `RColorBrewer`.
 # @param kinship_range Range of the color key, preferably the range of the data (default is infered from the breaks, but they need not agree)
 # @param leg_n The desired number of ticks in the y-axis (input to [pretty()], see that for more details)
 #

@@ -4,7 +4,7 @@
 
 # popkin 1.0.1.9000 (2017-11-21)
 
-* Fix a bug in which genotypes input to popkin via a function (rather than a regular matrix or a BEDMatrix object) caused popkin to die.  Now popkin behaves as expected.  New test unit cases were added to test function inputs (previously this case was untested).
+* Fix a bug in which genotypes input to popkin via a function (rather than a regular matrix or a `BEDMatrix` object) caused popkin to die.  Now popkin behaves as expected.  New test unit cases were added to test function inputs (previously this case was untested).
 
 # popkin 1.0.2.9000 (2017-11-24)
 
@@ -16,37 +16,37 @@
 
 # popkin 1.0.4 (2018-01-13)
 
-* All doc examples are now run (all used to be "dontrun").
+* All doc examples are now run (all used to be `dontrun`).
 
 * Other minor non-code changes for first CRAN submission.
 
 # popkin 1.0.5 (2018-01-26)
 
-* Updated vignette code to work when suggested package "lfa" is not available (needed for CRAN tests).  This change is not visible in rendered vignette included in package.
+* Updated vignette code to work when suggested package `lfa` is not available (needed for CRAN tests).  This change is not visible in rendered vignette included in package.
 
 # popkin 1.0.5.9000 (2018-02-01)
 
-* plotPopkin now allows NULL elements in input list x, makes empty plots with titles (good for placeholders or other non-existent data)
+* `plotPopkin` now allows NULL elements in input list x, makes empty plots with titles (good for placeholders or other non-existent data)
 
-* Clarified plotPopkin documentation (that marPad is added to xMar values if set)
+* Clarified `plotPopkin` documentation (that `marPad` is added to `xMar` values if set)
 
-* README.md now contains instructions for installing from CRAN as well as from GitHub.
+* `README.md` now contains instructions for installing from CRAN as well as from GitHub.
 
 # popkin 1.0.6.9000 (2018-07-30)
 
-* Internal function printLabs (used by plotPopkin) is now more flexible in where it places its labels (new args "side1" and "side2")
+* Internal function `printLabs` (used by `plotPopkin`) is now more flexible in where it places its labels (new args `side1` and `side2`)
 
 # popkin 1.0.7.9000 (2018-08-08)
 
-* Added option for continuous colors, off by default.  Default is still to use only the 17 colors given directly by RColorBrewer.
+* Added option for continuous colors, off by default.  Default is still to use only the 17 colors given directly by `RColorBrewer`.
 
 # popkin 1.0.8.9000 (2018-09-05)
 
-* Changed some function parameter defaults from missing to NULL, added more validation tests (affects fst, inbr, plotPopkin).
+* Changed some function parameter defaults from missing to NULL, added more validation tests (affects `fst`, `inbr`, `plotPopkin`).
 
 # popkin 1.1.0.9000 (2018-10-19)
 
-* Added neff function (estimates effective sample size given a kinship matrix and weights; can find optimal weights that are non-negative or sign-unconstrained, yielding maximum neff values)
+* Added `neff` function (estimates effective sample size given a kinship matrix and weights; can find optimal weights that are non-negative or sign-unconstrained, yielding maximum neff values)
 
 # popkin 1.1.1.9000 (2019-02-13)
 
@@ -103,8 +103,8 @@ These names get copied to the rows and columns of the output kinship matrix.
 # popkin 1.2.4 (2019-06-05)
 
 * Non-code changes:
-  * Edited .Rbuildignore to stop ignoring README; also removed non-existent files from list
-  * Removed unused popkin.Rproj file
+  * Edited `.Rbuildignore` to stop ignoring `README`; also removed non-existent files from list
+  * Removed unused `popkin.Rproj` file
 
 # popkin 1.2.4.9000 (2019-07-24)
 
@@ -149,7 +149,7 @@ Memory control bugfixes
   * The bug prevented memory usage from being controlled correctly when the genotype matrix did not fit entirely in memory.
   * The bug had no effect if the entire genotype matrix of interest was small enough to fit in memory.
   * The bug was introduced in 2019-08-02, popkin 1.2.6.9000, commit 643a276974171d86ea621df3d25e1937a100d09a
-* Tweaked popkin-specific memory formula to better control memory when a BEDMatrix object is analyzed
+* Tweaked popkin-specific memory formula to better control memory when a `BEDMatrix` object is analyzed
   * This improvement is relative to popkin's formula prior to the aforementioned bug (version 1.2.5.9000 and earlier)
 * Internal function `solve_m_mem_lim` now returns memory limit from `get_mem_lim` or user, in addition to the chunk size in both number of loci and in expected memory usage.
 
@@ -291,7 +291,7 @@ Overall added tree plotting capabilities and more plotting fine control.
 # popkin 1.3.13 (2021-07-27)
 
 - 7th CRAN submission.
-- Removed "LazyData: true" from DESCRIPTION (to avoid a new "NOTE" on CRAN).
+- Removed `LazyData: true` from DESCRIPTION (to avoid a new "NOTE" on CRAN).
 - Reformatted this `NEWS.md` slightly to improve its automatic parsing.
 - Fixed spelling in documentation.
 
@@ -301,7 +301,7 @@ Overall added tree plotting capabilities and more plotting fine control.
 - Function `popkin_A_min_subpops`:
   - Now uses `avg_kinship_subpops` internally to perform the bulk of the calculations
   - When `subpops = NULL`, calculation now returns minimum `A` among off-diagonal elements only (excluding diagonal) rather than the overall minimum of `A`.  There's no difference when `A` is calculated from genotypes (diagonal values are much greater than off-diagonal values), but made the change for consistency when it might differ for arbitrary inputs.
-- `README` updated github install instructions for building vignettes.
+- `README` updated GitHub install instructions for building vignettes.
 
 # popkin 1.3.14.9000 (2021-11-05)
 
@@ -331,7 +331,7 @@ Overall added tree plotting capabilities and more plotting fine control.
 
 # popkin 1.3.17.9000 (2022-01-31)
 
-- Function `plot_admix` added options `leg_title_line` and `leg_las`, and changed the default of `leg_mar`, to better accomodate numerous long ancestry labels.
+- Function `plot_admix` added options `leg_title_line` and `leg_las`, and changed the default of `leg_mar`, to better accommodate numerous long ancestry labels.
 
 # popkin 1.3.18.9000 (2022-01-31)
 
@@ -343,9 +343,9 @@ Overall added tree plotting capabilities and more plotting fine control.
 
 - Functions `popkin`, `popkin_A`:
   - Added option `mean_of_ratios`, default `FALSE` is original estimator, `TRUE` gives a new estimator that upweighs rare variants, which resembles in this way the standard kinship estimator, and which appears to improve performance in association testing.
-  - Fixed minor bug that `M` (one of the return values when `want_M = TRUE`) did not inherit individual names from `X` even though `A` and `kinship` did, and similarly all inherit names when `X` is a function (fixed accidentally when replacing Rcpp code with pure R).
-  - Internally, for original (`mean_of_ratios = FALSE`) replaced Rcpp code with pure R version, which results in large speedups, at a cost of higher memory use (despite my best attempts at improving the original Rcpp code, the simpler R code is doing something magically fast I don't understand).
-    Rcpp, RcppEigen dependencies have been dropped as a consequence.
+  - Fixed minor bug that `M` (one of the return values when `want_M = TRUE`) did not inherit individual names from `X` even though `A` and `kinship` did, and similarly all inherit names when `X` is a function (fixed accidentally when replacing `Rcpp` code with pure R).
+  - Internally, for original (`mean_of_ratios = FALSE`) replaced `Rcpp` code with pure R version, which results in large speedups, at a cost of higher memory use (despite my best attempts at improving the original `Rcpp` code, the simpler R code is doing something magically fast I don't understand).
+    `Rcpp`, `RcppEigen` dependencies have been dropped as a consequence.
 - Tests were separated into more files (contexts), had some cleanups
 
 # popkin 1.3.20.9000 (2022-05-13)
@@ -364,5 +364,17 @@ Overall added tree plotting capabilities and more plotting fine control.
 
 - Function `plot_phylo` added option `edge_width`, which defaults to 1.
   - This restores the plotting behavior under the dependency package `ape` version 5.5 and prior, where its function `plot.phylo` (which `popkin::plot_phylo` wraps) had its parameter `edge.width` default to 1.
-  - In contrast, starting on `ape` version 5.6 (2021-12-20), `edge.width` defaults to `NULL`, with results in setting it to `par('lwd')`, which had undesireable consequences in my use cases and which is why the old default is overridden in popkin.
+  - In contrast, starting on `ape` version 5.6 (2021-12-20), `edge.width` defaults to `NULL`, with results in setting it to `par('lwd')`, which had undesirable consequences in my use cases and which is why the old default is overridden in popkin.
   - By extension, `plot_popkin`'s old default edge widths for trees of class `phylo` is also restored.
+
+# popkin 1.3.23 (2023-01-06)
+
+- 9th CRAN submission.
+- Added `hgdp_subset` sample data, copied from `lfa`.
+  - Removed `lfa` dependency, which was only used for this sample data.
+    `lfa` has become unreliable in external testing servers, particularly as it is on Bioconductor and sometimes hard to install on R-devel, so its removal simplifies automatic testing considerably.
+- Functions `popkin`, `popkin_A`, and `popkin_af`
+  - Removed internal code that obtained available memory on Windows systems, which started to fail recently.  Now only Linux retrieves available memory from system, on all other systems a default of 1GB memory is assumed to be available.
+  - Updated documentation.
+- Fixed some typos, escaped more function/code names to simplify spellcheck in the future.
+- Function `plot_popkin` clarified documentation.

@@ -42,7 +42,7 @@
 #' @param leg_mar Margin values for the kinship legend panel only.
 #' A length-4 vector (in `c( bottom, left, top, right )` format that [graphics::par()] 'mar' expects) specifies the full margins, to which `mar_pad` is added.
 #' Otherwise, the margins used in the last panel are preserved with the exception that the left margin is set to `mar_pad`, and if `leg_mar` is length-1 (default), it is added to `mar_pad` to specify the right margin.
-#' By default the right margin is large enough to accomodate `leg_title` for the given value of `leg_title_line`.
+#' By default the right margin is large enough to accommodate `leg_title` for the given value of `leg_title_line`.
 #' @param leg_las The ancestry label orientations (in format that [graphics::mtext()] expects).
 #' @param leg_omit If `TRUE`, no legend (second panel) is produced (default `FALSE` is to include legend).
 #' @param layout_add If `TRUE` (default) then [graphics::layout()] is called internally to create two panels: the main panel and the color key legend.

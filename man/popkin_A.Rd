@@ -15,7 +15,7 @@ popkin_A(
 )
 }
 \arguments{
-\item{X}{Genotype matrix, BEDMatrix object, or a function \code{X(m)} that returns the genotypes of all individuals at \code{m} successive locus blocks each time it is called, and \code{NULL} when no loci are left.
+\item{X}{Genotype matrix, \code{BEDMatrix} object, or a function \code{X(m)} that returns the genotypes of all individuals at \code{m} successive locus blocks each time it is called, and \code{NULL} when no loci are left.
 If a regular matrix, \code{X} must have values only in \code{c(0, 1, 2, NA)}, encoded to count the number of reference alleles at the locus, or \code{NA} for missing data.}
 
 \item{n}{Number of individuals (required only when \code{X} is a function, ignored otherwise).
@@ -23,18 +23,18 @@ If \code{n} is missing but \code{subpops} is not, \code{n} is taken to be the le
 
 \item{loci_on_cols}{If \code{TRUE}, \code{X} has loci on columns and individuals on rows; if \code{FALSE} (default), loci are on rows and individuals on columns.
 Has no effect if \code{X} is a function.
-If \code{X} is a BEDMatrix object, \code{loci_on_cols} is ignored (set automatically to \code{TRUE} internally).}
+If \code{X} is a \code{BEDMatrix} object, \code{loci_on_cols} is ignored (set automatically to \code{TRUE} internally).}
 
 \item{mean_of_ratios}{Chose how to weigh loci.
 If \code{FALSE} (default) loci have equal weights (in terms of variance, rare variants contribute less than common variants; also called the "ratio-of-means" version, this has known asymptotic behavior).
 If \code{TRUE}, rare variant loci are upweighed (in terms of variance, contributions are approximately the same across variant frequencies; also called the "mean-of-ratios" version, its asymptotic behavior is less well understood but performs better for association testing).}
 
-\item{mem_factor}{Proportion of available memory to use loading and processing genotypes.
+\item{mem_factor}{Proportion of available memory to use loading and processing data.
 Ignored if \code{mem_lim} is not \code{NA}.}
 
-\item{mem_lim}{Memory limit in GB, used to break up genotype data into chunks for very large datasets.
+\item{mem_lim}{Memory limit in GB, used to break up data into chunks for very large datasets.
 Note memory usage is somewhat underestimated and is not controlled strictly.
-Default in Linux and Windows is \code{mem_factor} times the free system memory, otherwise it is 1GB (OSX and other systems).}
+Default in Linux is \code{mem_factor} times the free system memory, otherwise it is 1GB (Windows, OSX and other systems).}
 
 \item{m_chunk_max}{Sets the maximum number of loci to process at the time.
 Actual number of loci loaded may be lower if memory is limiting.}

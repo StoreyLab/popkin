@@ -5,20 +5,10 @@
 #' These coancestry estimates are unbiased if the true allele frequencies are provided, but may be less accurate when the allele frequencies themselves are estimated.
 #' This function is intended for cases where allele frequencies, but not individual genotypes, are available; otherwise it is best to use the individual genotypes and [popkin()].
 #' An application of interest is the allele frequency matrices from admixture models, in which case the columns correspond to subpopulations rather than individuals, and `subpops = NULL` is an acceptable choice.
-#' 
+#'
+#' @inheritParams popkin
 #' @param P `m`-by-`n` matrix of individual-specific allele frequencies, which should have values between `[0, 1]` (range is not strictly required) or `NA` for missing data.
-#' @param subpops The length-`n` vector of subpopulation assignments for each individual.
-#' If `NULL`, every individual is effectively treated as a different population.
 #' @param loci_on_cols If `TRUE`, `P` has loci on columns and individuals on rows; if `FALSE` (default), loci are on rows and individuals on columns.
-#' @param mem_factor Proportion of available memory to use loading and processing loci.
-#' Ignored if `mem_lim` is not `NA`.
-#' @param mem_lim Memory limit in GB, used to break up `P` into chunks for very large datasets.
-#' Note memory usage is somewhat underestimated and is not controlled strictly.
-#' Default in Linux and Windows is `mem_factor` times the free system memory, otherwise it is 1GB (OSX and other systems).
-#' @param want_M If `TRUE`, includes the matrix `M` of non-missing pair counts in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
-#' Default `FALSE` is to return the coancestry matrix only.
-#' @param m_chunk_max Sets the maximum number of loci to process at the time.
-#' Actual number of loci loaded may be lower if memory is limiting.
 #'
 #' @return If `want_M = FALSE`, returns the estimated `n`-by-`n` coancestry matrix only.
 #' If `P` has names for the individuals, they will be copied to the rows and columns of this coancestry matrix.

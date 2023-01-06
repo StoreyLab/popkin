@@ -34,7 +34,7 @@ The examples below assume the following R data variables are present for `n` ind
 
 The `subpops` vector is not required, but its use is recommended to improve estimation of the baseline kinship value treated as zero.
 
-If your data is in BED format, `popkin` will process it efficiently using BEDMatrix.
+If your data is in BED format, `popkin` will process it efficiently using `BEDMatrix`.
 If `file` is the path to the BED file (excluding .bed extension):
 ```R
 library(BEDMatrix)

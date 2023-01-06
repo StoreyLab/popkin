@@ -24,16 +24,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, cache = FALSE, include = FALSE}
-## copied from examples from the "simmer" R package
-## after: https://www.enchufa2.es/archives/suggests-and-vignettes.html
-## by Iñaki Úcar
-required <- c("lfa") # not a CRAN package, only suggested since popkin doesn't need it to run...
-
-if (!all(sapply(required, requireNamespace, quietly = TRUE)))
-  knitr::opts_chunk$set(eval = FALSE)
-```
-
 # Introduction
 
 The `popkin` ("population kinship") package estimates the kinship matrix of individuals and $\Fst$ from their biallelic genotypes.
@@ -107,21 +97,19 @@ Try first converting your data to BED and loading with `BEDMatrix`.
 
 ## Load and clean sample data
 
-For illustration, let's load the real human data worldwide sample ("HGDP subset") contained in the `lfa` package:
+For illustration, let's load the real human data worldwide sample ("HGDP subset") contained in this package:
 
 ```{r}
 library(popkin)
-# for hgdp_subset sample data only
-library(lfa)
 # rename for simplicity
 X <- hgdp_subset
 dim(X)
 ```
 
 This data has
-$m=`r if(exists("X")) nrow(X) else NA`$ <!-- exists test needed for when "lfa" is unavailable at CRAN servers... -->
+$m=`r nrow(X)`$
 loci and
-$n=`r if(exists("X")) ncol(X) else NA`$ <!-- exists test needed for when "lfa" is unavailable at CRAN servers... -->
+$n=`r ncol(X)`$
 individuals, and is oriented as `popkin` expects by default.
 These samples have labels grouping them by continental subpopulation in `colnames(X)`.
 To make visualizations easier later on, let's shorten these labels and reorder to have nice blocks:
@@ -156,7 +144,7 @@ Now we're ready to analyze this data with `popkin`!
 ## Estimate and visualize kinship using genotypes and subpopulations
 
 Estimating a kinship matrix requires the genotype matrix `X` and subpopulation levels used only to estimate the minimum level of kinship.
-Using the `lfa` sample data we cleaned in the last subsection, obtaining the estimate is simple:
+Using the sample data we cleaned in the last subsection, obtaining the estimate is simple:
 ```{r}
 kinship <- popkin(X, subpops)
 ```

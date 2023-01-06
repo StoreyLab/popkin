@@ -1,6 +1,6 @@
 Package: popkin
 Title: Estimate Kinship and FST under Arbitrary Population Structure
-Version: 1.3.22.9000
+Version: 1.3.23
 Authors@R: c(
     person(given = "Alejandro",
 	   family = "Ochoa",
@@ -14,13 +14,14 @@ Authors@R: c(
            comment = c(ORCID = "0000-0001-5992-402X"))
     )
 Description: Provides functions to estimate the kinship matrix of individuals from a large set of biallelic SNPs, and extract inbreeding coefficients and the generalized FST (Wright's fixation index).  Method described in Ochoa and Storey (2021) <doi:10.1371/journal.pgen.1009241>.
+LazyData: true
 Depends: R (>= 3.5.0)
 Imports: RColorBrewer, graphics, grDevices, ape
-Suggests: BEDMatrix, testthat, knitr, rmarkdown, lfa, bnpsd
+Suggests: BEDMatrix, testthat, knitr, rmarkdown, bnpsd
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 URL: https://github.com/StoreyLab/popkin/
 BugReports: https://github.com/StoreyLab/popkin/issues

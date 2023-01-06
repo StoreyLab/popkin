@@ -60,7 +60,7 @@ This list may contain \code{NULL} elements (makes blank panels with titles; good
 \item{titles}{Titles to add to each matrix panel (default is no titles).
 Applied to kinship and phylo panels only.}
 
-\item{col}{Colors for kinship heatmap (default is a red-white-blue palette symmetric about zero constructed using RColorBrewer).}
+\item{col}{Colors for kinship heatmap (default is a red-white-blue palette symmetric about zero constructed using \code{RColorBrewer}).}
 
 \item{col_n}{The number of colors to use in the heatmap (applies if \code{col = NULL}).}
 
@@ -164,7 +164,7 @@ Has no effect on non-kinship panels.
 SUBPOPULATION LABEL OPTIONS}
 
 \item{labs}{Subpopulation labels for individuals in kinship matrices.
-Use a matrix of labels to show groupings at more than one level (for a hierarchy or otherwise).
+Use a matrix of labels (individuals along rows, levels along columns) to show groupings at more than one level (for a hierarchy or otherwise).
 If input is a vector or a matrix, the same subpopulation labels are shown for every kinship matrix; the input must be a list of such vectors or matrices if the labels vary per panel.
 Has no effect on non-kinship panels.}
 
