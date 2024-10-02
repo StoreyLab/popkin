@@ -128,6 +128,8 @@
 #' Useful for including separating lines or ticks without text.
 #' @param labs_even A vector of logicals that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
 #' When `TRUE`, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.
+#' @param labs_even_line A vector of lines where the ends of "even" lines are placed (in format that [graphics::mtext()] expects) for each level of labs, or a list of such vectors if labels vary per panel.
+#' Ignored unless `labs_even = TRUE`.
 #' 
 #' @param ... Additional options passed to [graphics::image()].
 #' These are shared across kinship panels.
@@ -192,6 +194,7 @@ plot_popkin <- function(
                         labs_ticks = FALSE,
                         labs_text = TRUE,
                         labs_even = FALSE,
+                        labs_even_line = labs_line,
                         null_panel_data = FALSE,
                         weights = NULL,
                         raster = is.null(weights),
@@ -264,6 +267,7 @@ plot_popkin <- function(
     labs_ticks <- rep_check_list(labs_ticks, n)
     labs_text <- rep_check_list(labs_text, n)
     labs_even <- rep_check_list(labs_even, n)
+    labs_even_line <- rep_check_list(labs_even_line, n)
     weights <- rep_check_list(weights, n)
     # ylab behavior is more dynamic!
     if (length(ylab) > 1) {
@@ -433,6 +437,7 @@ plot_popkin <- function(
                 labs_text = labs_text[[i]],
                 labs_col = labs_col[[i]],
                 labs_even = labs_even[[i]],
+                labs_even_line = labs_even_line[[i]],
                 diag_line = diag_line[i],
                 main = titles[i],
                 weights = weights[[i]],
@@ -533,6 +538,7 @@ plot_popkin_single <- function (
                                 labs_text = TRUE,
                                 labs_col = 'black',
                                 labs_even = FALSE,
+                                labs_even_line = labs_line,
                                 diag_line = FALSE,
                                 weights = NULL,
                                 raster = is.null(weights),
@@ -652,6 +658,7 @@ plot_popkin_single <- function (
             labs_lwd = labs_lwd,
             labs_sep = labs_sep,
             labs_even = labs_even,
+            labs_even_line = labs_even_line,
             labs_ticks = labs_ticks,
             labs_text = labs_text,
             labs_col = labs_col,
@@ -674,7 +681,7 @@ centers_from_boundaries <- function(xb) {
     return( xc )
 }
 
-print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, labs_sep, labs_even, labs_ticks, labs_text, labs_col, xb_ind = NULL, indexes_ind_keep = NULL, xc_ind = NULL, doMat = TRUE) {
+print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, labs_sep, labs_even, labs_even_line, labs_ticks, labs_text, labs_col, xb_ind = NULL, indexes_ind_keep = NULL, xc_ind = NULL, doMat = TRUE) {
     # normalize so we can loop over cases (assume arbitrary label levels)
     if (!is.matrix(labs))
         labs <- cbind(labs) # a col vector
@@ -698,6 +705,7 @@ print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, la
         labs_col <- rep_check(labs_col, n)
         labs_sep <- rep_check(labs_sep, n)
         labs_even <- rep_check(labs_even, n)
+        labs_even_line <- rep_check(labs_even_line, n)
         labs_ticks <- rep_check(labs_ticks, n)
         labs_text <- rep_check(labs_text, n)
     }
@@ -711,6 +719,7 @@ print_labels_multi <- function(labs, labs_cex, labs_las, labs_line, labs_lwd, la
             lwd = labs_lwd[i],
             sep = labs_sep[i],
             even = labs_even[i],
+            even_line = labs_even_line[i],
             ticks = labs_ticks[i],
             text = labs_text[i],
             col = labs_col[i],
@@ -1123,6 +1132,7 @@ print_labels <- function(
                          ticks = FALSE,
                          even = FALSE,
                          line = 0,
+                         even_line = line,
                          text = TRUE,
                          col = 'black',
                          side1 = 1,
@@ -1210,8 +1220,8 @@ print_labels <- function(
         xc_grp <- centers_from_boundaries( xb_grp2 )
         
         # connect label boundaries to irregular boundaries in plot
-        ysLines <- line_to_user( c(0, line), 1 ) # shared by every label boundary on x-axis
-        xsLines <- line_to_user( c(0, line), 2 ) # shared by every label boundary on y-axis
+        ysLines <- line_to_user( c(0, even_line), 1 ) # shared by every label boundary on x-axis
+        xsLines <- line_to_user( c(0, even_line), 2 ) # shared by every label boundary on y-axis
         for (i in 1 : ( n_grp + 1 ) ) {
             # middle coordinate is a bit messy: first get ith and ith+1 boundaries, then turn them to coordinates, then average
             # don't forget that end is first element of next group, so we always need to reduce it by one

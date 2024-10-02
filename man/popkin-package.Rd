@@ -3,7 +3,6 @@
 \docType{package}
 \name{popkin-package}
 \alias{popkin-package}
-\alias{_PACKAGE}
 \title{A package for estimating kinship and FST under arbitrary population structure}
 \description{
 The heart of this package is the \code{\link[=popkin]{popkin()}} function, which estimates the kinship matrix of all individual pairs from their genotype matrix.

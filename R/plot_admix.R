@@ -72,6 +72,8 @@
 #' Useful for including separating lines or ticks without text.
 #' @param labs_even A vector of logicals that specify whether the subpopulations labels are drawn with equal spacing for each level of labs.
 #' When `TRUE`, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.
+#' @param labs_even_line A vector of lines where the ends of "even" lines are placed (in format that [graphics::mtext()] expects) for each level of labs.
+#' Ignored unless `labs_even = TRUE`.
 #' @param ... Additional options passed to [graphics::barplot()].
 #'
 #' @examples
@@ -130,6 +132,7 @@ plot_admix <- function(
                        labs_ticks = FALSE,
                        labs_text = TRUE,
                        labs_even = FALSE,
+                       labs_even_line = labs_line,
                        ... # passed to [graphics::barplot()]
                        ) {
     # colors can disagree with number of ancestries because RColorBrewer has limitations, fix or die
@@ -197,6 +200,7 @@ plot_admix <- function(
             labs_lwd = labs_lwd,
             labs_sep = labs_sep,
             labs_even = labs_even,
+            labs_even_line = labs_even_line,
             labs_ticks = labs_ticks,
             labs_text = labs_text,
             labs_col = labs_col,

@@ -44,6 +44,7 @@ plot_popkin(
   labs_ticks = FALSE,
   labs_text = TRUE,
   labs_even = FALSE,
+  labs_even_line = labs_line,
   null_panel_data = FALSE,
   weights = NULL,
   raster = is.null(weights),
@@ -187,6 +188,9 @@ Useful for including separating lines or ticks without text.}
 
 \item{labs_even}{A vector of logicals that specify whether the subpopulations labels are drawn with equal spacing for each level of labs, or a list of such vectors if labels vary per panel.
 When \code{TRUE}, lines mapping the equally-spaced labels to the unequally-spaced subsections of the heatmap are also drawn.}
+
+\item{labs_even_line}{A vector of lines where the ends of "even" lines are placed (in format that \code{\link[graphics:mtext]{graphics::mtext()}} expects) for each level of labs, or a list of such vectors if labels vary per panel.
+Ignored unless \code{labs_even = TRUE}.}
 
 \item{null_panel_data}{If \code{FALSE} (default), panels with \code{NULL} kinship matrices must not have titles or other parameters set, and no panel letters are used in these cases.
 If \code{TRUE}, panels with \code{NULL} kinship matrices must have titles and other parameters set.

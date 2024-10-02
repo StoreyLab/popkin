@@ -378,3 +378,7 @@ Overall added tree plotting capabilities and more plotting fine control.
   - Updated documentation.
 - Fixed some typos, escaped more function/code names to simplify spellcheck in the future.
 - Function `plot_popkin` clarified documentation.
+
+# popkin 1.3.23.9000 (2024-10-02)
+
+- Functions `plot_popkin` and `plot_admix` added option `labs_even_line` to allow location of the end of `labs_even` lines to differ from `labs_line`.
