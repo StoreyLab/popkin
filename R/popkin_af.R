@@ -12,10 +12,11 @@
 #'
 #' @return If `want_M = FALSE`, returns the estimated `n`-by-`n` coancestry matrix only.
 #' If `P` has names for the individuals, they will be copied to the rows and columns of this coancestry matrix.
-#' If `want_M = TRUE`, a named list is returned, containing:
+#' If `want_M = TRUE`, a more detailed named list is returned, containing:
 #'
 #' - `coancestry`: the estimated `n`-by-`n` coancestry matrix
 #' - `M`: the `n`-by-`n` matrix of non-missing pair counts (see `want_M` option).
+#' - `A_min`: the minimum value of the internal `A` matrix, calculated using `subpops` if provided.
 #'
 #' @examples
 #' # a matrix of random uniform allele frequencies
@@ -292,7 +293,8 @@ popkin_af_basic_na <- function(
         return(
             list(
                 coancestry = coancestry,
-                M = M
+                M = M,
+                A_min = A_min
             )
         )
     } else {

@@ -41,7 +41,7 @@ Ignored if \code{mem_lim} is not \code{NA}.}
 Note memory usage is somewhat underestimated and is not controlled strictly.
 Default in Linux is \code{mem_factor} times the free system memory, otherwise it is 1GB (Windows, OSX and other systems).}
 
-\item{want_M}{If \code{TRUE}, includes the matrix \code{M} of non-missing pair counts in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
+\item{want_M}{If \code{TRUE}, includes the matrix \code{M} of non-missing pair counts (as well as \code{A_min}) in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
 Default \code{FALSE} is to return the relatedness matrix only.}
 
 \item{m_chunk_max}{Sets the maximum number of loci to process at the time.
@@ -50,10 +50,11 @@ Actual number of loci loaded may be lower if memory is limiting.}
 \value{
 If \code{want_M = FALSE}, returns the estimated \code{n}-by-\code{n} kinship matrix only.
 If \code{X} has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
-If \code{want_M = TRUE}, a named list is returned, containing:
+If \code{want_M = TRUE}, a more detailed named list is returned, containing:
 \itemize{
 \item \code{kinship}: the estimated \code{n}-by-\code{n} kinship matrix
 \item \code{M}: the \code{n}-by-\code{n} matrix of non-missing pair counts (see \code{want_M} option).
+\item \code{A_min}: the minimum value of the internal \code{A} matrix, calculated using \code{subpops} if provided.
 }
 }
 \description{

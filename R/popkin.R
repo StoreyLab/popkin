@@ -24,17 +24,18 @@
 #' @param mem_lim Memory limit in GB, used to break up data into chunks for very large datasets.
 #' Note memory usage is somewhat underestimated and is not controlled strictly.
 #' Default in Linux is `mem_factor` times the free system memory, otherwise it is 1GB (Windows, OSX and other systems).
-#' @param want_M If `TRUE`, includes the matrix `M` of non-missing pair counts in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
+#' @param want_M If `TRUE`, includes the matrix `M` of non-missing pair counts (as well as `A_min`) in the return value, which are sample sizes that can be useful in modeling the variance of estimates.
 #' Default `FALSE` is to return the relatedness matrix only.
 #' @param m_chunk_max Sets the maximum number of loci to process at the time.
 #' Actual number of loci loaded may be lower if memory is limiting.
 #'
 #' @return If `want_M = FALSE`, returns the estimated `n`-by-`n` kinship matrix only.
 #' If `X` has names for the individuals, they will be copied to the rows and columns of this kinship matrix.
-#' If `want_M = TRUE`, a named list is returned, containing:
+#' If `want_M = TRUE`, a more detailed named list is returned, containing:
 #'
 #' - `kinship`: the estimated `n`-by-`n` kinship matrix
 #' - `M`: the `n`-by-`n` matrix of non-missing pair counts (see `want_M` option).
+#' - `A_min`: the minimum value of the internal `A` matrix, calculated using `subpops` if provided.
 #'
 #' @examples
 #' # Construct toy data
@@ -126,7 +127,8 @@ popkin <- function(
         return(
             list(
                 kinship = kinship,
-                M = M
+                M = M,
+                A_min = A_min
             )
         )
     } else {

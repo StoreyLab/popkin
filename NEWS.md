@@ -382,3 +382,7 @@ Overall added tree plotting capabilities and more plotting fine control.
 # popkin 1.3.23.9000 (2024-10-02)
 
 - Functions `plot_popkin` and `plot_admix` added option `labs_even_line` to allow location of the end of `labs_even` lines to differ from `labs_line`.
+
+# popkin 1.3.24.9000 (2026-01-02)
+
+- Functions `popkin` and `popkin_af` when `want_M = TRUE` now include `A_min` in their return list.
