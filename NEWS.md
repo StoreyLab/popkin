@@ -386,3 +386,7 @@ Overall added tree plotting capabilities and more plotting fine control.
 # popkin 1.3.24.9000 (2026-01-02)
 
 - Functions `popkin` and `popkin_af` when `want_M = TRUE` now include `A_min` in their return list.
+
+# popkin 1.3.25.9000 (2026-01-27)
+
+- Function `plot_popkin` added options `xlab`, `xlab_adj`, `xlab_line`, and `xlab_side`.

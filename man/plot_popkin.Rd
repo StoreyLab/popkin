@@ -21,6 +21,10 @@ plot_popkin(
   ylab_line = 0,
   ylab_side = 2,
   ylab_per_panel = FALSE,
+  xlab = NULL,
+  xlab_adj = NA,
+  xlab_line = 0,
+  xlab_side = 1,
   layout_add = TRUE,
   layout_rows = 1,
   leg_per_panel = FALSE,
@@ -81,7 +85,7 @@ Must be a scalar or a vector of length 4 to match \code{\link[graphics:par]{grap
 Applied to panels of all types (kinship, phylo, and function).}
 
 \item{oma}{Outer margin vector.
-If length 1, the value of \code{oma} is applied to the left outer margin only (so \code{ylab} below displays correctly) and zero outer margins elsewhere.
+If length 1, the value of \code{oma} is applied to the left outer margin only (so \code{ylab} below displays correctly), and bottom too if \code{xlab} is given and has length 1, and zero outer margins elsewhere.
 If length 4, all outer margins are expected in standard format \code{\link[graphics:par]{graphics::par()}} 'mar' expects (see \code{mar} above).
 \code{mar_pad} above is never added to outer margins.
 If \code{NULL}, no outer margins are set (previous settings are preserved).
@@ -117,7 +121,24 @@ If \code{length(ylab) == 1}, only the first value is used, otherwise \code{lengt
 If \code{length(ylab) == 1}, only the first value is used, otherwise \code{length(ylab_side)} must equal the number of panels.}
 
 \item{ylab_per_panel}{Forces y-axis labels to appear for each panel, in the inner margins.
-Most useful to cover the case where there is a single panel but no outer margins (\code{oma = NULL}).
+Most useful to cover the case where there is a single panel but no outer margins (\code{oma = NULL}).}
+
+\item{xlab}{The x-axis label (default \code{NULL} omits labels).
+If \code{length(xlab) == 1}, the label is placed in the outer margin (shared across panels);
+otherwise \code{length(xlab)} must equal the number of panels and each label is placed in the inner margin of the respective panel.
+Applied to panels of all types (kinship, phylo, and function).}
+
+\item{xlab_adj}{The value of \code{adj} for \code{xlab} passed to \code{\link[graphics:mtext]{graphics::mtext()}}.
+If \code{length(xlab) == 1}, only the first value is used, otherwise \code{length(xlab_adj)} must equal the number of panels.
+Ignored if \code{xlab} is \code{NULL}.}
+
+\item{xlab_line}{The value of \code{line} for \code{xlab} passed to \code{\link[graphics:mtext]{graphics::mtext()}}.
+If \code{length(xlab) == 1}, only the first value is used, otherwise \code{length(xlab_line)} must equal the number of panels.
+Ignored if \code{xlab} is \code{NULL}.}
+
+\item{xlab_side}{The value of \code{side} for \code{xlab} passed to \code{\link[graphics:mtext]{graphics::mtext()}} (1 is x-axis, 2 is y-axis, can also place on top (3) or right (4)).
+If \code{length(xlab) == 1}, only the first value is used, otherwise \code{length(xlab_side)} must equal the number of panels.
+Ignored if \code{xlab} is \code{NULL}.
 
 LAYOUT OPTIONS}
 

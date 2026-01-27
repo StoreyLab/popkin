@@ -31,7 +31,7 @@
 #' Must be a scalar or a vector of length 4 to match [graphics::par()] 'mar'.
 #' Applied to panels of all types (kinship, phylo, and function).
 #' @param oma Outer margin vector.
-#' If length 1, the value of `oma` is applied to the left outer margin only (so `ylab` below displays correctly) and zero outer margins elsewhere.
+#' If length 1, the value of `oma` is applied to the left outer margin only (so `ylab` below displays correctly), and bottom too if `xlab` is given and has length 1, and zero outer margins elsewhere.
 #' If length 4, all outer margins are expected in standard format [graphics::par()] 'mar' expects (see `mar` above).
 #' `mar_pad` above is never added to outer margins.
 #' If `NULL`, no outer margins are set (previous settings are preserved).
@@ -77,6 +77,19 @@
 #' If `length(ylab) == 1`, only the first value is used, otherwise `length(ylab_side)` must equal the number of panels.
 #' @param ylab_per_panel Forces y-axis labels to appear for each panel, in the inner margins.
 #' Most useful to cover the case where there is a single panel but no outer margins (`oma = NULL`).
+#' @param xlab The x-axis label (default `NULL` omits labels).
+#' If `length(xlab) == 1`, the label is placed in the outer margin (shared across panels);
+#' otherwise `length(xlab)` must equal the number of panels and each label is placed in the inner margin of the respective panel.
+#' Applied to panels of all types (kinship, phylo, and function).
+#' @param xlab_adj The value of `adj` for `xlab` passed to [graphics::mtext()].
+#' If `length(xlab) == 1`, only the first value is used, otherwise `length(xlab_adj)` must equal the number of panels.
+#' Ignored if `xlab` is `NULL`.
+#' @param xlab_line The value of `line` for `xlab` passed to [graphics::mtext()].
+#' If `length(xlab) == 1`, only the first value is used, otherwise `length(xlab_line)` must equal the number of panels.
+#' Ignored if `xlab` is `NULL`.
+#' @param xlab_side The value of `side` for `xlab` passed to [graphics::mtext()] (1 is x-axis, 2 is y-axis, can also place on top (3) or right (4)).
+#' If `length(xlab) == 1`, only the first value is used, otherwise `length(xlab_side)` must equal the number of panels.
+#' Ignored if `xlab` is `NULL`.
 #' 
 #' LAYOUT OPTIONS
 #' 
@@ -171,6 +184,10 @@ plot_popkin <- function(
                         ylab_line = 0,
                         ylab_side = 2,
                         ylab_per_panel = FALSE,
+                        xlab = NULL,
+                        xlab_adj = NA,
+                        xlab_line = 0,
+                        xlab_side = 1,
                         layout_add = TRUE,
                         layout_rows = 1, 
                         leg_per_panel = FALSE,
@@ -276,6 +293,12 @@ plot_popkin <- function(
         ylab_line <- rep_check(ylab_line, n)
         ylab_side <- rep_check(ylab_side, n)
     }
+    if ( !is.null( xlab ) && length(xlab) > 1 ) {
+        xlab <- rep_check(xlab, n)
+        xlab_adj <- rep_check(xlab_adj, n)
+        xlab_line <- rep_check(xlab_line, n)
+        xlab_side <- rep_check(xlab_side, n)
+    }
     # all of these can vary when legend is panel-specific!
     if ( leg_per_panel ) {
         leg_title <- rep_check( leg_title, n )
@@ -315,7 +338,11 @@ plot_popkin <- function(
     if ( !is.null( oma ) ) {
         if ( length( oma ) == 1 ) {
             # when a single value, it is the left outer margin (all other values are zero)
-            graphics::par( oma = c(0, oma, 0, 0) )
+            if ( is.null( xlab ) || length( xlab ) > 1 ) {
+                graphics::par( oma = c(0, oma, 0, 0) )
+            } else
+                # except if there's a single defined x-axis, then share the margin!
+                graphics::par( oma = c(oma, oma, 0, 0) )
         } else if ( length( oma ) == 4 ) {
             # here the whole vector was specified, set that
             graphics::par( oma = oma )
@@ -455,6 +482,9 @@ plot_popkin <- function(
         # uses inner rather than outer margin (only choice that makes sense)
         if ( ( ylab_per_panel || length(ylab) > 1 ) && !is.na( ylab[i] ) ) 
             graphics::mtext( ylab[i], side = ylab_side[i], adj = ylab_adj[i], line = ylab_line[i] )
+        # ditto x axis
+        if ( !is.null( xlab ) && length(xlab) > 1 && !is.na( xlab[i] ) ) 
+            graphics::mtext( xlab[i], side = xlab_side[i], adj = xlab_adj[i], line = xlab_line[i] )
         
         # add letters only when ...
         if (
@@ -506,6 +536,9 @@ plot_popkin <- function(
     # add margin only once if there was only one, and not overridden, place in outer margin (only choice that makes sense)
     if ( !ylab_per_panel && length(ylab) == 1 )
         graphics::mtext( ylab, side = ylab_side, adj = ylab_adj, outer = TRUE, line = ylab_line )
+    # ditto x axis
+    if ( !is.null( xlab ) && length(xlab) == 1 )
+        graphics::mtext( xlab, side = xlab_side, adj = xlab_adj, outer = TRUE, line = xlab_line )
 
     # restore original setup when done, but only if we created the default layout
     # otherwise the external layout gets reset, which is bad if we were not done adding panels
